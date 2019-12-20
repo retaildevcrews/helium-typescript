@@ -1,0 +1,57 @@
+{
+  "name": "helium",
+  "version": "1.0.0",
+  "description": "Azure App Service reference application.",
+  "main": "dist/server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node dist/server.js",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "test-unit": "sh ./scripts/run-unit-tests.sh",
+    "test-integration": "mocha --reporter spec --timeout 5000 --compilers ts:ts-node/register '**/*.integration.ts'",
+    "build": "gulp scripts",
+    "docker-build": "docker build -t helium:canary .",
+    "docker-run": "docker run -it -p 8080:8080 helium:canary"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/helium.git"
+  },
+  "author": "aka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/helium/issues"
+  },
+  "homepage": "https://github.com/Microsoft/helium#readme",
+  "dependencies": {
+    "@azure/cosmos": "^3.5.2",
+    "@azure/keyvault": "^0.1.0",
+    "@azure/ms-rest-nodeauth": "^2.0.5",
+    "@types/body-parser": "^1.17.1",
+    "@types/documentdb": "^1.10.5",
+    "@types/restify": "^8.4.2",
+    "applicationinsights": "^1.4.2",
+    "body-parser": "^1.19.0",
+    "bunyan": "^1.8.12",
+    "class-validator": "^0.11.0",
+    "http-status-codes": "^1.4.0",
+    "inversify": "^5.0.1",
+    "inversify-restify-utils": "^3.4.0",
+    "reflect-metadata": "^0.1.13",
+    "restify": "^8.5.1",
+    "swagger-jsdoc": "^3.5.0",
+    "swagger-ui-dist": "^3.24.3",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^5.0.1",
+    "mocha": "^6.2.2",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.3"
+  }
+}

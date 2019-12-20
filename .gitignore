@@ -1,0 +1,7 @@
+node_modules
+dist
+*.env
+.terraform
+### OSX ###
+# General
+.DS_Store
