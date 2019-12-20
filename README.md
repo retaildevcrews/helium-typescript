@@ -32,9 +32,7 @@ Build the container using Docker
 
 # make sure you are in the root of the repo
 # build the image
-# TODO: Remove need to specify target to match other helium versions
-docker build --target=release -t helium-node -f Dockerfile
-docker build --target=test -t helium-node -f Dockerfile
+docker build -t helium-node -f Dockerfile
 
 # Tag and push the image to your Docker repo
 

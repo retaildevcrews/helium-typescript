@@ -1,5 +1,5 @@
 import * as keyvault from "@azure/keyvault";
-import { instanceRoleConstant } from "../config/constants";
+import { webInstanceRole } from "../config/constants";
 import { inject, injectable } from "inversify";
 import { ILoggingProvider } from "../logging/iLoggingProvider";
 import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
@@ -55,7 +55,7 @@ export class KeyVaultProvider {
         this.logger.Trace("Initializing KeyVault");
 
         // if web instance, use app service MSI, otherwise use az login credentials
-        const creds: any = process.env[instanceRoleConstant] ?
+        const creds: any = process.env[webInstanceRole] ?
             await msRestNodeAuth.loginWithAppServiceMSI({ resource: "https://vault.azure.net" }) :
             await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 

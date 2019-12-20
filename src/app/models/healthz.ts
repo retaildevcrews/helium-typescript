@@ -1,4 +1,4 @@
-import { instanceRoleConstant } from "../../config/constants";
+import { webInstanceRole } from "../../config/constants";
 
 /**
  * @swagger
@@ -44,7 +44,7 @@ export class HealthzSuccessDetails {
     public version: string = "1.0.0";
 
     constructor() {
-        const instanceId = process.env[instanceRoleConstant];
+        const instanceId = process.env[webInstanceRole];
         this.instance = !instanceId ? "unknown" : instanceId;
     }
 }
