@@ -5,6 +5,7 @@ import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-util
 import "reflect-metadata";
 import * as swaggerJSDoc from "swagger-jsdoc";
 import { ActorController } from "./app/controllers/actor";
+import { FeaturedController } from "./app/controllers/featured";
 import { GenreController } from "./app/controllers/genre";
 import { MovieController } from "./app/controllers/movie";
 import { HealthzController } from "./app/controllers/healthz";
@@ -37,6 +38,7 @@ import { html } from "./swagger-html";
      *  Bind the Controller classes for the Controllers you want in your server
      */
     iocContainer.bind<interfaces.Controller>(TYPE.Controller).to(ActorController).whenTargetNamed("ActorController");
+    iocContainer.bind<interfaces.Controller>(TYPE.Controller).to(FeaturedController).whenTargetNamed("FeaturedController");
     iocContainer.bind<interfaces.Controller>(TYPE.Controller).to(GenreController).whenTargetNamed("GenreController");
     iocContainer.bind<interfaces.Controller>(TYPE.Controller).to(MovieController).whenTargetNamed("MovieController");
     iocContainer.bind<interfaces.Controller>(TYPE.Controller).to(HealthzController).whenTargetNamed("HealthzController");
