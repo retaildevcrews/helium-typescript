@@ -77,7 +77,11 @@ export class FeaturedController implements interfaces.Controller {
 
         const result = await this.cosmosDb.queryDocuments(sql);
 
-        result.forEach( (movie) => movieList.push(movie.movieId));
+        result.forEach( (movie) => {
+            for (let i = 0; i < movie.weight; i++) {
+                movieList.push(movie.movieId);
+            }
+        });
 
         // default to The Matrix
         if ( movieList.length === 0 ) {
