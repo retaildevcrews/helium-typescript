@@ -15,7 +15,6 @@ import { Movie } from "../models/movie";
 @injectable()
 export class MovieController implements interfaces.Controller {
 
-    private static readonly movieDoesNotExistError: any = "A Movie with that ID does not exist";
     private readonly _movieSelect: string = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
     private readonly _movieOrderBy: string = " order by m.title";
 
@@ -91,7 +90,7 @@ export class MovieController implements interfaces.Controller {
      *         description: Unexpected error
      */
     @Get("/")
-    public async getAll(req, res) {
+    public async getAllMovies(req, res) {
         let sql: string = this._movieSelect;
         let orderby: string = this._movieOrderBy;
 

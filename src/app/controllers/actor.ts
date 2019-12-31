@@ -66,7 +66,7 @@ export class ActorController implements interfaces.Controller {
      *         description: Unexpected error
      */
     @Get("/")
-    public async getAll(req: Request, res) {
+    public async getAllActors(req: Request, res) {
 
         let sql: string = this._actorSelect;
 

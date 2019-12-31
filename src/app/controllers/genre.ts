@@ -44,7 +44,7 @@ export class GenreController implements interfaces.Controller {
    *         description: Unexpected error
    */
   @Get("/")
-  public async getAll(req: Request, res) {
+  public async getAllGenres(req: Request, res) {
     let resCode: number = HttpStatus.OK;
     let results: string[];
     try {
