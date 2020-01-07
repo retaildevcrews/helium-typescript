@@ -1,5 +1,6 @@
 import * as bodyParser from "body-parser";
 import * as swaggerJSDoc from "swagger-jsdoc";
+import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
 import { ActorController } from "./app/controllers/actor";
 import { AppInsightsProvider } from "./telem/appinsightsprovider";
@@ -17,7 +18,6 @@ import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-util
 import { ITelemProvider } from "./telem/itelemprovider";
 import { MovieController } from "./app/controllers/movie";
 import { robotsHandler } from "./middleware/robotsText";
-import "reflect-metadata";
 
 (async () => {
     const restify = require("restify");
