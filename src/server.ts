@@ -1,26 +1,27 @@
-// import { telemetryTypeToBaseType } from "applicationinsights/out/Declarations/Contracts";
 import * as bodyParser from "body-parser";
-import { Container } from "inversify";
-import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-utils";
-import "reflect-metadata";
 import * as swaggerJSDoc from "swagger-jsdoc";
+import EndpointLogger from "./middleware/EndpointLogger";
 import { ActorController } from "./app/controllers/actor";
+import { AppInsightsProvider } from "./telem/appinsightsprovider";
+import { BunyanLogger } from "./logging/bunyanLogProvider";
+import { Container } from "inversify";
+import { CosmosDBProvider } from "./db/cosmosdbprovider";
 import { FeaturedController } from "./app/controllers/featured";
 import { GenreController } from "./app/controllers/genre";
-import { MovieController } from "./app/controllers/movie";
-import { HealthzController } from "./app/controllers/healthz";
-import { CosmosDBProvider } from "./db/cosmosdbprovider";
-import { IDatabaseProvider } from "./db/idatabaseprovider";
-import { BunyanLogger } from "./logging/bunyanLogProvider";
-import { ILoggingProvider } from "./logging/iLoggingProvider";
-import { AppInsightsProvider } from "./telem/appinsightsprovider";
-import { ITelemProvider } from "./telem/itelemprovider";
-import EndpointLogger from "./middleware/EndpointLogger";
 import { getConfigValues } from "./config/config";
+import { HealthzController } from "./app/controllers/healthz";
 import { html } from "./swagger-html";
+import { IDatabaseProvider } from "./db/idatabaseprovider";
+import { ILoggingProvider } from "./logging/iLoggingProvider";
+import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-utils";
+import { ITelemProvider } from "./telem/itelemprovider";
+import { MovieController } from "./app/controllers/movie";
+import { robotsHandler } from "./middleware/robotsText";
+import "reflect-metadata";
 
 (async () => {
     const restify = require("restify");
+
     /**
      * Create an Inversion of Control container using Inversify
      */
@@ -70,6 +71,8 @@ import { html } from "./swagger-html";
              */
             app.use(bodyParser.urlencoded({ extended: true }));
 
+            app.pre(robotsHandler);
+
             /**
              * Parses HTTP query string and makes it available in req.query.
              * Setting mapParams to false prevents additional params in query to be merged in req.Params
@@ -101,7 +104,7 @@ import { html } from "./swagger-html";
                         title: "Helium", // Title (required)
                         version: "1.0.1", // Version (required)
                     },
-                    openapi: "3.0.2", // Specification (optional, defaults to swagger: '2.0')
+                    openapi: "3.0.2", // Specification (optional, defaults to swagger: "2.0")
                 },
             };
 
