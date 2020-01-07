@@ -1,0 +1,44 @@
+# ---- Base Node ----
+FROM node:current-alpine AS helium-dev-base
+
+### Optional: Set Proxy Variables
+# ENV http_proxy {value}
+# ENV https_proxy {value}
+# ENV HTTP_PROXY {value}
+# ENV HTTPS_PROXY {value}
+# ENV no_proxy {value}
+# ENV NO_PROXY {value}
+
+### install azure cli
+RUN \
+  apk update && \
+  apk add bash py-pip && \
+  apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev make && \
+  pip --no-cache-dir install -U pip && \
+  pip --no-cache-dir install azure-cli
+
+RUN mkdir -p /root/.azure
+
+WORKDIR /app
+COPY scripts ./scripts
+EXPOSE 4120
+COPY package.json .
+ 
+#
+# ---- Dependencies ----
+FROM helium-dev-base AS dependencies
+RUN npm set progress=false && npm config set depth 0
+RUN apk add --no-cache --virtual .gyp \
+        make \
+        python \
+        && npm install --production 
+RUN cp -R node_modules prod_node_modules
+RUN npm install
+
+FROM dependencies AS test
+COPY . .
+RUN npm run lint && npm run build && npm run test-unit
+
+FROM helium-dev-base AS release
+COPY --from=dependencies /app/prod_node_modules ./node_modules
+COPY --from=test /app/dist ./dist
