@@ -60,7 +60,25 @@ Run the application as a local container instead
 
 ```bash
 
-# TODO: Add/create dev dockerfile
+# make sure you are in the root of the repo
+# docker-dev builds an alpine image with Azure CLI installed in the container
+docker build -t helium-dev -f Dockerfile-Dev .
+
+# run the container
+# mount your ~/.azure directory to container root/.azure directory
+# you can also run the container and run az login from a bash shell
+docker run -d -p 4120:4120 -e KeyVaultName=$He_Name --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
+
+# check the logs
+# re-run until the application started message appears
+docker logs helium-dev
+
+# curl the health check endpoint
+curl http://localhost:4120/healthz
+
+# Stop and remove the container
+docker stop helium-dev
+docker rm helium-dev
 
 ```
 
