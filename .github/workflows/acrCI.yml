@@ -1,0 +1,23 @@
+name: ACR CI
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Build and publish to ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: bluebell.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}    
+    - run: |
+        docker build -t bluebell.azurecr.io/helium-typescript:latest .
+        docker tag bluebell.azurecr.io/helium-typescript:latest bluebell.azurecr.io/helium-typescript:${{ github.sha }}
+        docker push bluebell.azurecr.io/helium-typescript:${{ github.sha }}
+        docker push bluebell.azurecr.io/helium-typescript:latest
