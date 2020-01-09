@@ -18,6 +18,7 @@ import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-util
 import { ITelemProvider } from "./telem/itelemprovider";
 import { MovieController } from "./app/controllers/movie";
 import { robotsHandler } from "./middleware/robotsText";
+import { version } from "./config/constants";
 
 (async () => {
     const restify = require("restify");
@@ -102,7 +103,7 @@ import { robotsHandler } from "./middleware/robotsText";
                 definition: {
                     info: {
                         title: "Helium", // Title (required)
-                        version: "1.0.1", // Version (required)
+                        version: {version}, // Version (required)
                     },
                     openapi: "3.0.2", // Specification (optional, defaults to swagger: "2.0")
                 },
