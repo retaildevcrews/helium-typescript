@@ -53,10 +53,12 @@ jobs:
   
           docker tag image $IMAGE_ID:$VERSION
           docker tag image $IMAGE_ID:stable
-  
-          docker push $IMAGE_ID
+          docker tag image $IMAGE_ID:latest
 
-          echo "Image pushed"
         else
-          echo "Image only pushed on tags"
+          docker tag image $IMAGE_ID:beta
         fi
+
+        docker push $IMAGE_ID
+
+        echo "Image pushed"
