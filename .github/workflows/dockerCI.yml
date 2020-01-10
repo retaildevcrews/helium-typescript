@@ -45,7 +45,7 @@ jobs:
         # Strip git ref prefix from version
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-        # Only tag and push when a new tag is created
+        # Label image based on repo tag
         if [[ "${{ github.ref }}" == "refs/tags/"* ]]
         then
           # Strip "v" prefix from tag name
@@ -53,7 +53,6 @@ jobs:
   
           docker tag image $IMAGE_ID:$VERSION
           docker tag image $IMAGE_ID:stable
-          docker tag image $IMAGE_ID:latest
 
         else
           docker tag image $IMAGE_ID:beta
