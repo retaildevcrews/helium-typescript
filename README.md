@@ -32,7 +32,7 @@ Build the container using Docker
 
 # make sure you are in the root of the repo
 # build the image
-docker build -t helium-node -f Dockerfile
+docker build -t helium-typescript -f Dockerfile
 
 # Tag and push the image to your Docker repo
 
