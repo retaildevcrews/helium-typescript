@@ -62,7 +62,7 @@ import { version } from "./config/constants";
     // create restify server
     const server = new InversifyRestifyServer(iocContainer);
 
-    log.Trace("Created the Restify server");
+    log.Trace("Version: " + version);
 
     try {
         // listen for requests
@@ -112,13 +112,11 @@ import { version } from "./config/constants";
             // Initialize swagger-jsdoc -> returns validated swagger spec in json format
             const swaggerSpec: any = swaggerJSDoc(options);
 
-            log.Trace("Setting up swagger.json to serve statically");
             app.get("/swagger.json", (req, res) => {
                 res.setHeader("Content-Type", "application/json");
                 res.send(swaggerSpec);
             });
 
-            log.Trace("Setting up index.html to serve static");
             app.get("/", (req, res) => {
                 res.writeHead(200, {
                     "Content-Length": Buffer.byteLength(html),
@@ -128,7 +126,6 @@ import { version } from "./config/constants";
                 res.end();
             });
 
-            log.Trace("Setting up node modules to serve statically");
             app.get("/node_modules/swagger-ui-dist/*", restify.plugins.serveStatic({
                 directory: __dirname + "/..",
             }));

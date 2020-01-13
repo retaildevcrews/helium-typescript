@@ -26,7 +26,6 @@ export class KeyVaultProvider {
      * @param name The name of the secret.
      */
     public async getSecret(name: string): Promise<string> {
-        this.logger.Trace("In getSecret from KeyVault");
         if (this.client == null) {
             await this._initialize();
         }
@@ -42,7 +41,7 @@ export class KeyVaultProvider {
                     throw new Error(`Unable to find secret ${name}`);
                 }
             });
-        this.logger.Trace("Got secret " + name + " from KeyVault");
+
         return secret;
     }
 
@@ -51,8 +50,6 @@ export class KeyVaultProvider {
      * This is handled in a separate method to avoid calling async operations in the constructor.
      */
     private async _initialize() {
-
-        this.logger.Trace("Initializing KeyVault");
 
         // if web instance, use app service MSI, otherwise use az login credentials
         const creds: any = process.env[webInstanceRole] ?

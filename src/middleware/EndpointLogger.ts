@@ -20,18 +20,20 @@ export default function responseDuration(container: Container) {
         const duration: () => number = DateUtilities.getTimer();
         // create string unique to this action at this endpoint
         const apiName: string = `${req.method} ${req.url}`;
-        // log endpoint call start
-        log.Trace("API Endpoint Called: " + apiName);
+
         telem.trackEvent(apiName);
 
         // hook into response finish to log call duration/result
         res.on("finish", (() => {
+            const totalDuration = duration();
             telem.trackMetric(telem.getMetricTelemetryObject(
                 apiName + " duration",
-                duration(),
+                totalDuration,
             ));
 
-            log.Trace(apiName + "  Result: " + res.statusCode, req.getId());
+            if (res.statusCode > 399) {
+                log.Trace(apiName + "  Result: " + res.statusCode + "; Duration: " + totalDuration, req.getId());
+            }
         }));
 
         // call next middleware

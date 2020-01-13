@@ -51,6 +51,8 @@ export class CosmosDBProvider {
      * @param query The query to select the documents.
      */
     public async queryDocuments(query: string): Promise<any[]> {
+        // Initialize if not already set up
+        // TODO: Move this initialization to server.ts as this degrades initial query performance
         if (this.cosmosContainer == null) {
             try {
                 await this._initialize();
@@ -74,6 +76,8 @@ export class CosmosDBProvider {
      */
     public async getDocument(partitionKey: string,
                              documentId: string): Promise<any> {
+        // Initialize if not already set up
+        // TODO: Move this initialization to server.ts as this degrades initial query performance
         if (this.cosmosContainer == null) {
             try {
                 await this._initialize();
@@ -83,8 +87,6 @@ export class CosmosDBProvider {
         }
 
         return new Promise(async (resolve, reject) => {
-            this.logger.Trace("In CosmosDB getDocument");
-
             const { resource: result, statusCode: status } = await this.cosmosContainer.item(documentId, partitionKey).read();
             if (status === 200) {
                 resolve(result);
