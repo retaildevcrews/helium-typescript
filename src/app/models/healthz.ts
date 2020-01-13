@@ -1,4 +1,4 @@
-import { webInstanceRole } from "../../config/constants";
+import { version, webInstanceRole } from "../../config/constants";
 
 /**
  * @swagger
@@ -41,7 +41,7 @@ export class HealthzSuccessDetails {
     public instance: string;
 
     // TODO DYNAMIC
-    public version: string = "1.0.0";
+    public version: string = version;
 
     constructor() {
         const instanceId = process.env[webInstanceRole];
