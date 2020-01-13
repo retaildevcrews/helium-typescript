@@ -14,9 +14,10 @@ This sample is a Node.JS REST WebAPI application designed to "fork and code" wit
 
 - Azure CLI 2.0.72+ ([download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest))
 - Docker CLI ([download](https://docs.docker.com/install/))
+- Node.js 12.14.1+ ([download](https://nodejs.org/en/download/))
+- npm 6.14.4+ (comes with Node.js)
 - JQ ([download](https://stedolan.github.io/jq/download/))
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
-- TODO: Add other prerequisites for running app
 
 ## Setup
 
@@ -45,6 +46,15 @@ Run the application locally
 ```bash
 
 # make sure you are in the root of the repo
+
+# set required keyvaultname environment variable
+export KeyVaultName={name of your key vault}
+
+# log in with azure credentials (if not done already)
+az login
+
+# install modules in package.json file
+npm install
 
 # run the app
 npm run build
