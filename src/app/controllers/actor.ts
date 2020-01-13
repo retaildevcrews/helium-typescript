@@ -6,7 +6,6 @@ import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
 import { QueryUtilities } from "../../utilities/queryUtilities";
-import { actorDoesNotExistError } from "../../config/constants";
 import { Actor } from "../models/actor";
 import { defaultPageSize, maxPageSize } from "../../config/constants";
 
@@ -156,18 +155,13 @@ export class ActorController implements interfaces.Controller {
                 QueryUtilities.getPartitionKey(actorId),
                 actorId);
         } catch (err) {
-            if (err.toString().includes("NotFound")) {
+            result = err.toString();
+
+            if (err.toString().includes("404")) {
                 resCode = HttpStatus.NOT_FOUND;
-                result = actorDoesNotExistError;
             } else {
                 resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-                result = err.toString();
             }
-        }
-
-        if (!result) {
-            resCode = HttpStatus.NOT_FOUND;
-            result = actorDoesNotExistError;
         }
 
         return res.send(resCode, result);

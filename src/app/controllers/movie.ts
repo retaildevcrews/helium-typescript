@@ -5,7 +5,7 @@ import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
 import { QueryUtilities } from "../../utilities/queryUtilities";
-import { defaultPageSize, maxPageSize, movieDoesNotExistError } from "../../config/constants";
+import { defaultPageSize, maxPageSize } from "../../config/constants";
 import { Movie } from "../models/movie";
 
 /**
@@ -217,18 +217,13 @@ export class MovieController implements interfaces.Controller {
                 QueryUtilities.getPartitionKey(movieId),
                 movieId);
         } catch (err) {
-            if (err.toString().includes("NotFound")) {
+            result = err.toString();
+
+            if (err.toString().includes("404")) {
                 resCode = HttpStatus.NOT_FOUND;
-                result = movieDoesNotExistError;
             } else {
                 resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-                result = err.toString();
             }
-        }
-
-        if (!result) {
-            resCode = HttpStatus.NOT_FOUND;
-            result = movieDoesNotExistError;
         }
 
         return res.send(resCode, result);
