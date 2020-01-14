@@ -59,6 +59,14 @@ import { version } from "./config/constants";
     iocContainer.bind<ITelemProvider>("ITelemProvider").to(AppInsightsProvider).inSingletonScope();
     const telem: ITelemProvider = iocContainer.get<ITelemProvider>("ITelemProvider");
 
+    // initialize cosmos db provider
+    const cosmosDb: IDatabaseProvider = iocContainer.get<IDatabaseProvider>("IDatabaseProvider");
+    try {
+        await cosmosDb.initialize();
+    } catch (e) {
+        log.Trace("Cosmos failed to initialize: " + e);
+    }
+
     // create restify server
     const server = new InversifyRestifyServer(iocContainer);
 
