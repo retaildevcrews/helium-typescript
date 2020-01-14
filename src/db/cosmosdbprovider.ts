@@ -40,8 +40,9 @@ export class CosmosDBProvider {
      * Initialize the Cosmos DB Container.
      * This is handled in a separate method to avoid calling async operations in the constructor.
      */
-    public async initialize() {
+    private async _initialize() {
 
+        this.logger.Trace("Initializing CosmosDB Container");
         this.cosmosContainer = await this.cosmosClient.database(this.databaseId).container(this.containerId);
     }
 
@@ -50,6 +51,15 @@ export class CosmosDBProvider {
      * @param query The query to select the documents.
      */
     public async queryDocuments(query: string): Promise<any[]> {
+        // Initialize if not already set up
+        // TODO: Move this initialization to server.ts as this degrades initial query performance
+        if (this.cosmosContainer == null) {
+            try {
+                await this._initialize();
+            } catch (e) {
+                this.logger.Trace("No Cosmos setup: " + e);
+            }
+        }
         // Wrap all functionality in a promise to avoid forcing the caller to use callbacks
         return new Promise(async (resolve, reject) => {
             const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
@@ -66,6 +76,15 @@ export class CosmosDBProvider {
      */
     public async getDocument(partitionKey: string,
                              documentId: string): Promise<any> {
+        // Initialize if not already set up
+        // TODO: Move this initialization to server.ts as this degrades initial query performance
+        if (this.cosmosContainer == null) {
+            try {
+                await this._initialize();
+            } catch (e) {
+                this.logger.Trace("No Cosmos setup: " + e);
+            }
+        }
 
         return new Promise(async (resolve, reject) => {
             const { resource: result, statusCode: status } = await this.cosmosContainer.item(documentId, partitionKey).read();
