@@ -1,4 +1,4 @@
-import * as keyvault from "@azure/keyvault";
+import { SecretClient } from "@azure/keyvault-secrets";
 import { webInstanceRole } from "../config/constants";
 import { inject, injectable } from "inversify";
 import { ILoggingProvider } from "../logging/iLoggingProvider";
@@ -9,7 +9,7 @@ import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
  */
 @injectable()
 export class KeyVaultProvider {
-    private client: keyvault.KeyVaultClient;
+    private client: SecretClient;
 
     /**
      * Creates a new instance of the KeyVaultProvider class.
@@ -30,7 +30,7 @@ export class KeyVaultProvider {
             await this._initialize();
         }
 
-        const secret: string = await this.client.getSecret(this.url, name, "")
+        const secret: string = await this.client.getSecret(name)
             .then((s) => (s.value) as string)
             .catch((e) => {
                 if (name === "AppInsightsKey") {
@@ -56,6 +56,6 @@ export class KeyVaultProvider {
             await msRestNodeAuth.loginWithAppServiceMSI({ resource: "https://vault.azure.net" }) :
             await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 
-        this.client = new keyvault.KeyVaultClient(creds);
+        this.client = new SecretClient(this.url, creds);
     }
 }
