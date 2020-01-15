@@ -83,7 +83,7 @@ export class SuccessDetails {
  *           $ref: '#/components/schemas/SuccessDetails'
  */
 export class HealthzSuccess {
-    public status: string = "UP";
+    public status: string = "up";
     public details: SuccessDetails = new SuccessDetails();
 }
 
@@ -104,7 +104,7 @@ export class HealthzSuccess {
  *           $ref: '#/components/schemas/ErrorDetails'
  */
 export class HealthzError {
-    public status: string = "DOWN";
+    public status: string = "down";
     public details: ErrorDetails = new ErrorDetails();
 }
 
@@ -142,7 +142,7 @@ export class ErrorDetails {
  *           $ref: '#/components/schemas/HealthzSuccessDetails'
  */
 export class CosmosDbSuccess {
-    public status: string = "UP";
+    public status: string = "up";
     public details: HealthzSuccessDetails = new HealthzSuccessDetails();
 }
 
@@ -163,7 +163,7 @@ export class CosmosDbSuccess {
  *           $ref: '#/components/schemas/HealthzErrorDetails'
  */
 export class CosmosDbError {
-    public status: string = "DOWN";
+    public status: string = "down";
     public details: HealthzErrorDetails = new HealthzErrorDetails();
 }
 
