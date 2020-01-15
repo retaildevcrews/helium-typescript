@@ -64,8 +64,9 @@ import { version } from "./config/constants";
     try {
         await cosmosDb.initialize();
     } catch (err) {
-        log.Trace("Cosmos failed to initialize: " + err);
+        log.Error(Error(err), "Cosmos failed to initialize: " + err);
     }
+
     // create restify server
     const server = new InversifyRestifyServer(iocContainer);
 
