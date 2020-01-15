@@ -19,6 +19,10 @@ This sample is a Node.JS REST WebAPI application designed to "fork and code" wit
 - JQ ([download](https://stedolan.github.io/jq/download/))
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
+## Package Dependency Vulnerability
+
+Currently, helium-typescript has a dependncy on inversify-restify-utils which has a [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
+
 ## Setup
 
 - Fork this repo and clone to your local machine
@@ -34,6 +38,10 @@ Build the container using Docker
 # make sure you are in the root of the repo
 # build the image
 docker build -t helium-typescript -f Dockerfile
+
+# note: you may see output like the following, this is expected and safe to ignore
+# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules/mocha/node_modules/fsevents):
+# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 
 # Tag and push the image to your Docker repo
 
@@ -54,6 +62,9 @@ export KeyVaultName={name of your key vault}
 az login
 
 # install modules in package.json file
+# note: you may see output like the following, this is expected and safe to ignore
+# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules/mocha/node_modules/fsevents):
+# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 npm install
 
 # run the app
