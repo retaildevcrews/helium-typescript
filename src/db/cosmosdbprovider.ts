@@ -2,6 +2,8 @@ import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable, named } from "inversify";
 import { ILoggingProvider } from "../logging/iLoggingProvider";
 import { QueryUtilities } from "../utilities/queryUtilities";
+import { Actor } from "../app/models/actor";
+import { defaultPageSize, maxPageSize } from "../config/constants";
 
 /**
  * Handles executing queries against CosmosDB
@@ -14,6 +16,9 @@ export class CosmosDBProvider {
     private containerId: string;
     private cosmosContainer: Container;
     private feedOptions: FeedOptions = { maxItemCount: 2000 };
+
+    private readonly _actorSelect: string = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
+    private readonly _actorOrderBy: string = " order by m.name";
 
     /**
      * Creates a new instance of the CosmosDB class.
@@ -76,5 +81,49 @@ export class CosmosDBProvider {
                 reject("Cosmos Error: " + status);
             }
         });
+    }
+
+    /**
+     * Runs the given query for actors against the database.
+     * @param queryParams The query params used to select the actor documents.
+     */
+    public async queryActors(queryParams: any): Promise<Actor[]> {
+        let sql: string = this._actorSelect;
+
+        let pageSize: number = 100;
+        let pageNumber: number = 1;
+        let actorName: string = queryParams.q;
+
+        // handle paging parameters
+        // fall back to default values if none provided in query
+        pageSize = (queryParams.pageSize) ? queryParams.pageSize : pageSize;
+        pageNumber = (queryParams.pageNumber) ? queryParams.pageNumber : pageNumber;
+
+        if (pageSize < 1) {
+            pageSize = defaultPageSize;
+        } else if (pageSize > maxPageSize) {
+            pageSize = maxPageSize;
+        }
+
+        pageNumber--;
+
+        if (pageNumber < 0) {
+            pageNumber = 0;
+        }
+
+        const offsetLimit = " offset " + pageNumber + " limit " + pageSize + " ";
+
+        // apply search term if provided in query
+        if (actorName) {
+            actorName = actorName.trim().toLowerCase().replace("'", "''");
+
+            if (actorName) {
+                sql += " and contains(m.textSearch, '" + actorName + "')";
+            }
+        }
+
+        sql += this._actorOrderBy + offsetLimit;
+
+        return await this.queryDocuments(sql);
     }
 }

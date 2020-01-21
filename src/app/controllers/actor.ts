@@ -13,9 +13,6 @@ import { defaultPageSize, maxPageSize } from "../../config/constants";
 @injectable()
 export class ActorController implements interfaces.Controller {
 
-    private readonly _actorSelect: string = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
-    private readonly _actorOrderBy: string = " order by m.name";
-
     // Instantiate the actor controller
     constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
                 @inject("ITelemProvider") private telem: ITelemProvider,
@@ -65,49 +62,13 @@ export class ActorController implements interfaces.Controller {
      */
     @Get("/")
     public async getAllActors(req: Request, res) {
-
-        let sql: string = this._actorSelect;
-
-        let pageSize: number = 100;
-        let pageNumber: number = 1;
-        let actorName: string = req.query.q;
-
-        // handle paging parameters
-        // fall back to default values if none provided in query
-        pageSize = (req.query.pageSize) ? req.query.pageSize : pageSize;
-        pageNumber = (req.query.pageNumber) ? req.query.pageNumber : pageNumber;
-
-        if (pageSize < 1) {
-            pageSize = defaultPageSize;
-        } else if (pageSize > maxPageSize) {
-            pageSize = maxPageSize;
-        }
-
-        pageNumber--;
-
-        if (pageNumber < 0) {
-            pageNumber = 0;
-        }
-
-        const offsetLimit = " offset " + pageNumber + " limit " + pageSize + " ";
-
-        // apply search term if provided in query
-        if (actorName) {
-            actorName = actorName.trim().toLowerCase().replace("'", "''");
-
-            if (actorName) {
-                sql += " and contains(m.textSearch, '" + actorName + "')";
-            }
-        }
-
-        sql += this._actorOrderBy + offsetLimit;
-
-        // run query, catch errors
         let resCode: number = HttpStatus.OK;
         let results: Actor[];
+
         try {
-            results = await this.cosmosDb.queryDocuments(sql);
+            results = await this.cosmosDb.queryActors(req.query);
         } catch (err) {
+            this.logger.Error(Error(), "CosmosException: Healthz: " + err.code + "\n" + err);
             resCode = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
