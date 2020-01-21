@@ -13,8 +13,7 @@ export interface IDatabaseProvider {
 
     /**
      * Retrieves a specific document by Id.
-     * @param partitionKey The partition key for the document.
      * @param documentId The id of the document to query.
      */
-    getDocument(partitionKey: string, documentId: string): Promise<any>;
+    getDocument(documentId: string): Promise<any>;
 }
