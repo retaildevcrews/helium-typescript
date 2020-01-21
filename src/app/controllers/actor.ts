@@ -6,7 +6,6 @@ import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
 import { Actor } from "../models/actor";
-import { defaultPageSize, maxPageSize } from "../../config/constants";
 
 // Controller implementation for our actors endpoint
 @Controller("/api/actors")
