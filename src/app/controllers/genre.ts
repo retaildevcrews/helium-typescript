@@ -5,6 +5,7 @@ import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
+import { sqlGenres } from "../../config/constants";
 
 /**
  * controller implementation for our genres endpoint
@@ -12,8 +13,6 @@ import { ITelemProvider } from "../../telem/itelemprovider";
 @Controller("/api/genres")
 @injectable()
 export class GenreController implements interfaces.Controller {
-
-  private readonly _sql: string = "SELECT VALUE root.id FROM root where root.type = 'Genre'";
 
   constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
               @inject("ITelemProvider") private telem: ITelemProvider,
@@ -48,7 +47,7 @@ export class GenreController implements interfaces.Controller {
     let resCode: number = HttpStatus.OK;
     let results: string[];
     try {
-      results = await this.cosmosDb.queryDocuments(this._sql);
+      results = await this.cosmosDb.queryDocuments(sqlGenres);
     } catch (err) {
       resCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }

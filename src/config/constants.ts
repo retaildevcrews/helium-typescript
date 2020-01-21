@@ -12,3 +12,5 @@ export const version = process.env.npm_package_version;
 
 export const defaultPageSize = 100;
 export const maxPageSize = 1000;
+
+export const sqlGenres = "SELECT VALUE m.id FROM m where m.type = 'Genre'";

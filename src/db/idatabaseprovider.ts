@@ -16,4 +16,16 @@ export interface IDatabaseProvider {
      * @param documentId The id of the document to query.
      */
     getDocument(documentId: string): Promise<any>;
+
+    /**
+     * Runs the given query for actors against the database.
+     * @param queryParams The query params used to select the actor documents.
+     */
+    queryActors(queryParams: any): Promise<any[]>;
+
+    /**
+     * Runs the given query for movies against the database.
+     * @param queryParams The query params used to select the movie documents.
+     */
+    queryMovies(queryParams: any): Promise<any[]>;
 }
