@@ -39,7 +39,7 @@ export class HealthzController implements interfaces.Controller {
      *       '200':
      *         description: Returns a plain text health status as text/plain
      */
-@Get("/")
+    @Get("/")
     public async healthCheck(req, res) {
 
         const healthCheckResult = await this.runHealthChecksAsync();
@@ -61,7 +61,7 @@ export class HealthzController implements interfaces.Controller {
      *       '200':
      *         description: Returns an IETF (draft) health+json representation of the full Health Check
      */
-@Get("/ietf")
+    @Get("/ietf")
     public async healthCheckIetf(req, res) {
         const healthCheckResult = await this.runHealthChecksAsync();
         const resCode = healthCheckResult.status === IetfStatus.down ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
