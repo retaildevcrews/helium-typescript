@@ -4,7 +4,6 @@ import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
-import { defaultPageSize, maxPageSize } from "../../config/constants";
 import { Movie } from "../models/movie";
 
 /**
@@ -13,9 +12,6 @@ import { Movie } from "../models/movie";
 @Controller("/api/movies")
 @injectable()
 export class MovieController implements interfaces.Controller {
-
-    private readonly _movieSelect: string = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
-    private readonly _movieOrderBy: string = " order by m.title";
 
     constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
                 @inject("ITelemProvider") private telem: ITelemProvider,
@@ -90,87 +86,11 @@ export class MovieController implements interfaces.Controller {
      */
     @Get("/")
     public async getAllMovies(req, res) {
-        let sql: string = this._movieSelect;
-        let orderby: string = this._movieOrderBy;
-
-        let pageSize: number = 100;
-        let pageNumber: number = 1;
-        let queryParam: string;
-        let actorId: string;
-        let genre: string;
-
         let resCode: number = HttpStatus.OK;
         let results: Movie[];
 
-        // handle paging parameters
-        // fall back to default values if none provided in query
-        pageSize = (req.query.pageSize) ? req.query.pageSize : pageSize;
-        pageNumber = (req.query.pageNumber) ? req.query.pageNumber : pageNumber;
-
-        if (pageSize < 1) {
-            pageSize = defaultPageSize;
-        } else if (pageSize > maxPageSize) {
-            pageSize = maxPageSize;
-        }
-
-        pageNumber--;
-
-        if (pageNumber < 0) {
-            pageNumber = 0;
-        }
-
-        let offsetLimit = " offset " + pageNumber + " limit " + pageSize + " ";
-
-        // handle query parameters and build sql query
-        if (req.query.q) {
-            queryParam = req.query.q.trim().toLowerCase().replace("'", "''");
-            if (queryParam) {
-                sql += " and contains(m.textSearch, '" + queryParam + "') ";
-            }
-        }
-
-        if (req.query.year > 0) {
-            sql += " and m.year = " + req.query.year + " ";
-        }
-
-        if (req.query.rating > 0) {
-            sql += " and m.rating >= " + req.query.rating + " ";
-        }
-
-        if (req.query.toprated) {
-            sql = "select top 10 " + sql.substring(7);
-            orderby = " order by m.rating desc";
-            offsetLimit = "";
-        }
-
-        if (req.query.actorid) {
-            actorId = req.query.actorid.trim().toLowerCase().replace("'", "''");
-
-            if (actorId) {
-                sql += " and array_contains(m.roles, { actorId: '";
-                sql += actorId;
-                sql += "' }, true) ";
-            }
-        }
-
-        if (req.query.genre) {
-            const sqlGenreQuery = "select value m.genre from m where m.type = 'Genre' and m.id = '" + req.query.genre.trim().toLowerCase() + "'";
-            const genreResults = await this.cosmosDb.queryDocuments(sqlGenreQuery);
-            genre = genreResults[0];
-
-            if (genre == null) {
-                // return empty array if no movies found
-                return res.send(resCode, new Movie[0]());
-            }
-
-            sql += " and array_contains(m.genres, '" + genre + "')";
-        }
-
-        sql += orderby + offsetLimit;
-
-        // run query, catch errors
         try {
-            results = await this.cosmosDb.queryDocuments(sql);
+            results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
             resCode = HttpStatus.INTERNAL_SERVER_ERROR;
         }

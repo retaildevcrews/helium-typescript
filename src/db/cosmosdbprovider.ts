@@ -3,6 +3,7 @@ import { inject, injectable, named } from "inversify";
 import { ILoggingProvider } from "../logging/iLoggingProvider";
 import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor } from "../app/models/actor";
+import { Movie } from "../app/models/movie";
 import { defaultPageSize, maxPageSize } from "../config/constants";
 
 /**
@@ -19,6 +20,8 @@ export class CosmosDBProvider {
 
     private readonly _actorSelect: string = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
     private readonly _actorOrderBy: string = " order by m.name";
+    private readonly _movieSelect: string = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
+    private readonly _movieOrderBy: string = " order by m.title";
 
     /**
      * Creates a new instance of the CosmosDB class.
@@ -123,6 +126,89 @@ export class CosmosDBProvider {
         }
 
         sql += this._actorOrderBy + offsetLimit;
+
+        return await this.queryDocuments(sql);
+    }
+
+    /**
+     * Runs the given query for movies against the database.
+     * @param queryParams The query params used to select the movie documents.
+     */
+    public async queryMovies(queryParams: any): Promise<Movie[]> {
+        let sql: string = this._movieSelect;
+        let orderby: string = this._movieOrderBy;
+
+        let pageSize: number = 100;
+        let pageNumber: number = 1;
+        let queryParam: string;
+        let actorId: string;
+        let genre: string;
+
+        // handle paging parameters
+        // fall back to default values if none provided in query
+        pageSize = (queryParams.pageSize) ? queryParams.pageSize : pageSize;
+        pageNumber = (queryParams.pageNumber) ? queryParams.pageNumber : pageNumber;
+
+        if (pageSize < 1) {
+            pageSize = defaultPageSize;
+        } else if (pageSize > maxPageSize) {
+            pageSize = maxPageSize;
+        }
+
+        pageNumber--;
+
+        if (pageNumber < 0) {
+            pageNumber = 0;
+        }
+
+        let offsetLimit = " offset " + pageNumber + " limit " + pageSize + " ";
+
+        // handle query parameters and build sql query
+        if (queryParams.q) {
+            queryParam = queryParams.q.trim().toLowerCase().replace("'", "''");
+            if (queryParam) {
+                sql += " and contains(m.textSearch, '" + queryParam + "') ";
+            }
+        }
+
+        if (queryParams.year > 0) {
+            sql += " and m.year = " + queryParams.year + " ";
+        }
+
+        if (queryParams.rating > 0) {
+            sql += " and m.rating >= " + queryParams.rating + " ";
+        }
+
+        if (queryParams.toprated) {
+            sql = "select top 10 " + sql.substring(7);
+            orderby = " order by m.rating desc";
+            offsetLimit = "";
+        }
+
+        if (queryParams.actorid) {
+            actorId = queryParams.actorid.trim().toLowerCase().replace("'", "''");
+
+            if (actorId) {
+                sql += " and array_contains(m.roles, { actorId: '";
+                sql += actorId;
+                sql += "' }, true) ";
+            }
+        }
+
+        if (queryParams.genre) {
+            const sqlGenreQuery = "select value m.genre from m where m.type = 'Genre' and m.id = '" + queryParams.genre.trim().toLowerCase() + "'";
+            const genreResults = await this.queryDocuments(sqlGenreQuery);
+            genre = genreResults[0];
+
+            if (genre == null) {
+                // return empty array if no movies found
+                return new Movie[0]();
+            }
+
+            sql += " and array_contains(m.genres, '" + genre + "')";
+        }
+
+        sql += orderby + offsetLimit;
 
         return await this.queryDocuments(sql);
     }
