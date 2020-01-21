@@ -5,7 +5,6 @@ import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
-import { QueryUtilities } from "../../utilities/queryUtilities";
 import { Actor } from "../models/actor";
 import { defaultPageSize, maxPageSize } from "../../config/constants";
 
@@ -151,9 +150,7 @@ export class ActorController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let result: Actor;
         try {
-            result = await this.cosmosDb.getDocument(
-                QueryUtilities.getPartitionKey(actorId),
-                actorId);
+            result = await this.cosmosDb.getDocument(actorId);
         } catch (err) {
             result = err.toString();
 

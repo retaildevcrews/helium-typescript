@@ -4,7 +4,6 @@ import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
-import { QueryUtilities } from "../../utilities/queryUtilities";
 import { defaultPageSize, maxPageSize } from "../../config/constants";
 import { Movie } from "../models/movie";
 
@@ -213,9 +212,7 @@ export class MovieController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let result: Movie;
         try {
-            result = await this.cosmosDb.getDocument(
-                QueryUtilities.getPartitionKey(movieId),
-                movieId);
+            result = await this.cosmosDb.getDocument(movieId);
         } catch (err) {
             result = err.toString();
 

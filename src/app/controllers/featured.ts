@@ -4,7 +4,6 @@ import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
-import { QueryUtilities } from "../../utilities/queryUtilities";
 import { Movie } from "../models/movie";
 
 /**
@@ -56,9 +55,7 @@ export class FeaturedController implements interfaces.Controller {
 
             if (this._featuredMovies != null && this._featuredMovies.length > 0 ) {
                 const movieId = this._featuredMovies[ Math.floor(Math.random() * ( this._featuredMovies.length - 1 )) ];
-                result = await this.cosmosDb.getDocument(
-                    QueryUtilities.getPartitionKey(movieId),
-                    movieId);
+                result = await this.cosmosDb.getDocument(movieId);
             }
         } catch (err) {
             if (err.toString().includes("NotFound")) {

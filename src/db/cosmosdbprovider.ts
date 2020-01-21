@@ -1,6 +1,7 @@
 import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable, named } from "inversify";
 import { ILoggingProvider } from "../logging/iLoggingProvider";
+import { QueryUtilities } from "../utilities/queryUtilities";
 
 /**
  * Handles executing queries against CosmosDB
@@ -62,14 +63,13 @@ export class CosmosDBProvider {
 
     /**
      * Retrieves a specific document by Id.
-     * @param partitionKey The partition key for the document.
      * @param documentId The id of the document to query.
      */
-    public async getDocument(partitionKey: string,
-                             documentId: string): Promise<any> {
+    public async getDocument(documentId: string): Promise<any> {
 
         return new Promise(async (resolve, reject) => {
-            const { resource: result, statusCode: status } = await this.cosmosContainer.item(documentId, partitionKey).read();
+            const { resource: result, statusCode: status } =
+                await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
             if (status === 200) {
                 resolve(result);
             } else {
