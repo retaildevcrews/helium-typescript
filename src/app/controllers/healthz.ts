@@ -4,7 +4,13 @@ import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
-import { HealthzSuccessDetails, HealthzSuccess, HealthzError } from "../models/healthz";
+import { sqlGenres, webInstanceRole, version } from "../../config/constants";
+
+enum IetfStatus {
+    up = "up",
+    warn = "warn",
+    down = "down",
+}
 
 /**
  * controller implementation for our healthz endpoint
@@ -26,56 +32,135 @@ export class HealthzController implements interfaces.Controller {
      *
      * /healthz:
      *   get:
-     *     description: Returns a HealthzSuccess or HealthzError as application/json
+     *     description: Returns a plain text health status (Healthy, Degraded or Unhealthy)
      *     tags:
      *       - Healthz
      *     responses:
      *       '200':
-     *         description: Returns a HealthzSuccess as application/json
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/HealthzSuccess'
-     *       '503':
-     *         description: Returns a HealthzError as application/json due to unexpected results
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/HealthzError'
+     *         description: Returns a plain text health status as text/plain
      */
     @Get("/")
-    public async healthcheck(req, res) {
-        // healthcheck counts the document types
-        let resCode: number = HttpStatus.OK;
+    public async healthCheck(req, res) {
+
+        const healthCheckResult = await this.runHealthChecksAsync();
+        const resCode = healthCheckResult.status === IetfStatus.down ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
+
+        res.setHeader("Content-Type", "text/plain");
+        return res.send(resCode, healthCheckResult.status);
+    }
+
+    /**
+     * @swagger
+     *
+     * /healthz/ietf:
+     *   get:
+     *     description: Returns an IETF (draft) health+json representation of the full Health Check
+     *     tags:
+     *       - Healthz
+     *     responses:
+     *       '200':
+     *         description: Returns an IETF (draft) health+json representation of the full Health Check
+     */
+    @Get("/ietf")
+    public async healthCheckIetf(req, res) {
+        const healthCheckResult = await this.runHealthChecksAsync();
+        const resCode = healthCheckResult.status === IetfStatus.down ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
+
+        res.setHeader("Content-Type", "application/health+json");
+        res.writeHead(resCode, {
+            "Content-Length": Buffer.byteLength(JSON.stringify(healthCheckResult)),
+            "Content-Type": "application/health+json",
+        });
+        res.write(JSON.stringify(healthCheckResult));
+    }
+
+    /**
+     * Executes all health checks and builds the final ietf result
+     */
+    private async runHealthChecksAsync() {
+        const ietfResult: {[k: string]: any} = {};
+        ietfResult.status = IetfStatus.up;
+        ietfResult.serviceId =  "helium-typescript";
+        ietfResult.description = "Helium Typescript Health Check";
+        ietfResult.instance = process.env[webInstanceRole] ?? "unknown";
+        ietfResult.version = version;
+
+        const healthChecks: {[k: string]: any} = {};
         try {
-            const healthzSuccess = new HealthzSuccess();
-            const healthzDetails = new HealthzSuccessDetails();
-            healthzDetails.movies = await this.getcount("Movie");
-            healthzDetails.actors = await this.getcount("Actor");
-            healthzDetails.genres = await this.getcount("Genre");
+            healthChecks.getGenresAsync = (await this.runHealthCheckAsync("/api/genres", 400));
+            healthChecks.getActorByIdAsync = (await this.runHealthCheckAsync("/api/actors/nm0000173", 250));
+            healthChecks.getMovieByIdAsync = (await this.runHealthCheckAsync("/api/movies/tt0133093", 250));
+            healthChecks.searchMoviesAsync = (await this.runHealthCheckAsync("/api/movies?q=ring", 400));
+            healthChecks.searchActorsAsync = (await this.runHealthCheckAsync("/api/actors?q=nicole", 400));
+            healthChecks.getTopRatedMoviesAsync = (await this.runHealthCheckAsync("/api/movies?toprated=true", 400));
 
-            healthzSuccess.details.cosmosDb.details = healthzDetails;
+            // if any health check has a warn or down status
+            // set overall status to the worst status
+            for (const check in healthChecks) {
+                if (healthChecks.hasOwnProperty(check)) {
+                    if (!(healthChecks[check].status === IetfStatus.up)) {
+                        ietfResult.status = healthChecks[check].status;
+                    }
 
-            res.setHeader("Content-Type", "application/json");
-            return res.send(resCode, healthzSuccess);
+                    if (ietfResult.status === IetfStatus.down) {
+                        break;
+                    }
+                }
+            }
+
+            ietfResult.checks = healthChecks;
+            return ietfResult;
         } catch (err) {
-            // TODO: Clean up error/exception handling
-            this.logger.Error(Error(), "CosmosException: Healthz: " + err.code + "\n" + err);
-
-            const e: HealthzError = new HealthzError();
-            e.details.cosmosDb.details.error = err.Message;
-            resCode = e.details.cosmosDb.details.status;
-
-            return res.send(resCode, e);
+            this.logger.Error(Error(), "CosmosException: Healthz: " + err);
+            ietfResult.status = IetfStatus.down;
+            ietfResult.cosmosException = err;
+            ietfResult.checks = healthChecks;
+            return ietfResult;
         }
     }
 
-    private async getcount(type) {
-        const sql: string = "select value count(1) from m where m.type = '" + type + "'";
+    /**
+     * Executes a health check and builds the result
+     * @param endpoint The affected endpoint for the health check to run.
+     * @param target The target duration for the health check endpoint call.
+     */
+    private async runHealthCheckAsync(endpoint: string, target: number) {
+        // start tracking time
+        const start = new Date();
 
-        const results = await this.cosmosDb.queryDocuments(sql);
+        // execute health check query based on endpoint
+        if (endpoint === "/api/genres") {
+            await this.cosmosDb.queryDocuments(sqlGenres);
+        } else if (endpoint === "/api/actors/nm0000173") {
+            await this.cosmosDb.getDocument("nm0000173");
+        } else if (endpoint === "/api/movies/tt0133093") {
+            await this.cosmosDb.getDocument("tt0133093");
+        } else if (endpoint === "/api/movies?q=ring") {
+            await this.cosmosDb.queryMovies({q: "ring"});
+        } else if (endpoint === "/api/actors?q=nicole") {
+            await this.cosmosDb.queryActors({q: "nicole"});
+        } else {
+            await this.cosmosDb.queryMovies({toprated: "true"});
+        }
 
-        const resultNum = parseInt(results[0], 10);
-        return resultNum;
+        const duration = (new Date()).getMilliseconds() - start.getMilliseconds();
+
+        // build health check result following ietf standard
+        const healthCheckResult: {[k: string]: any} = {};
+        healthCheckResult.status = IetfStatus.up;
+        healthCheckResult.componentType = "CosmosDB";
+        healthCheckResult.observedUnit = "ms";
+        healthCheckResult.observedValue = duration;
+        healthCheckResult.targetValue = target;
+        healthCheckResult.time = start.toISOString();
+        healthCheckResult.affectedEndpoints = endpoint;
+
+        // set to warn if target duration is not met
+        if (healthCheckResult.observedValue > healthCheckResult.targetValue) {
+            healthCheckResult.status = IetfStatus.warn;
+            healthCheckResult.message = "Request exceeded expected duration";
+        }
+
+        return healthCheckResult;
     }
 }
