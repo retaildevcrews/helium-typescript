@@ -137,6 +137,11 @@ import { version } from "./config/constants";
             app.get("/node_modules/swagger-ui-dist/*", restify.plugins.serveStatic({
                 directory: __dirname + "/..",
             }));
+
+            app.get("/version", (req, res) => {
+                res.setHeader("Content-Type", "text/plain");
+                res.send(version);
+            });
         }).build().listen(config.port, () => {
             log.Trace("Server is listening on port " + config.port);
             telem.trackEvent("API Server: Server started on port " + config.port);
