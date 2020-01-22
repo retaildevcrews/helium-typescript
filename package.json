@@ -9,8 +9,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test-unit": "sh ./scripts/run-unit-tests.sh",
-    "test-integration": "mocha --reporter spec --timeout 5000 --compilers ts:ts-node/register '**/*.integration.ts'",
+    "test": "jest",
+    "test-integration": "",
     "build": "gulp scripts",
     "docker-build": "docker build -t helium:canary .",
     "docker-run": "docker run -it -p 8080:8080 helium:canary"
@@ -42,16 +42,16 @@
     "reflect-metadata": "^0.1.13",
     "restify": "^8.5.1",
     "swagger-jsdoc": "^3.5.0",
-    "swagger-ui-dist": "^3.24.3",
-    "uuid": "^3.3.3"
+    "swagger-ui-dist": "^3.25.0",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.7",
-    "@types/mocha": "^5.2.7",
+    "@types/jest": "^24.9.0",
     "gulp": "^4.0.2",
     "gulp-typescript": "^6.0.0-alpha.1",
-    "mocha": "^7.0.0",
+    "jest": "^25.1.0",
+    "ts-jest": "^24.3.0",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   }
 }

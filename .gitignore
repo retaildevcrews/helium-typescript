@@ -2,6 +2,7 @@ node_modules
 dist
 *.env
 .terraform
+coverage
 ### OSX ###
 # General
 .DS_Store
