@@ -126,7 +126,8 @@ export class HealthzController implements interfaces.Controller {
      */
     private async runHealthCheckAsync(endpoint: string, target: number) {
         // start tracking time
-        const start = new Date();
+        const startDate = new Date();
+        const start = process.hrtime();
 
         // execute health check query based on endpoint
         if (endpoint === "/api/genres") {
@@ -143,16 +144,18 @@ export class HealthzController implements interfaces.Controller {
             await this.cosmosDb.queryMovies({toprated: "true"});
         }
 
-        const duration = (new Date()).getMilliseconds() - start.getMilliseconds();
+        // const duration = (new Date()).getMilliseconds() - start.getMilliseconds();
+        const hrtime = process.hrtime(start);
+        const duration = ((hrtime[0] * 1e9) + hrtime[1]) / 1e6;
 
         // build health check result following ietf standard
         const healthCheckResult: {[k: string]: any} = {};
         healthCheckResult.status = IetfStatus.up;
         healthCheckResult.componentType = "CosmosDB";
         healthCheckResult.observedUnit = "ms";
-        healthCheckResult.observedValue = duration;
+        healthCheckResult.observedValue = duration.toFixed(0);
         healthCheckResult.targetValue = target;
-        healthCheckResult.time = start.toISOString();
+        healthCheckResult.time = startDate.toISOString();
         healthCheckResult.affectedEndpoints = endpoint;
 
         // set to warn if target duration is not met
