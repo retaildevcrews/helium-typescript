@@ -30,14 +30,19 @@ Currently, helium-typescript has a dependncy on inversify-restify-utils which ha
 
 Build the container using Docker
 
-- The unit tests run as part of the Docker build process. You can also run the unit tests manually. (TODO: Create Unit Tests)
+- The unit tests run as part of the Docker build process. You can also run the unit tests manually.
+
+```bash
+npm run test-unit
+```
+
 - For instructions on building the container with ACR, please see the Helium [readme](https://github.com/retaildevcrews/helium)
 
 ```bash
 
 # make sure you are in the root of the repo
 # build the image
-docker build -t helium-typescript -f Dockerfile
+docker build -t helium-typescript -f Dockerfile .
 
 # note: you may see output like the following, this is expected and safe to ignore
 # npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules/mocha/node_modules/fsevents):
