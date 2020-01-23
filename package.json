@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "jest",
+    "test-unit": "jest",
     "test-integration": "",
     "build": "gulp scripts",
     "docker-build": "docker build -t helium:canary .",
