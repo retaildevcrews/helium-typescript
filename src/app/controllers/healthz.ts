@@ -144,8 +144,9 @@ export class HealthzController implements interfaces.Controller {
             await this.cosmosDb.queryMovies({toprated: "true"});
         }
 
-        // const duration = (new Date()).getMilliseconds() - start.getMilliseconds();
         const hrtime = process.hrtime(start);
+
+        // convert to milliseconds
         const duration = ((hrtime[0] * 1e9) + hrtime[1]) / 1e6;
 
         // build health check result following ietf standard
