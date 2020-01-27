@@ -7,9 +7,9 @@ import { ITelemProvider } from "../../telem/itelemprovider";
 import { sqlGenres, webInstanceRole, version } from "../../config/constants";
 
 enum IetfStatus {
-    up = "up",
+    pass = "pass",
     warn = "warn",
-    down = "down",
+    fail = "fail",
 }
 
 /**
@@ -43,7 +43,7 @@ export class HealthzController implements interfaces.Controller {
     public async healthCheck(req, res) {
 
         const healthCheckResult = await this.runHealthChecksAsync();
-        const resCode = healthCheckResult.status === IetfStatus.down ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
+        const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
         res.setHeader("Content-Type", "text/plain");
         return res.send(resCode, healthCheckResult.status);
@@ -64,7 +64,7 @@ export class HealthzController implements interfaces.Controller {
     @Get("/ietf")
     public async healthCheckIetf(req, res) {
         const healthCheckResult = await this.runHealthChecksAsync();
-        const resCode = healthCheckResult.status === IetfStatus.down ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
+        const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
         res.setHeader("Content-Type", "application/health+json");
         res.writeHead(resCode, {
@@ -79,7 +79,7 @@ export class HealthzController implements interfaces.Controller {
      */
     private async runHealthChecksAsync() {
         const ietfResult: {[k: string]: any} = {};
-        ietfResult.status = IetfStatus.up;
+        ietfResult.status = IetfStatus.pass;
         ietfResult.serviceId =  "helium-typescript";
         ietfResult.description = "Helium Typescript Health Check";
         ietfResult.instance = process.env[webInstanceRole] ?? "unknown";
@@ -98,11 +98,11 @@ export class HealthzController implements interfaces.Controller {
             // set overall status to the worst status
             for (const check in healthChecks) {
                 if (healthChecks.hasOwnProperty(check)) {
-                    if (!(healthChecks[check].status === IetfStatus.up)) {
+                    if (!(healthChecks[check].status === IetfStatus.pass)) {
                         ietfResult.status = healthChecks[check].status;
                     }
 
-                    if (ietfResult.status === IetfStatus.down) {
+                    if (ietfResult.status === IetfStatus.fail) {
                         break;
                     }
                 }
@@ -112,7 +112,7 @@ export class HealthzController implements interfaces.Controller {
             return ietfResult;
         } catch (err) {
             this.logger.Error(Error(), "CosmosException: Healthz: " + err);
-            ietfResult.status = IetfStatus.down;
+            ietfResult.status = IetfStatus.fail;
             ietfResult.cosmosException = err;
             ietfResult.checks = healthChecks;
             return ietfResult;
@@ -151,7 +151,7 @@ export class HealthzController implements interfaces.Controller {
 
         // build health check result following ietf standard
         const healthCheckResult: {[k: string]: any} = {};
-        healthCheckResult.status = IetfStatus.up;
+        healthCheckResult.status = IetfStatus.pass;
         healthCheckResult.componentType = "CosmosDB";
         healthCheckResult.observedUnit = "ms";
         healthCheckResult.observedValue = duration.toFixed(0);
