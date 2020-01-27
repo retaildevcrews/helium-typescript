@@ -3,15 +3,20 @@
  */
 export class DateUtilities {
 
-    public static getTimestamp(): number {
-        return Date.now();
-    }
-
     public static getTimer() {
         const start: number = Date.now();
 
         return () => {
             return Date.now() - start;
         };
+    }
+
+    // Calculate duration (in ms) from node process hrtime
+    public static getDurationMS(hrtime: [number, number]): string {
+
+        // convert to milliseconds
+        const duration = ((hrtime[0] * 1e9) + hrtime[1]) / 1e6;
+
+        return duration.toFixed(0);
     }
 }
