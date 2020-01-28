@@ -5,11 +5,12 @@ import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
 import { ITelemProvider } from "../../telem/itelemprovider";
 import { sqlGenres, webInstanceRole, version } from "../../config/constants";
+import { DateUtilities } from "../../utilities/dateUtilities";
 
 enum IetfStatus {
-    up = "up",
+    pass = "pass",
     warn = "warn",
-    down = "down",
+    fail = "fail",
 }
 
 /**
@@ -43,7 +44,7 @@ export class HealthzController implements interfaces.Controller {
     public async healthCheck(req, res) {
 
         const healthCheckResult = await this.runHealthChecksAsync();
-        const resCode = healthCheckResult.status === IetfStatus.down ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
+        const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
         res.setHeader("Content-Type", "text/plain");
         return res.send(resCode, healthCheckResult.status);
@@ -64,7 +65,7 @@ export class HealthzController implements interfaces.Controller {
     @Get("/ietf")
     public async healthCheckIetf(req, res) {
         const healthCheckResult = await this.runHealthChecksAsync();
-        const resCode = healthCheckResult.status === IetfStatus.down ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
+        const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
         res.setHeader("Content-Type", "application/health+json");
         res.writeHead(resCode, {
@@ -79,30 +80,49 @@ export class HealthzController implements interfaces.Controller {
      */
     private async runHealthChecksAsync() {
         const ietfResult: {[k: string]: any} = {};
-        ietfResult.status = IetfStatus.up;
+        ietfResult.status = IetfStatus.pass;
         ietfResult.serviceId =  "helium-typescript";
         ietfResult.description = "Helium Typescript Health Check";
         ietfResult.instance = process.env[webInstanceRole] ?? "unknown";
         ietfResult.version = version;
 
+        // Declare health checks
         const healthChecks: {[k: string]: any} = {};
+        const getGenres: {[k: string]: any} = {};
+        const getActorById: {[k: string]: any} = {};
+        const getMovieById: {[k: string]: any} = {};
+        const searchMovies: {[k: string]: any} = {};
+        const searchActors: {[k: string]: any} = {};
+        const getTopRatedMovies: {[k: string]: any} = {};
+
         try {
-            healthChecks.getGenresAsync = (await this.runHealthCheckAsync("/api/genres", 400));
-            healthChecks.getActorByIdAsync = (await this.runHealthCheckAsync("/api/actors/nm0000173", 250));
-            healthChecks.getMovieByIdAsync = (await this.runHealthCheckAsync("/api/movies/tt0133093", 250));
-            healthChecks.searchMoviesAsync = (await this.runHealthCheckAsync("/api/movies?q=ring", 400));
-            healthChecks.searchActorsAsync = (await this.runHealthCheckAsync("/api/actors?q=nicole", 400));
-            healthChecks.getTopRatedMoviesAsync = (await this.runHealthCheckAsync("/api/movies?toprated=true", 400));
+            healthChecks.getGenres = getGenres;
+            await this.runHealthCheckAsync("/api/genres", 400, healthChecks.getGenres);
+
+            healthChecks.getActorById = getActorById;
+            await this.runHealthCheckAsync("/api/actors/nm0000173", 250, healthChecks.getActorById);
+
+            healthChecks.getMovieById = getMovieById;
+            await this.runHealthCheckAsync("/api/movies/tt0133093", 250, healthChecks.getMovieById);
+
+            healthChecks.searchMovies = searchMovies;
+            await this.runHealthCheckAsync("/api/movies?q=ring", 400, healthChecks.searchMovies);
+
+            healthChecks.searchActors = searchActors;
+            await this.runHealthCheckAsync("/api/actors?q=nicole", 400, healthChecks.searchActors);
+
+            healthChecks.getTopRatedMovies = getTopRatedMovies;
+            await this.runHealthCheckAsync("/api/movies?toprated=true", 400, healthChecks.getTopRatedMovies);
 
             // if any health check has a warn or down status
             // set overall status to the worst status
             for (const check in healthChecks) {
                 if (healthChecks.hasOwnProperty(check)) {
-                    if (!(healthChecks[check].status === IetfStatus.up)) {
+                    if (!(healthChecks[check].status === IetfStatus.pass)) {
                         ietfResult.status = healthChecks[check].status;
                     }
 
-                    if (ietfResult.status === IetfStatus.down) {
+                    if (ietfResult.status === IetfStatus.fail) {
                         break;
                     }
                 }
@@ -112,7 +132,7 @@ export class HealthzController implements interfaces.Controller {
             return ietfResult;
         } catch (err) {
             this.logger.Error(Error(), "CosmosException: Healthz: " + err);
-            ietfResult.status = IetfStatus.down;
+            ietfResult.status = IetfStatus.fail;
             ietfResult.cosmosException = err;
             ietfResult.checks = healthChecks;
             return ietfResult;
@@ -123,48 +143,56 @@ export class HealthzController implements interfaces.Controller {
      * Executes a health check and builds the result
      * @param endpoint The affected endpoint for the health check to run.
      * @param target The target duration for the health check endpoint call.
+     * @param healthCheckResult The health check entry to update.
      */
-    private async runHealthCheckAsync(endpoint: string, target: number) {
+    private async runHealthCheckAsync(endpoint: string, target: number, healthCheckResult: any) {
         // start tracking time
         const startDate = new Date();
         const start = process.hrtime();
 
-        // execute health check query based on endpoint
-        if (endpoint === "/api/genres") {
-            await this.cosmosDb.queryDocuments(sqlGenres);
-        } else if (endpoint === "/api/actors/nm0000173") {
-            await this.cosmosDb.getDocument("nm0000173");
-        } else if (endpoint === "/api/movies/tt0133093") {
-            await this.cosmosDb.getDocument("tt0133093");
-        } else if (endpoint === "/api/movies?q=ring") {
-            await this.cosmosDb.queryMovies({q: "ring"});
-        } else if (endpoint === "/api/actors?q=nicole") {
-            await this.cosmosDb.queryActors({q: "nicole"});
-        } else {
-            await this.cosmosDb.queryMovies({toprated: "true"});
-        }
-
-        const hrtime = process.hrtime(start);
-
-        // convert to milliseconds
-        const duration = ((hrtime[0] * 1e9) + hrtime[1]) / 1e6;
-
         // build health check result following ietf standard
-        const healthCheckResult: {[k: string]: any} = {};
-        healthCheckResult.status = IetfStatus.up;
+        healthCheckResult.status = IetfStatus.pass;
         healthCheckResult.componentType = "CosmosDB";
         healthCheckResult.observedUnit = "ms";
-        healthCheckResult.observedValue = duration.toFixed(0);
+        healthCheckResult.observedValue = 0;
         healthCheckResult.targetValue = target;
         healthCheckResult.time = startDate.toISOString();
-        healthCheckResult.affectedEndpoints = endpoint;
 
-        // set to warn if target duration is not met
-        if (healthCheckResult.observedValue > healthCheckResult.targetValue) {
-            healthCheckResult.status = IetfStatus.warn;
-            healthCheckResult.message = "Request exceeded expected duration";
+        try {
+            // execute health check query based on endpoint
+            if (endpoint === "/api/genres") {
+                await this.cosmosDb.queryDocuments(sqlGenres);
+            } else if (endpoint === "/api/actors/nm0000173") {
+                await this.cosmosDb.getDocument("nm0000173");
+            } else if (endpoint === "/api/movies/tt0133093") {
+                await this.cosmosDb.getDocument("tt0133093");
+            } else if (endpoint === "/api/movies?q=ring") {
+                await this.cosmosDb.queryMovies({q: "ring"});
+            } else if (endpoint === "/api/actors?q=nicole") {
+                await this.cosmosDb.queryActors({q: "nicole"});
+            } else {
+                await this.cosmosDb.queryMovies({toprated: "true"});
+            }
+
+            // calculate duration in ms
+            healthCheckResult.observedValue = DateUtilities.getDurationMS(process.hrtime(start));
+        } catch (e) {
+            // calculate duration
+            // log exception and fail status, and re-throw exception
+            healthCheckResult.observedValue = DateUtilities.getDurationMS(process.hrtime(start));
+            healthCheckResult.status = IetfStatus.fail;
+            healthCheckResult.affectedEndpoints = [ endpoint ];
+            healthCheckResult.message = e;
+
+            throw e;
         }
 
-        return healthCheckResult;
+        // set to warn if target duration is not met
+        // only log affected endpoints if warn or fail status
+        if (healthCheckResult.observedValue > healthCheckResult.targetValue) {
+            healthCheckResult.status = IetfStatus.warn;
+            healthCheckResult.affectedEndpoints = [ endpoint ];
+            healthCheckResult.message = "Request exceeded expected duration";
+        }
     }
 }
