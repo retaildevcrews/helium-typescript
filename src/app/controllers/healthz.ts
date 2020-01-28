@@ -88,31 +88,31 @@ export class HealthzController implements interfaces.Controller {
 
         // Declare health checks
         const healthChecks: {[k: string]: any} = {};
-        const getGenresAsync: {[k: string]: any} = {};
-        const getActorByIdAsync: {[k: string]: any} = {};
-        const getMovieByIdAsync: {[k: string]: any} = {};
-        const searchMoviesAsync: {[k: string]: any} = {};
-        const searchActorsAsync: {[k: string]: any} = {};
-        const getTopRatedMoviesAsync: {[k: string]: any} = {};
+        const getGenres: {[k: string]: any} = {};
+        const getActorById: {[k: string]: any} = {};
+        const getMovieById: {[k: string]: any} = {};
+        const searchMovies: {[k: string]: any} = {};
+        const searchActors: {[k: string]: any} = {};
+        const getTopRatedMovies: {[k: string]: any} = {};
 
         try {
-            healthChecks.getGenresAsync = getGenresAsync;
-            await this.runHealthCheckAsync("/api/genres", 400, healthChecks.getGenresAsync);
+            healthChecks.getGenres = getGenres;
+            await this.runHealthCheckAsync("/api/genres", 400, healthChecks.getGenres);
 
-            healthChecks.getActorByIdAsync = getActorByIdAsync;
-            await this.runHealthCheckAsync("/api/actors/nm0000173", 250, healthChecks.getActorByIdAsync);
+            healthChecks.getActorById = getActorById;
+            await this.runHealthCheckAsync("/api/actors/nm0000173", 250, healthChecks.getActorById);
 
-            healthChecks.getMovieByIdAsync = getMovieByIdAsync;
-            await this.runHealthCheckAsync("/api/movies/tt0133093", 250, healthChecks.getMovieByIdAsync);
+            healthChecks.getMovieById = getMovieById;
+            await this.runHealthCheckAsync("/api/movies/tt0133093", 250, healthChecks.getMovieById);
 
-            healthChecks.searchMoviesAsync = searchMoviesAsync;
-            await this.runHealthCheckAsync("/api/movies?q=ring", 400, healthChecks.searchMoviesAsync);
+            healthChecks.searchMovies = searchMovies;
+            await this.runHealthCheckAsync("/api/movies?q=ring", 400, healthChecks.searchMovies);
 
-            healthChecks.searchActorsAsync = searchActorsAsync;
-            await this.runHealthCheckAsync("/api/actors?q=nicole", 400, healthChecks.searchActorsAsync);
+            healthChecks.searchActors = searchActors;
+            await this.runHealthCheckAsync("/api/actors?q=nicole", 400, healthChecks.searchActors);
 
-            healthChecks.getTopRatedMoviesAsync = getTopRatedMoviesAsync;
-            await this.runHealthCheckAsync("/api/movies?toprated=true", 400, healthChecks.getTopRatedMoviesAsync);
+            healthChecks.getTopRatedMovies = getTopRatedMovies;
+            await this.runHealthCheckAsync("/api/movies?toprated=true", 400, healthChecks.getTopRatedMovies);
 
             // if any health check has a warn or down status
             // set overall status to the worst status
