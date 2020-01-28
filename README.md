@@ -1,6 +1,6 @@
 # [Work in Progress] Build a Docker containerized, secure Node.js Web API application using Managed Identity, Key Vault, and Cosmos DB that is designed to be deployed to Azure App Service or AKS
 
-This sample is a Node.JS REST WebAPI application designed to "fork and code" with the following features:
+This is a Node.JS REST WebAPI reference application designed to "fork and code" with the following features:
 
 - Securely build, deploy and run an App Service (Web App for Containers) application
 - Use Managed Identity to securely access resources
@@ -33,7 +33,9 @@ Build the container using Docker
 - The unit tests run as part of the Docker build process. You can also run the unit tests manually.
 
 ```bash
+
 npm run test-unit
+
 ```
 
 - For instructions on building the container with ACR, please see the Helium [readme](https://github.com/retaildevcrews/helium)
@@ -93,6 +95,7 @@ docker build -t helium-dev -f Dockerfile-Dev .
 # run the container
 # mount your ~/.azure directory to container root/.azure directory
 # you can also run the container and run az login from a bash shell
+# $He_Name is set to the name of your key vault
 docker run -d -p 4120:4120 -e KeyVaultName=$He_Name --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
 
 # check the logs
