@@ -202,11 +202,9 @@ export class CosmosDBProvider {
                 genreResult = await this.getDocument(queryParams.genre.trim().toLowerCase());
                 genre = genreResult.genre;
             } catch (e) {
-                this.logger.Trace("e: " + e.toString());
                 if (e.toString().includes("404")) {
                     // return empty array if no genre found
-                    const emptyMovie: Movie[] = [];
-                    return emptyMovie;
+                    return [];
                 }
             }
 
