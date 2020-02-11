@@ -196,13 +196,16 @@ export class CosmosDBProvider {
         }
 
         if (queryParams.genre) {
-            const sqlGenreQuery = "select value m.genre from m where m.type = 'Genre' and m.id = '" + queryParams.genre.trim().toLowerCase() + "'";
-            const genreResults = await this.queryDocuments(sqlGenreQuery);
-            genre = genreResults[0];
+            let genreResult: any;
 
-            if (genre == null) {
-                // return empty array if no movies found
-                return new Movie[0]();
+            try {
+                genreResult = await this.getDocument(queryParams.genre.trim().toLowerCase());
+                genre = genreResult.genre;
+            } catch (e) {
+                if (e.toString().includes("404")) {
+                    // return empty array if no genre found
+                    return [];
+                }
             }
 
             sql += " and array_contains(m.genres, '" + genre + "')";
