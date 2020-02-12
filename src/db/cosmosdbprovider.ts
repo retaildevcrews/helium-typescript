@@ -114,7 +114,7 @@ export class CosmosDBProvider {
             pageNumber = 0;
         }
 
-        const offsetLimit = " offset " + pageNumber + " limit " + pageSize + " ";
+        const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
         // apply search term if provided in query
         if (actorName) {
@@ -161,7 +161,7 @@ export class CosmosDBProvider {
             pageNumber = 0;
         }
 
-        let offsetLimit = " offset " + pageNumber + " limit " + pageSize + " ";
+        let offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
         // handle query parameters and build sql query
         if (queryParams.q) {
