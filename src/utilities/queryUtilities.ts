@@ -6,13 +6,13 @@ export class QueryUtilities {
     // Compute the partition key based on the movieId or actorId
     // For this sample, the partition key is mod 10 of the numeric portion of the id
     public static getPartitionKey(id: string): string {
-        let idInt: number = 0
+        let idInt: number = 0;
 
         if ( id.length > 5 && (id.startsWith("tt") || id.startsWith("nm"))) {
             idInt = parseInt(id.substring(2), 10);
-            return (idInt % 10).toString()
+            return (idInt % 10).toString();
         } else {
-            return idInt.toString()
+            return idInt.toString();
         }
     }
 }
