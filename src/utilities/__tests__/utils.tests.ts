@@ -7,6 +7,7 @@ test("Get partition key", () => {
   expect(QueryUtilities.getPartitionKey("nm1234")).toEqual(expect.any(String));
   expect(QueryUtilities.getPartitionKey("nm1234")).toBe("4");
   expect(QueryUtilities.getPartitionKey("tt1234")).toBe("4");
+  expect(QueryUtilities.getPartitionKey("tttttt")).toBe("0");
   expect(QueryUtilities.getPartitionKey("tt1")).toBe("0");
 });
 

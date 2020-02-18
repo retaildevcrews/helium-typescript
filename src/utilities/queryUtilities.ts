@@ -10,7 +10,7 @@ export class QueryUtilities {
 
         if ( id.length > 5 && (id.startsWith("tt") || id.startsWith("nm"))) {
             idInt = parseInt(id.substring(2), 10);
-            return (idInt % 10).toString();
+            return isNaN(idInt) ? "0" : (idInt % 10).toString();
         } else {
             return idInt.toString();
         }
