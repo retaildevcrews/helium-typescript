@@ -20,7 +20,6 @@ export async function getConfigValues(
     let cosmosDbUrl: string;
     let database: string;
     let collection: string;
-    // insightsKey comes from KeyVault
     let insightsKey: string;
 
     let keyVaultUrl: string = process.env[keyVaultName];
@@ -34,10 +33,10 @@ export async function getConfigValues(
     }
 
     const keyvault: KeyVaultProvider = new KeyVaultProvider(keyVaultUrl, log);
+
+    // get Cosmos DB related secrets
     try {
         cosmosDbKey = await keyvault.getSecret(cosmosKey);
-
-        insightsKey = await keyvault.getSecret(appInsightsKey);
 
         cosmosDbUrl = await keyvault.getSecret(cosmosUrl);
 
@@ -45,7 +44,15 @@ export async function getConfigValues(
 
         collection = await keyvault.getSecret(cosmosCollection);
     } catch {
-        log.Error(Error(), "Failed to get secrets from KeyVault. Falling back to env vars for secrets");
+        log.Error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");
+        process.exit(1);
+    }
+
+    // get optional App Insights Key
+    try {
+        insightsKey = await keyvault.getSecret(appInsightsKey);
+    } catch {
+        log.Trace("Application Insights key not set.");
     }
 
     return {
