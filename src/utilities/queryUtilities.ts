@@ -5,7 +5,7 @@ export class QueryUtilities {
 
     // Compute the partition key based on the movieId or actorId
     // For this sample, the partition key is mod 10 of the numeric portion of the id
-    // Returns "0" by defualt
+    // Returns "0" by default
     public static getPartitionKey(id: string): string {
         let idInt: number = 0;
 
