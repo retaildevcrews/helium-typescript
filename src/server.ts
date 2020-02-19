@@ -34,7 +34,8 @@ import { version } from "./config/constants";
     iocContainer.bind<ILoggingProvider>("ILoggingProvider").to(BunyanLogger).inSingletonScope();
     const log: ILoggingProvider = iocContainer.get<ILoggingProvider>("ILoggingProvider");
 
-    const config: any = await getConfigValues(log);
+    // Get config values from Key Vault
+    const config = await getConfigValues(log);
 
     /**
      *  Bind the Controller classes for the Controllers you want in your server
@@ -52,12 +53,16 @@ import { version } from "./config/constants";
     iocContainer.bind<IDatabaseProvider>("IDatabaseProvider").to(CosmosDBProvider).inSingletonScope();
     iocContainer.bind<string>("string").toConstantValue(config.cosmosDbUrl).whenTargetNamed("cosmosDbUrl");
     iocContainer.bind<string>("string").toConstantValue(config.cosmosDbKey).whenTargetNamed("cosmosDbKey");
-    iocContainer.bind<string>("string").toConstantValue(config.insightsKey).whenTargetNamed("instrumentationKey");
     iocContainer.bind<string>("string").toConstantValue(config.database).whenTargetNamed("database");
     iocContainer.bind<string>("string").toConstantValue(config.collection).whenTargetNamed("collection");
 
-    iocContainer.bind<ITelemProvider>("ITelemProvider").to(AppInsightsProvider).inSingletonScope();
-    const telem: ITelemProvider = iocContainer.get<ITelemProvider>("ITelemProvider");
+    let telem: ITelemProvider;
+    // AppInsightsProvider is optional
+    if (config.insightsKey) {
+        iocContainer.bind<string>("string").toConstantValue(config.insightsKey).whenTargetNamed("instrumentationKey");
+        iocContainer.bind<ITelemProvider>("ITelemProvider").to(AppInsightsProvider).inSingletonScope();
+        telem = iocContainer.get<ITelemProvider>("ITelemProvider");
+    }
 
     // initialize cosmos db provider
     const cosmosDb: IDatabaseProvider = iocContainer.get<IDatabaseProvider>("IDatabaseProvider");
@@ -144,7 +149,6 @@ import { version } from "./config/constants";
             });
         }).build().listen(config.port, () => {
             log.Trace("Server is listening on port " + config.port);
-            telem.trackEvent("API Server: Server started on port " + config.port);
         });
 
     } catch (err) {

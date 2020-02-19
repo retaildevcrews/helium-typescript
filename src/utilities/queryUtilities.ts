@@ -13,7 +13,7 @@ export class QueryUtilities {
             idInt = parseInt(id.substring(2), 10);
             return isNaN(idInt) ? "0" : (idInt % 10).toString();
         }
-        
+
         return idInt.toString();
     }
 }
