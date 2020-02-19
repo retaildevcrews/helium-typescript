@@ -5,6 +5,7 @@ import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor } from "../app/models/actor";
 import { Movie } from "../app/models/movie";
 import { defaultPageSize, maxPageSize } from "../config/constants";
+import { omit } from "lodash";
 
 /**
  * Handles executing queries against CosmosDB
@@ -79,7 +80,9 @@ export class CosmosDBProvider {
             const { resource: result, statusCode: status } =
                 await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
             if (status === 200) {
-                resolve(result);
+                // remove added system properties from result so only movie fields are returned
+                const resultFiltered = omit(result, ["_rid", "_self", "_etag", "_attachments", "_ts"]);
+                resolve(resultFiltered);
             } else {
                 reject("Cosmos Error: " + status);
             }
