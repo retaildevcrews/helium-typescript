@@ -88,7 +88,7 @@ export class Movie implements IValidatable {
     public title: string;
 
     @Equals("Movie")
-    public type: string;
+    public type: string = "Movie";
 
     @IsNotEmpty()
     @NotEquals((x) => x.trim.length() > 0)
@@ -102,20 +102,22 @@ export class Movie implements IValidatable {
     public genres?: string[];
     public roles?: Actor[];
 
-    constructor(data: any) {
-        this.id = data.id;
-        this.movieId = data.movieId;
-        this.title = data.title;
-        this.textSearch = data.textSearch;
-        this.type = data.type;
-        this.partitionKey = data.partitionKey;
-        this.year = data.year;
-        this.runtime = data.runtime;
-        this.rating = data.rating;
-        this.votes = data.votes;
-        this.totalScore = data.totalScore;
-        this.genres = data.genres;
-        this.roles = data.roles;
+    constructor(data?: any) {
+        if (data) {
+            this.id = data.id;
+            this.movieId = data.movieId;
+            this.title = data.title;
+            this.textSearch = data.textSearch;
+            this.type = data.type;
+            this.partitionKey = data.partitionKey;
+            this.year = data.year;
+            this.runtime = data.runtime;
+            this.rating = data.rating;
+            this.votes = data.votes;
+            this.totalScore = data.totalScore;
+            this.genres = data.genres;
+            this.roles = data.roles;
+        }
     }
 
     public validate(): Promise<ValidationError[]> {
