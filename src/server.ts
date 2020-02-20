@@ -56,10 +56,12 @@ import { version } from "./config/constants";
     iocContainer.bind<string>("string").toConstantValue(config.database).whenTargetNamed("database");
     iocContainer.bind<string>("string").toConstantValue(config.collection).whenTargetNamed("collection");
 
+    let telem: ITelemProvider;
     // ITelemProvicer/AppInsightsProvider is optional
     if (config.insightsKey) {
         iocContainer.bind<string>("string").toConstantValue(config.insightsKey).whenTargetNamed("instrumentationKey");
         iocContainer.bind<ITelemProvider>("ITelemProvider").to(AppInsightsProvider).inSingletonScope();
+        telem = iocContainer.get<ITelemProvider>("ITelemProvicer");
     }
 
     // initialize cosmos db provider
