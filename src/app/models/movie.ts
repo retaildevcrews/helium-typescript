@@ -94,30 +94,28 @@ export class Movie implements IValidatable {
     @NotEquals((x) => x.trim.length() > 0)
     public partitionKey: string;
 
-    constructor(
-        id: string,
-        movieId: string,
-        title: string,
-        textSearch: string,
-        partitionKey: string,
-        public year?: number,
-        public runtime?: number,
-        public rating?: number,
-        public votes?: number,
-        public genres?: string[],
-        public roles?: Actor[]) {
-        this.id = id;
-        this.movieId = movieId;
-        this.title = title;
-        this.textSearch = textSearch;
-        this.type = "Movie";
-        this.partitionKey = partitionKey;
-        this.year = year;
-        this.runtime = runtime;
-        this.rating = rating;
-        this.votes = votes;
-        this.genres = genres;
-        this.roles = roles;
+    public year?: number;
+    public runtime?: number;
+    public rating?: number;
+    public votes?: number;
+    public totalScore?: number;
+    public genres?: string[];
+    public roles?: Actor[];
+
+    constructor(data: any) {
+        this.id = data.id;
+        this.movieId = data.movieId;
+        this.title = data.title;
+        this.textSearch = data.textSearch;
+        this.type = data.type;
+        this.partitionKey = data.partitionKey;
+        this.year = data.year;
+        this.runtime = data.runtime;
+        this.rating = data.rating;
+        this.votes = data.votes;
+        this.totalScore = data.totalScore;
+        this.genres = data.genres;
+        this.roles = data.roles;
     }
 
     public validate(): Promise<ValidationError[]> {

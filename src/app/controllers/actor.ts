@@ -110,7 +110,7 @@ export class ActorController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let result: Actor;
         try {
-            result = await this.cosmosDb.getDocument(actorId);
+            result = new Actor(await this.cosmosDb.getDocument(actorId));
         } catch (err) {
             result = err.toString();
 

@@ -90,26 +90,22 @@ export class Actor implements IValidatable {
     @NotEquals((x) => x.trim.length() > 0)
     public partitionKey: string;
 
-    constructor(
-        id: string,
-        actorId: string,
-        name: string,
-        textSearch: string,
-        partitionKey: string,
-        public birthYear?: number,
-        public deathYear?: number,
-        public profession?: string[],
-        public movies?: Movie[]) {
-        this.id = id;
-        this.actorId = actorId;
-        this.name = name;
-        this.textSearch = textSearch;
-        this.type = "Actor";
-        this.partitionKey = partitionKey;
-        this.birthYear = birthYear;
-        this.deathYear = deathYear;
-        this.profession = profession;
-        this.movies = movies;
+    public birthYear?: number;
+    public deathYear?: number;
+    public profession?: string[];
+    public movies?: Movie[];
+
+    constructor(data: any) {
+        this.id = data.id;
+        this.actorId = data.actorId;
+        this.name = data.name;
+        this.textSearch = data.textSearch;
+        this.type = data.type;
+        this.partitionKey = data.partitionKey;
+        this.birthYear = data.birthYear;
+        this.deathYear = data.deathYear;
+        this.profession = data.profession;
+        this.movies = data.movies;
     }
 
     public validate(): Promise<ValidationError[]> {
