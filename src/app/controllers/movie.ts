@@ -3,7 +3,6 @@ import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
-import { ITelemProvider } from "../../telem/itelemprovider";
 import { Movie } from "../models/movie";
 
 /**
@@ -14,10 +13,8 @@ import { Movie } from "../models/movie";
 export class MovieController implements interfaces.Controller {
 
     constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-                @inject("ITelemProvider") private telem: ITelemProvider,
                 @inject("ILoggingProvider") private logger: ILoggingProvider) {
         this.cosmosDb = cosmosDb;
-        this.telem = telem;
         this.logger = logger;
     }
 
