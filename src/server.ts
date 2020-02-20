@@ -61,7 +61,7 @@ import { version } from "./config/constants";
     if (config.insightsKey) {
         iocContainer.bind<string>("string").toConstantValue(config.insightsKey).whenTargetNamed("instrumentationKey");
         iocContainer.bind<ITelemProvider>("ITelemProvider").to(AppInsightsProvider).inSingletonScope();
-        telem = iocContainer.get<ITelemProvider>("ITelemProvicer");
+        telem = iocContainer.get<ITelemProvider>("ITelemProvider");
     }
 
     // initialize cosmos db provider
