@@ -132,7 +132,7 @@ export class MovieController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let result: Movie;
         try {
-            result = await this.cosmosDb.getDocument(movieId);
+            result = new Movie(await this.cosmosDb.getDocument(movieId));
         } catch (err) {
             result = err.toString();
 
