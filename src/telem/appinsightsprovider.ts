@@ -1,6 +1,4 @@
 import * as ApplicationInsights from "applicationinsights";
-import { MetricTelemetry } from "applicationinsights/out/Declarations/Contracts";
-import { DependencyTelemetry } from "applicationinsights/out/Declarations/Contracts/TelemetryTypes/DependencyTelemetry";
 import { inject, injectable, named } from "inversify";
 
 /**
@@ -33,63 +31,10 @@ export class AppInsightsProvider {
 
     /**
      * Sends an event with the given name to App Insights
+     * Note: Currently unused, but will be used with Key Rotation
      * @param eventName Name of event to track
      */
     public trackEvent(eventName: string) {
         this.telemClient.trackEvent({name: eventName});
-    }
-
-    /**
-     * Send quantifiable metrics to App Insights
-     * TelemetryClient.TrackDependency class and properties:
-     *      https://docs.microsoft.com/en-us/dotnet/api/microsoft.applicationinsights
-     *      .datacontracts.dependencytelemetry?view=azure-dotnet
-     */
-
-    public trackDependency(dependency: DependencyTelemetry) {
-
-        this.telemClient.trackDependency(dependency);
-    }
-
-    public trackMetric(metric: MetricTelemetry) {
-
-        this.telemClient.trackMetric(metric);
-
-    }
-
-    public getDependencyTrackingObject(
-        dependencyTypeNameParam: string,
-        nameParam: string,
-        dataParam: string,
-        resultCodeParam: string,
-        successParam: boolean,
-        durationParam: number): DependencyTelemetry {
-
-        // Declare and initialize a DependencyTelemetry object for sending metrics to AppInsights
-        const dependencyTelem: DependencyTelemetry = {
-            dependencyTypeName: dependencyTypeNameParam,
-            name: nameParam,
-            data: dataParam,
-            resultCode: resultCodeParam,
-            success: successParam,
-            duration: durationParam,
-        };
-
-        // Return the DependencyTelemetry object
-        return dependencyTelem;
-    }
-
-    public getMetricTelemetryObject(
-        metricname: string,
-        metricvalue: number): MetricTelemetry {
-
-        // Declare and initialize a MetricTelemetry object for sending metrics to AppInsights
-        const metricTelem: MetricTelemetry = {
-            name: metricname,
-            value: metricvalue,
-        };
-
-        // Return the MetricTelemetry object
-        return metricTelem;
     }
 }

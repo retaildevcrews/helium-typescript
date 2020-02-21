@@ -4,7 +4,6 @@ import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
-import { ITelemProvider } from "../../telem/itelemprovider";
 import { sqlGenres } from "../../config/constants";
 
 /**
@@ -15,10 +14,8 @@ import { sqlGenres } from "../../config/constants";
 export class GenreController implements interfaces.Controller {
 
   constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-              @inject("ITelemProvider") private telem: ITelemProvider,
               @inject("ILoggingProvider") private logger: ILoggingProvider) {
     this.cosmosDb = cosmosDb;
-    this.telem = telem;
     this.logger = logger;
   }
 

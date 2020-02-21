@@ -4,7 +4,6 @@ import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
 import { IDatabaseProvider } from "../../db/idatabaseprovider";
 import { ILoggingProvider } from "../../logging/iLoggingProvider";
-import { ITelemProvider } from "../../telem/itelemprovider";
 import { Actor } from "../models/actor";
 
 // Controller implementation for our actors endpoint
@@ -14,10 +13,8 @@ export class ActorController implements interfaces.Controller {
 
     // Instantiate the actor controller
     constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-                @inject("ITelemProvider") private telem: ITelemProvider,
                 @inject("ILoggingProvider") private logger: ILoggingProvider) {
         this.cosmosDb = cosmosDb;
-        this.telem = telem;
         this.logger = logger;
     }
 
