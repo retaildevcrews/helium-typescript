@@ -56,7 +56,7 @@ import { version } from "./config/constants";
     iocContainer.bind<string>("string").toConstantValue(config.database).whenTargetNamed("database");
     iocContainer.bind<string>("string").toConstantValue(config.collection).whenTargetNamed("collection");
 
-    // Note: the telem object is currently unused, but will be used with Key Rotation 
+    // Note: the telem object is currently unused, but will be used with Key Rotation
     let telem: ITelemProvider;
     // ITelemProvicer/AppInsightsProvider is optional
     if (config.insightsKey) {
