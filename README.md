@@ -31,7 +31,7 @@ There is a known dependency on deprecated @opentelemetry/types package. This is 
 
 - npm WARN deprecated @opentelemetry/types@0.2.0: Package renamed to @opentelemetry/api, see [description](https://github.com/open-telemetry/opentelemetry-js)
 
-There is a known dependency on deprecated request@2.88.2. This is due to dependencies on jsdom and adal-node. This is tracked by [jsdom issue](https://github.com/jsdom/jsdom/issues/2792) and [adal issue](https://github.com/AzureAD/azure-activedirectory-library-for-nodejs/issues/229)
+There is a known dependency on deprecated request@2.88.2. This is due to dependencies on jsdom and adal-node. This is tracked by [jsdom issue](https://github.com/jsdom/jsdom/issues/2792) and [adal issue](https://github.com/AzureAD/azure-activedirectory-library-for-nodejs/issues/229).
 
 - npm WARN deprecated request@2.88.2: request has been deprecated, see [description](https://github.com/request/request/issues/3142)
 
