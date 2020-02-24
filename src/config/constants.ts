@@ -16,4 +16,4 @@ export const version = VersionUtilities.getBuildVersion();
 export const defaultPageSize = 100;
 export const maxPageSize = 1000;
 
-export const sqlGenres = "SELECT VALUE m.id FROM m where m.type = 'Genre'";
+export const sqlGenres = "SELECT VALUE m.genre FROM m where m.type = 'Genre'";
