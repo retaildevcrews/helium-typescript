@@ -44,11 +44,23 @@ export class GenreController implements interfaces.Controller {
     let resCode: number = HttpStatus.OK;
     let results: string[];
     try {
-      results = await this.cosmosDb.queryDocuments(sqlGenres);
+      results = this.toTitleCase(await this.cosmosDb.queryDocuments(sqlGenres));
     } catch (err) {
       resCode = HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     return res.send(resCode, results);
   }
+
+  private toTitleCase(arr: string[]) {
+    // Creates title case for genres also caps after hyphens
+    const capGenre: string[] = arr.map( (item: string) => {
+      return item.toLowerCase().replace(/(?:^|[\s-/])\w/g, (match: string) => {
+        return match.toUpperCase();
+      });
+    });
+
+    return capGenre;
+  }
+
 }
