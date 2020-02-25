@@ -19,9 +19,25 @@ This is a Node.JS REST WebAPI reference application designed to "fork and code" 
 - JQ ([download](https://stedolan.github.io/jq/download/))
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
-## Package Dependency Vulnerability
+## Package Status
+
+### Dependency Vulnerability
 
 Currently, helium-typescript has a dependncy on inversify-restify-utils which has a [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
+
+### Warnings
+
+There is a known dependency on deprecated @opentelemetry/types package. This is due to a dependency on a few Azure SDK packages, tracked by [this issue](https://github.com/Azure/azure-sdk-for-js/issues/7079).
+
+- npm WARN deprecated @opentelemetry/types@0.2.0: Package renamed to @opentelemetry/api, see [description](https://github.com/open-telemetry/opentelemetry-js)
+
+There is a known dependency on deprecated request@2.88.2. This is due to dependencies on jsdom and adal-node. This is tracked by [jsdom issue](https://github.com/jsdom/jsdom/issues/2792) and [adal issue](https://github.com/AzureAD/azure-activedirectory-library-for-nodejs/issues/229).  Adal-node should be updated to msal, tracking this with [ms-node-auth issue](https://github.com/Azure/ms-rest-nodeauth/issues/84).
+
+- npm WARN deprecated request@2.88.2: request has been deprecated, see [description](https://github.com/request/request/issues/3142)
+
+There is a known warning for a peer dependency on canvas.  However, the reported work-arounds online introduce a lot of different, additional errors.  Tracked by [issue/PR](https://github.com/node-gfx/node-canvas-prebuilt/pull/80). For now, this does not affect app behavior.
+
+- npm WARN jsdom@15.2.1 requires a peer of canvas@^2.5.0 but none is installed. You must install peer dependencies yourself.
 
 ## Setup
 
