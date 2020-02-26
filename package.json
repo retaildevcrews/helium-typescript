@@ -1,7 +1,7 @@
 {
   "name": "helium",
   "version": "0.5.0",
-  "description": "Azure App Service reference application.",
+  "description": "Azure App Service reference application",
   "main": "dist/server.js",
   "directories": {
     "test": "tests"
