@@ -2,7 +2,7 @@
 name: CP Review
 about: Checkpoint Review checklist
 title: ''
-labels: CP Review, Pri1
+labels: CP Review, Sharing
 assignees: ''
 
 ---
