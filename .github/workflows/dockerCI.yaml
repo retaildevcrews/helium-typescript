@@ -8,8 +8,8 @@ on:
     paths-ignore:
       - 'docs/**'
       - '.github/**'
-      - 'README.md'
-      - 'savenv.sh'
+      - '**.md'
+      - 'saveenv.sh'
       - 'src/**/__tests__'
 
     tags:
