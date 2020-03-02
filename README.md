@@ -8,7 +8,7 @@ This is a Node.JS REST WebAPI reference application designed to "fork and code" 
 - Securely build, deploy and run an App Service (Web App for Containers) application
 - Use Managed Identity to securely access resources
 - Securely store secrets in Key Vault
-- Securely build and deploy the Docker container from Container Registry or Azure DevOps
+- Securely build and deploy the Docker container from Container Registry
 - Connect to and query CosmosDB
 - Automatically send telemetry and logs to Azure Monitor
 - Instructions for setting up Key Vault, ACR, Azure Monitor and Cosmos DB are in the Helium [readme](https://github.com/retaildevcrews/helium)
@@ -26,7 +26,7 @@ This is a Node.JS REST WebAPI reference application designed to "fork and code" 
 
 ### Dependency Vulnerability
 
-Currently, helium-typescript has a dependncy on inversify-restify-utils which has a [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
+Currently, helium-typescript has a dependency on inversify-restify-utils which has a [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
 
 ### Warnings
 
