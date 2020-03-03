@@ -10,6 +10,7 @@ export const appInsightsKey = "AppInsightsKey";
 export const portConstant = "4120";
 
 export const webInstanceRole = "WEBSITE_ROLE_INSTANCE_ID";
+export const authType = "AUTH_TYPE";
 
 export const version = VersionUtilities.getBuildVersion();
 

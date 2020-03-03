@@ -18,7 +18,7 @@ import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-util
 import { ITelemProvider } from "./telem/itelemprovider";
 import { MovieController } from "./app/controllers/movie";
 import { robotsHandler } from "./middleware/robotsText";
-import { version } from "./config/constants";
+import { keyVaultName, version } from "./config/constants";
 
 (async () => {
     const restify = require("restify");
@@ -34,6 +34,34 @@ import { version } from "./config/constants";
     iocContainer.bind<ILoggingProvider>("ILoggingProvider").to(BunyanLogger).inSingletonScope();
     const log: ILoggingProvider = iocContainer.get<ILoggingProvider>("ILoggingProvider");
 
+    // Read command line args
+    let args = process.argv;
+    let keyVaultUri = process.env[keyVaultName];
+    let authType = process.env["AUTH_TYPE"] ? process.env["AUTH_TYPE"] : "MSI";
+    // log.Trace("args: " + args[2]); // + "," + args[1]);
+    if (args[2]){
+        for(let i = 2; i < args.length; i++){
+            if(args[i].startsWith("--authtype") && (i + 1) < args.length) {
+                authType = args[i + 1];
+                i++;
+            } else {
+                keyVaultUri = args[i];
+            }
+        }
+        log.Trace("authType: " + authType);
+        log.Trace("kvUri: " + keyVaultUri);
+    }
+    // function readCommandLineArgs():{ keyVaultUri: string, authType: string} {
+    //     let args = process.argv;
+    //     if (args != null) {
+    //         for (let i = 0; i < args.length; i++) {
+    //             if (args[i].startsWith("--")) {
+    
+    //             }
+    //         }
+    //     }
+    //     return { " ", " "};
+    // }
     // Get config values from Key Vault
     const config = await getConfigValues(log);
 
