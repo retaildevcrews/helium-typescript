@@ -136,7 +136,6 @@ export class CosmosDBProvider {
      */
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         let sql: string = this._movieSelect;
-        const orderby: string = this._movieOrderBy;
 
         let pageSize: number = 100;
         let pageNumber: number = 1;
@@ -205,7 +204,7 @@ export class CosmosDBProvider {
             sql += " and array_contains(m.genres, '" + genre + "')";
         }
 
-        sql += orderby + offsetLimit;
+        sql += this._movieOrderBy + offsetLimit;
 
         return await this.queryDocuments(sql);
     }
