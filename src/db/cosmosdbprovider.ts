@@ -136,7 +136,6 @@ export class CosmosDBProvider {
      */
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         let sql: string = this._movieSelect;
-        let orderby: string = this._movieOrderBy;
 
         let pageSize: number = 100;
         let pageNumber: number = 1;
@@ -161,7 +160,7 @@ export class CosmosDBProvider {
             pageNumber = 0;
         }
 
-        let offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
+        const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
         // handle query parameters and build sql query
         if (queryParams.q) {
@@ -177,12 +176,6 @@ export class CosmosDBProvider {
 
         if (queryParams.rating > 0) {
             sql += " and m.rating >= " + queryParams.rating + " ";
-        }
-
-        if (queryParams.toprated) {
-            sql = "select top 10 " + sql.substring(7);
-            orderby = " order by m.rating desc";
-            offsetLimit = "";
         }
 
         if (queryParams.actorid) {
@@ -211,7 +204,7 @@ export class CosmosDBProvider {
             sql += " and array_contains(m.genres, '" + genre + "')";
         }
 
-        sql += orderby + offsetLimit;
+        sql += this._movieOrderBy + offsetLimit;
 
         return await this.queryDocuments(sql);
     }
