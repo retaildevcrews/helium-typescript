@@ -23,7 +23,7 @@ describe("Query Actors", () => {
         const query = new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
         query.queryDocuments = jest.fn();
 
-        test("Defualt params sent to DB", () => {
+        test("Default params sent to DB", () => {
             query.queryActors({});
             const call = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor'  order by m.name offset 0 limit 100 ";
 
@@ -109,8 +109,8 @@ describe("Query Movies", () => {
         });
 
         test("Params with a query", () => {
-            query.queryMovies({q: "The Squel"});
-            const call = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie'  and contains(m.textSearch, 'the squel')  order by m.title offset 0 limit 100 ";
+            query.queryMovies({q: "The Sequel"});
+            const call = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie'  and contains(m.textSearch, 'the sequel')  order by m.title offset 0 limit 100 ";
 
             expect(query.queryDocuments).toBeCalledWith(call);
         });
@@ -125,13 +125,6 @@ describe("Query Movies", () => {
         test("Params with a rating", () => {
             query.queryMovies({rating: 5});
             const call = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie'  and m.rating >= 5  order by m.title offset 0 limit 100 ";
-
-            expect(query.queryDocuments).toBeCalledWith(call);
-        });
-
-        test("Params with a toprated", () => {
-            query.queryMovies({toprated: true});
-            const call = "select top 10 m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie'  order by m.rating desc";
 
             expect(query.queryDocuments).toBeCalledWith(call);
         });
