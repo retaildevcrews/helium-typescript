@@ -47,11 +47,6 @@ export class MovieController implements interfaces.Controller {
      *         in: query
      *         schema:
      *           type: string
-     *       - name: topRated
-     *         description: Get top rated movies (true)
-     *         in: query
-     *         schema:
-     *           type: string
      *       - name: actorid
      *         description: Get movies by Actor Id (nm0000704)
      *         in: query
