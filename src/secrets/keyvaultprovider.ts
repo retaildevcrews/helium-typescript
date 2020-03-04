@@ -1,5 +1,4 @@
 import { SecretClient } from "@azure/keyvault-secrets";
-import { webInstanceRole } from "../config/constants";
 import { inject, injectable } from "inversify";
 import { ILoggingProvider } from "../logging/iLoggingProvider";
 import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
@@ -16,8 +15,10 @@ export class KeyVaultProvider {
      * @param url The KeyVault testing action URL
      */
     constructor(private url: string,
+                private authType: string,
                 @inject("ILoggingProvider") private logger: ILoggingProvider) {
         this.url = url;
+        this.authType = authType;
         this.logger = logger;
     }
 
@@ -51,8 +52,8 @@ export class KeyVaultProvider {
      */
     private async _initialize() {
 
-        // if web instance, use app service MSI, otherwise use az login credentials
-        const creds: any = process.env[webInstanceRole] ?
+        // Use specified authentication type (either MSI or CLI)
+        const creds: any = this.authType === "MSI" ?
             await msRestNodeAuth.loginWithAppServiceMSI({ resource: "https://vault.azure.net" }) :
             await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 

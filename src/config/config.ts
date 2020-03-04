@@ -1,12 +1,14 @@
 import { ILoggingProvider } from "../logging/iLoggingProvider";
 import { KeyVaultProvider } from "../secrets/keyvaultprovider";
 import {
-    keyVaultName, cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl,
+    cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl,
     appInsightsKey, portConstant,
 } from "./constants";
 
 // Gets configuration details needed to connect to KeyVault, CosmosDB, and AppInsights.
 export async function getConfigValues(
+    keyVaultUrl: string,
+    authType: string,
     log: ILoggingProvider): Promise<{
         port: string, cosmosDbKey: string, cosmosDbUrl: string,
         database: string, collection: string, insightsKey: string,
@@ -22,17 +24,7 @@ export async function getConfigValues(
     let collection: string;
     let insightsKey: string;
 
-    let keyVaultUrl: string = process.env[keyVaultName];
-    if (keyVaultUrl && !keyVaultUrl.startsWith("https://")) {
-        keyVaultUrl = "https://" + keyVaultUrl + ".vault.azure.net/";
-    }
-
-    if (!keyVaultUrl) {
-        log.Trace("Key Vault name missing: " + keyVaultUrl);
-        process.exit(1);
-    }
-
-    const keyvault: KeyVaultProvider = new KeyVaultProvider(keyVaultUrl, log);
+    const keyvault: KeyVaultProvider = new KeyVaultProvider(keyVaultUrl, authType, log);
 
     // get Cosmos DB related secrets
     try {

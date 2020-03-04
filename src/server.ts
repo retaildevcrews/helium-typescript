@@ -18,7 +18,8 @@ import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-util
 import { ITelemProvider } from "./telem/itelemprovider";
 import { MovieController } from "./app/controllers/movie";
 import { robotsHandler } from "./middleware/robotsText";
-import { keyVaultName, version } from "./config/constants";
+import { authTypeEnv, keyVaultName, version } from "./config/constants";
+import { CommandLineUtilities } from "./utilities/commandLineUtilities";
 
 (async () => {
     const restify = require("restify");
@@ -34,36 +35,61 @@ import { keyVaultName, version } from "./config/constants";
     iocContainer.bind<ILoggingProvider>("ILoggingProvider").to(BunyanLogger).inSingletonScope();
     const log: ILoggingProvider = iocContainer.get<ILoggingProvider>("ILoggingProvider");
 
+    /**
+     * Set Key Vault name/url and authentication type variables
+     * Command line args override environment variables
+     */
+    let keyVaultUrl = process.env[keyVaultName];
+    let authType = process.env[authTypeEnv];
+
     // Read command line args
-    let args = process.argv;
-    let keyVaultUri = process.env[keyVaultName];
-    let authType = process.env["AUTH_TYPE"] ? process.env["AUTH_TYPE"] : "MSI";
-    // log.Trace("args: " + args[2]); // + "," + args[1]);
-    if (args[2]){
-        for(let i = 2; i < args.length; i++){
-            if(args[i].startsWith("--authtype") && (i + 1) < args.length) {
+    const args = process.argv;
+    if (args.length > 2) {
+        let i = 2;
+        let message: string;
+        while ((i) < args.length) {
+            if (args[i].startsWith("--authtype") && (i + 1) < args.length && !args[i + 1].startsWith("-")) {
                 authType = args[i + 1];
-                i++;
+
+                if (authType !== "MSI" && authType !== "CLI") {
+                    message = "Invalid authentication type.";
+                    break;
+                }
+                i += 2;
+            } else if (args[i].startsWith("--kvname") && (i + 1) < args.length && !args[i + 1].startsWith("-")) {
+                keyVaultUrl = args[i + 1];
+                i += 2;
+            } else if (args[i] === "-h" || args[i] === "--help") {
+                CommandLineUtilities.usage();
+                process.exit(0);
             } else {
-                keyVaultUri = args[i];
+                message = "Invalid command line argument/s.";
+                break;
             }
         }
-        log.Trace("authType: " + authType);
-        log.Trace("kvUri: " + keyVaultUri);
+
+        if (message) {
+            CommandLineUtilities.usage(message);
+            process.exit(0);
+        }
     }
-    // function readCommandLineArgs():{ keyVaultUri: string, authType: string} {
-    //     let args = process.argv;
-    //     if (args != null) {
-    //         for (let i = 0; i < args.length; i++) {
-    //             if (args[i].startsWith("--")) {
-    
-    //             }
-    //         }
-    //     }
-    //     return { " ", " "};
-    // }
+
+    // Exit if missing Key Vault Name
+    if (!keyVaultUrl) {
+        console.log("Key Vault name missing.");
+        process.exit(1);
+    } else if (!keyVaultUrl.startsWith("https://")) {
+        keyVaultUrl = "https://" + keyVaultUrl + ".vault.azure.net/";
+    }
+
+    // Default authentication type to MSI
+    if (!authType) {
+        console.log("No authentication type specified, defaulting to MSI.");
+        authType = "MSI";
+    }
+
     // Get config values from Key Vault
-    const config = await getConfigValues(log);
+    const config = await getConfigValues(keyVaultUrl, authType, log);
 
     /**
      *  Bind the Controller classes for the Controllers you want in your server
