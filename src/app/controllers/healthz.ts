@@ -90,7 +90,6 @@ export class HealthzController implements interfaces.Controller {
         const getMovieById: {[k: string]: any} = {};
         const searchMovies: {[k: string]: any} = {};
         const searchActors: {[k: string]: any} = {};
-        const getTopRatedMovies: {[k: string]: any} = {};
 
         try {
             healthChecks.getGenres = getGenres;
@@ -107,9 +106,6 @@ export class HealthzController implements interfaces.Controller {
 
             healthChecks.searchActors = searchActors;
             await this.runHealthCheckAsync("/api/actors?q=nicole", 400, healthChecks.searchActors);
-
-            healthChecks.getTopRatedMovies = getTopRatedMovies;
-            await this.runHealthCheckAsync("/api/movies?toprated=true", 400, healthChecks.getTopRatedMovies);
 
             // if any health check has a warn or down status
             // set overall status to the worst status
@@ -165,10 +161,8 @@ export class HealthzController implements interfaces.Controller {
                 await this.cosmosDb.getDocument("tt0133093");
             } else if (endpoint === "/api/movies?q=ring") {
                 await this.cosmosDb.queryMovies({q: "ring"});
-            } else if (endpoint === "/api/actors?q=nicole") {
-                await this.cosmosDb.queryActors({q: "nicole"});
             } else {
-                await this.cosmosDb.queryMovies({toprated: "true"});
+                await this.cosmosDb.queryActors({q: "nicole"});
             }
 
             // calculate duration in ms
