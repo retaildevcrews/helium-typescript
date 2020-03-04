@@ -81,9 +81,6 @@ Run the application locally
 
 # make sure you are in the root of the repo
 
-# set required keyvaultname environment variable
-export KeyVaultName={name of your key vault}
-
 # log in with azure credentials (if not done already)
 az login
 
@@ -93,8 +90,17 @@ az login
 # npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 npm install
 
-# run the app
+# build the app
 npm run build
+
+# run the app with command line args
+# for local run, you need to specify CLI authentication type
+npm start -- --kvname {name of your keyvault} --authtype CLI
+
+# alternatively you can set the following environment variables and run without command line args
+export KeyVaultName={name of your keyvault}
+export AUTH_TYPE=CLI
+
 npm start
 
 # test the application
@@ -115,7 +121,12 @@ docker build -t helium-dev -f Dockerfile-Dev .
 # mount your ~/.azure directory to container root/.azure directory
 # you can also run the container and run az login from a bash shell
 # $He_Name is set to the name of your key vault
-docker run -d -p 4120:4120 -e KeyVaultName=$He_Name --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
+
+# option using command line args
+docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--kvname" "${He_Name}" "--authtype" "CLI"
+
+# option using environment variables
+docker run -d -p 4120:4120 -e KeyVaultName=$He_Name -e AUTH_TYPE=CLI --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
 
 # check the logs
 # re-run until the application started message appears
