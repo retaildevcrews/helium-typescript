@@ -36,6 +36,7 @@
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",
     "class-validator": "^0.11.0",
+    "fs": "0.0.1-security",
     "http-status-codes": "^1.4.0",
     "inversify": "^5.0.1",
     "inversify-restify-utils": "^3.4.0",

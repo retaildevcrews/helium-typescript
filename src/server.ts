@@ -1,5 +1,4 @@
 import * as bodyParser from "body-parser";
-import * as swaggerJSDoc from "swagger-jsdoc";
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
 import { ActorController } from "./app/controllers/actor";
@@ -19,9 +18,11 @@ import { ITelemProvider } from "./telem/itelemprovider";
 import { MovieController } from "./app/controllers/movie";
 import { robotsHandler } from "./middleware/robotsText";
 import { version } from "./config/constants";
+// import * as swaggerJSDoc from "swagger-jsdoc";
 
 (async () => {
     const restify = require("restify");
+    const fs = require("fs");
 
     /**
      * Create an Inversion of Control container using Inversify
@@ -33,6 +34,18 @@ import { version } from "./config/constants";
      */
     iocContainer.bind<ILoggingProvider>("ILoggingProvider").to(BunyanLogger).inSingletonScope();
     const log: ILoggingProvider = iocContainer.get<ILoggingProvider>("ILoggingProvider");
+
+    /**
+     * Read in Swagger json content
+     * This is only needed for reading in the swagger.json file
+     */
+    let swaggerJson;
+    fs.readFile("./swagger.json", "utf8", (err, data) => {
+        if (err) {
+            log.Error(Error(err), "swagger.json file not found.");
+        }
+        swaggerJson = data;
+    });
 
     // Get config values from Key Vault
     const config = await getConfigValues(log);
@@ -111,24 +124,33 @@ import { version } from "./config/constants";
              */
             app.use(EndpointLogger(iocContainer));
 
-            const options: any = {
-                // Path to the API docs
-                apis: [`${__dirname}/app/models/*.js`, `${__dirname}/app/controllers/*.js`],
-                definition: {
-                    info: {
-                        title: "Helium", // Title (required)
-                        version: {version}, // Version (required)
-                    },
-                    openapi: "3.0.2", // Specification (optional, defaults to swagger: "2.0")
-                },
-            };
+            // const options: any = {
+            //     // Path to the API docs
+            //     apis: [`${__dirname}/app/models/*.js`, `${__dirname}/app/controllers/*.js`],
+            //     definition: {
+            //         info: {
+            //             title: "Helium", // Title (required)
+            //             version: {version}, // Version (required)
+            //         },
+            //         openapi: "3.0.2", // Specification (optional, defaults to swagger: "2.0")
+            //     },
+            // };
 
             // Initialize swagger-jsdoc -> returns validated swagger spec in json format
-            const swaggerSpec: any = swaggerJSDoc(options);
+            // const swaggerSpec: any = swaggerJSDoc(options);
+
+            // app.get("/swagger.json", (req, res) => {
+            //     res.setHeader("Content-Type", "application/json");
+            //     res.send(swaggerSpec);
+            // });
 
             app.get("/swagger.json", (req, res) => {
-                res.setHeader("Content-Type", "application/json");
-                res.send(swaggerSpec);
+                res.writeHead(200, {
+                    "Content-Length": Buffer.byteLength(swaggerJson),
+                    "Content-Type": "application/json",
+                });
+                res.write(swaggerJson);
+                res.end();
             });
 
             app.get("/", (req, res) => {
