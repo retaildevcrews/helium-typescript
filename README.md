@@ -1,11 +1,14 @@
 # [Work in Progress] Build a Docker containerized, secure Node.js Web API application using Managed Identity, Key Vault, and Cosmos DB that is designed to be deployed to Azure App Service or AKS
 
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Docker Image Build](https://github.com/retaildevcrews/helium-typescript/workflows/Docker%20Image%20Build/badge.svg)
+
 This is a Node.JS REST WebAPI reference application designed to "fork and code" with the following features:
 
 - Securely build, deploy and run an App Service (Web App for Containers) application
 - Use Managed Identity to securely access resources
 - Securely store secrets in Key Vault
-- Securely build and deploy the Docker container from Container Registry or Azure DevOps
+- Securely build and deploy the Docker container from Container Registry
 - Connect to and query CosmosDB
 - Automatically send telemetry and logs to Azure Monitor
 - Instructions for setting up Key Vault, ACR, Azure Monitor and Cosmos DB are in the Helium [readme](https://github.com/retaildevcrews/helium)
@@ -19,9 +22,25 @@ This is a Node.JS REST WebAPI reference application designed to "fork and code" 
 - JQ ([download](https://stedolan.github.io/jq/download/))
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
-## Package Dependency Vulnerability
+## Package Status
 
-Currently, helium-typescript has a dependncy on inversify-restify-utils which has a [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
+### Dependency Vulnerability
+
+Currently, helium-typescript has a dependency on inversify-restify-utils which has a [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
+
+### Warnings
+
+There is a known dependency on deprecated @opentelemetry/types package. This is due to a dependency on a few Azure SDK packages, tracked by [this issue](https://github.com/Azure/azure-sdk-for-js/issues/7079).
+
+- npm WARN deprecated @opentelemetry/types@0.2.0: Package renamed to @opentelemetry/api, see [description](https://github.com/open-telemetry/opentelemetry-js)
+
+There is a known dependency on deprecated request@2.88.2. This is due to dependencies on jsdom and adal-node. This is tracked by [jsdom issue](https://github.com/jsdom/jsdom/issues/2792) and [adal issue](https://github.com/AzureAD/azure-activedirectory-library-for-nodejs/issues/229).  Adal-node should be updated to msal, tracking this with [ms-node-auth issue](https://github.com/Azure/ms-rest-nodeauth/issues/84).
+
+- npm WARN deprecated request@2.88.2: request has been deprecated, see [description](https://github.com/request/request/issues/3142)
+
+There is a known warning for a peer dependency on canvas.  However, the reported work-arounds online introduce a lot of different, additional errors.  Tracked by [issue/PR](https://github.com/node-gfx/node-canvas-prebuilt/pull/80). For now, this does not affect app behavior.
+
+- npm WARN jsdom@15.2.1 requires a peer of canvas@^2.5.0 but none is installed. You must install peer dependencies yourself.
 
 ## Setup
 
@@ -62,9 +81,6 @@ Run the application locally
 
 # make sure you are in the root of the repo
 
-# set required keyvaultname environment variable
-export KeyVaultName={name of your key vault}
-
 # log in with azure credentials (if not done already)
 az login
 
@@ -74,8 +90,17 @@ az login
 # npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 npm install
 
-# run the app
+# build the app
 npm run build
+
+# run the app with command line args
+# for local run, you need to specify CLI authentication type
+npm start -- --kvname {name of your keyvault} --authtype CLI
+
+# alternatively you can set the following environment variables and run without command line args
+export KeyVaultName={name of your keyvault}
+export AUTH_TYPE=CLI
+
 npm start
 
 # test the application
@@ -96,7 +121,12 @@ docker build -t helium-dev -f Dockerfile-Dev .
 # mount your ~/.azure directory to container root/.azure directory
 # you can also run the container and run az login from a bash shell
 # $He_Name is set to the name of your key vault
-docker run -d -p 4120:4120 -e KeyVaultName=$He_Name --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
+
+# option using command line args
+docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--kvname" "${He_Name}" "--authtype" "CLI"
+
+# option using environment variables
+docker run -d -p 4120:4120 -e KeyVaultName=$He_Name -e AUTH_TYPE=CLI --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
 
 # check the logs
 # re-run until the application started message appears
