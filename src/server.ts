@@ -17,9 +17,10 @@ import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-util
 import { ITelemProvider } from "./telem/itelemprovider";
 import { MovieController } from "./app/controllers/movie";
 import { robotsHandler } from "./middleware/robotsText";
-// import * as swaggerJSDoc from "swagger-jsdoc";
 import { authTypeEnv, keyVaultName, version } from "./config/constants";
 import { CommandLineUtilities } from "./utilities/commandLineUtilities";
+// Uncomment this if you want to auto generate swagger json
+// import * as swaggerJSDoc from "swagger-jsdoc";
 
 (async () => {
     const restify = require("restify");
