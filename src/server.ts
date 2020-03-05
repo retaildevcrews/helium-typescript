@@ -36,7 +36,8 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
     iocContainer.bind<ILoggingProvider>("ILoggingProvider").to(BunyanLogger).inSingletonScope();
     const log: ILoggingProvider = iocContainer.get<ILoggingProvider>("ILoggingProvider");
 
-    /** Set Key Vault name/url and authentication type variables
+    /**
+     * Set Key Vault name/url and authentication type variables
      * Command line args override environment variables
      */
     let keyVaultUrl = process.env[keyVaultName];
