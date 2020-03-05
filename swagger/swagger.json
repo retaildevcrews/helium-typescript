@@ -789,7 +789,7 @@
           }
         }
       },
-      "/Healthz": {
+      "/healthz": {
         "get": {
           "tags": [ "Healthz" ],
           "summary": "Health Check (simple)",
@@ -809,7 +809,7 @@
           }
         }
       },
-      "/Healthz/ietf": {
+      "/healthz/ietf": {
         "get": {
           "tags": [ "Healthz" ],
           "summary": "Health Check (IETF)",
@@ -868,73 +868,6 @@
                         "observedValue": 57.27,
                         "targetValue": 400,
                         "time": "2020-03-02T01:49:17Z"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/Healthz/dotnet": {
-        "get": {
-          "tags": [ "Healthz" ],
-          "summary": "Health Check (dotnet)",
-          "description": "Returns a `DotNetHealthCheck` document from the Health Check",
-          "responses": {
-            "200": {
-              "description": "`DotNetHealthCheck`",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/DotNetHealthCheck"
-                  },
-                  "example": {
-                    "description": "Helium C# Health Check",
-                    "status": "Healthy",
-                    "data": {
-                      "instance": "0",
-                      "version": "1.0.0302.0026",
-                      "getGenres": {
-                        "status": "Healthy",
-                        "componentType": "CosmosDB",
-                        "duration": "00:00:00.010",
-                        "targetDuration": "00:00:00.400",
-                        "time": "2020-03-02T01:50:47Z",
-                        "endpoint": "/api/genres"
-                      },
-                      "getActorById": {
-                        "status": "Healthy",
-                        "componentType": "CosmosDB",
-                        "duration": "00:00:00.001",
-                        "targetDuration": "00:00:00.250",
-                        "time": "2020-03-02T01:50:47Z",
-                        "endpoint": "/api/actors/nm0000173"
-                      },
-                      "getMovieById": {
-                        "status": "Healthy",
-                        "componentType": "CosmosDB",
-                        "duration": "00:00:00.002",
-                        "targetDuration": "00:00:00.400",
-                        "time": "2020-03-02T01:50:47Z",
-                        "endpoint": "/api/movies/tt0133093"
-                      },
-                      "searchMovies": {
-                        "status": "Healthy",
-                        "componentType": "CosmosDB",
-                        "duration": "00:00:00.023",
-                        "targetDuration": "00:00:00.400",
-                        "time": "2020-03-02T01:50:47Z",
-                        "endpoint": "/api/movies?q=ring"
-                      },
-                      "searchActors": {
-                        "status": "Healthy",
-                        "componentType": "CosmosDB",
-                        "duration": "00:00:00.046",
-                        "targetDuration": "00:00:00.400",
-                        "time": "2020-03-02T01:50:47Z",
-                        "endpoint": "/api/actors?q=nicole"
                       }
                     }
                   }
@@ -1282,184 +1215,6 @@
                       "items": {
                         "type": "string"
                       }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "additionalProperties": false
-        },
-        "DotNetHealthCheck": {
-          "type": "object",
-          "properties": {
-            "status": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            },
-            "data": {
-              "type": "object",
-              "properties": {
-                "instance": {
-                  "type": "string"
-                },
-                "version": {
-                  "type": "string"
-                },
-                "getGenres": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "componentType": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "duration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "targetDuration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "time": {
-                      "type": "string",
-                      "format": "datetime"
-                    },
-                    "endPoint": {
-                      "type": "string",
-                      "nullable": true
-                    }
-                  }
-                },
-                "getActorById": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "componentType": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "duration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "targetDuration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "time": {
-                      "type": "string",
-                      "format": "datetime"
-                    },
-                    "endPoint": {
-                      "type": "string",
-                      "nullable": true
-                    }
-                  }
-                },
-                "getMovieById": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "componentType": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "duration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "targetDuration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "time": {
-                      "type": "string",
-                      "format": "datetime"
-                    },
-                    "endPoint": {
-                      "type": "string",
-                      "nullable": true
-                    }
-                  }
-                },
-                "searchActors": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "componentType": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "duration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "targetDuration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "time": {
-                      "type": "string",
-                      "format": "datetime"
-                    },
-                    "endPoint": {
-                      "type": "string",
-                      "nullable": true
-                    }
-                  }
-                },
-                "searchMovies": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string"
-                    },
-                    "componentType": {
-                      "type": "string"
-                    },
-                    "message": {
-                      "type": "string",
-                      "nullable": true
-                    },
-                    "duration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "targetDuration": {
-                      "type": "string",
-                      "format": "time"
-                    },
-                    "time": {
-                      "type": "string",
-                      "format": "datetime"
-                    },
-                    "endPoint": {
-                      "type": "string",
-                      "nullable": true
                     }
                   }
                 }

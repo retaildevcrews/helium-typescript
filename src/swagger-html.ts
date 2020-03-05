@@ -42,7 +42,7 @@ export const html: string = `<!DOCTYPE html>
                     window.onload = function() {
                         // Begin Swagger UI call region
                         const ui = SwaggerUIBundle({
-                            url: '/swagger.json',
+                            url: '/swagger/swagger.json',
                             dom_id: '#swagger-ui',
                             deepLinking: true,
                             presets: [

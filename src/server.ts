@@ -23,7 +23,6 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
 
 (async () => {
     const restify = require("restify");
-    const fs = require("fs");
 
     /**
      * Create an Inversion of Control container using Inversify
@@ -35,18 +34,6 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
      */
     iocContainer.bind<ILoggingProvider>("ILoggingProvider").to(BunyanLogger).inSingletonScope();
     const log: ILoggingProvider = iocContainer.get<ILoggingProvider>("ILoggingProvider");
-
-    /**
-     * Read in Swagger json content
-     * This is only needed for reading in the swagger.json file
-     */
-    let swaggerJson;
-    fs.readFile("./swagger.json", "utf8", (err, data) => {
-        if (err) {
-            log.Error(Error(err), "swagger.json file not found.");
-        }
-        swaggerJson = data;
-    });
 
     /** Set Key Vault name/url and authentication type variables
      * Command line args override environment variables
@@ -177,6 +164,7 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
              */
             app.use(EndpointLogger(iocContainer));
 
+            // Uncomment this if you want to auto generate swagger json
             // const options: any = {
             //     // Path to the API docs
             //     apis: [`${__dirname}/app/models/*.js`, `${__dirname}/app/controllers/*.js`],
@@ -190,21 +178,19 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
             // };
 
             // Initialize swagger-jsdoc -> returns validated swagger spec in json format
+            // Uncomment this if you want to auto generate swagger json
             // const swaggerSpec: any = swaggerJSDoc(options);
 
+            // Uncomment this if you want to auto generate swagger json
             // app.get("/swagger.json", (req, res) => {
             //     res.setHeader("Content-Type", "application/json");
             //     res.send(swaggerSpec);
             // });
 
-            app.get("/swagger.json", (req, res) => {
-                res.writeHead(200, {
-                    "Content-Length": Buffer.byteLength(swaggerJson),
-                    "Content-Type": "application/json",
-                });
-                res.write(swaggerJson);
-                res.end();
-            });
+            app.get("/swagger/*", restify.plugins.serveStatic({
+                directory: __dirname + "/..",
+                default: "swagger.json",
+            }));
 
             app.get("/", (req, res) => {
                 res.writeHead(200, {

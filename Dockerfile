@@ -41,4 +41,5 @@ FROM base AS release
 USER appuser
 COPY --from=dependencies /app/prod_node_modules ./node_modules
 COPY --from=test /app/dist ./dist
+COPY --from=test /app/swagger/swagger.json ./swagger/swagger.json
 ENTRYPOINT [ "sh", "./scripts/start-service.sh" ]

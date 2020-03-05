@@ -42,3 +42,4 @@ RUN npm run lint && npm run build && npm run test-unit
 FROM helium-dev-base AS release
 COPY --from=dependencies /app/prod_node_modules ./node_modules
 COPY --from=test /app/dist ./dist
+COPY --from=test /app/swagger/swagger.json ./swagger/swagger.json
