@@ -30,19 +30,18 @@ export class KeyVaultProvider {
             await this._initialize();
         }
 
-        const secret: string = await this.client.getSecret(name)
-            .then((s) => (s.value) as string)
-            .catch((e) => {
-                if (name === "AppInsightsKey") {
-                    this.logger.Trace("App Insights Key not set");
-                    return " ";
-                } else {
-                    this.logger.Error(Error(), "Unable to find secret " + name + " " + e);
-                    throw new Error(`Unable to find secret ${name}`);
-                }
-            });
-
-        return secret;
+        try {
+            const { value: secret } = await this.client.getSecret(name);
+            return secret as string;
+        } catch (err) {
+            if (name === "AppInsightsKey") {
+                this.logger.Trace("App Insights Key not set");
+                return " ";
+            } else {
+                this.logger.Error(Error(), "Unable to find secret " + name + " " + err);
+                throw new Error(`Unable to find secret ${name}`);
+            }
+        }
     }
 
     /**
