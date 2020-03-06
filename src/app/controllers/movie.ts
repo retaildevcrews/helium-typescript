@@ -128,8 +128,6 @@ export class MovieController implements interfaces.Controller {
         } catch (err) {
             result = err.toString();
 
-            console.log(result)
-
             if (err.toString().includes("404")) {
                 resCode = HttpStatus.NOT_FOUND;
             } else {

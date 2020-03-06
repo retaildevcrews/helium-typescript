@@ -69,6 +69,7 @@ export class CosmosDBProvider {
             return queryResults;
         } catch (err) {
             this.logger.Error(Error(err), err);
+            throw Error(err);
         }
     }
 
@@ -83,11 +84,12 @@ export class CosmosDBProvider {
             if (status === 200) {
                 return result;
             }
-            return Promise.reject(Number(status))
-            //throw Number(status);
+
+            throw "Cosmos Error: " + status;
+
         } catch (err) {
             this.logger.Error(Error(err), err);
-            //throw Error(err);
+            throw Error(err);
         }
     }
 
