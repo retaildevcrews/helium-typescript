@@ -55,7 +55,7 @@ export class CosmosDBProvider {
         try {
             this.cosmosContainer = await this.cosmosClient.database(this.databaseId).container(this.containerId);
         } catch (err) {
-            this.logger.Error(Error(err), "Cosmos failed to initialize: " + err);
+            this.logger.Error(Error(err), err);
         }
     }
 
@@ -68,7 +68,7 @@ export class CosmosDBProvider {
             const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
             return queryResults;
         } catch (err) {
-            this.logger.Error(Error(err), "Cosmos query failed: " + err);
+            this.logger.Error(Error(err), err);
         }
     }
 
@@ -83,8 +83,11 @@ export class CosmosDBProvider {
             if (status === 200) {
                 return result;
             }
+            return Promise.reject(Number(status))
+            //throw Number(status);
         } catch (err) {
-            this.logger.Error(Error(err), "Cosmos get failed with " + status + ": " + err);
+            this.logger.Error(Error(err), err);
+            //throw Error(err);
         }
     }
 
@@ -132,7 +135,7 @@ export class CosmosDBProvider {
         try {
             return await this.queryDocuments(sql);
         } catch (err) {
-            this.logger.Error(Error(err), "Cosmos actor query error: " + err);
+            this.logger.Error(Error(err), err);
         }
     }
 
@@ -215,7 +218,7 @@ export class CosmosDBProvider {
         try {
             return await this.queryDocuments(sql);
         } catch (err) {
-            this.logger.Error(Error(err), "Cosmos movie query error: " + err);
+            this.logger.Error(Error(err), err);
         }
     }
 }
