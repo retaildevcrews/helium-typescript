@@ -1,5 +1,4 @@
 import * as bodyParser from "body-parser";
-import * as swaggerJSDoc from "swagger-jsdoc";
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
 import { ActorController } from "./app/controllers/actor";
@@ -20,6 +19,8 @@ import { MovieController } from "./app/controllers/movie";
 import { robotsHandler } from "./middleware/robotsText";
 import { authTypeEnv, keyVaultName, version } from "./config/constants";
 import { CommandLineUtilities } from "./utilities/commandLineUtilities";
+// Uncomment this if you want to auto generate swagger json
+// import * as swaggerJSDoc from "swagger-jsdoc";
 
 (async () => {
     const restify = require("restify");
@@ -165,25 +166,33 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
              */
             app.use(EndpointLogger(iocContainer));
 
-            const options: any = {
-                // Path to the API docs
-                apis: [`${__dirname}/app/models/*.js`, `${__dirname}/app/controllers/*.js`],
-                definition: {
-                    info: {
-                        title: "Helium", // Title (required)
-                        version: {version}, // Version (required)
-                    },
-                    openapi: "3.0.2", // Specification (optional, defaults to swagger: "2.0")
-                },
-            };
+            // Uncomment this if you want to auto generate swagger json
+            // const options: any = {
+            //     // Path to the API docs
+            //     apis: [`${__dirname}/app/models/*.js`, `${__dirname}/app/controllers/*.js`],
+            //     definition: {
+            //         info: {
+            //             title: "Helium", // Title (required)
+            //             version: {version}, // Version (required)
+            //         },
+            //         openapi: "3.0.2", // Specification (optional, defaults to swagger: "2.0")
+            //     },
+            // };
 
             // Initialize swagger-jsdoc -> returns validated swagger spec in json format
-            const swaggerSpec: any = swaggerJSDoc(options);
+            // Uncomment this if you want to auto generate swagger json
+            // const swaggerSpec: any = swaggerJSDoc(options);
 
-            app.get("/swagger.json", (req, res) => {
-                res.setHeader("Content-Type", "application/json");
-                res.send(swaggerSpec);
-            });
+            // Uncomment this if you want to auto generate swagger json
+            // app.get("/swagger.json", (req, res) => {
+            //     res.setHeader("Content-Type", "application/json");
+            //     res.send(swaggerSpec);
+            // });
+
+            app.get("/swagger/*", restify.plugins.serveStatic({
+                directory: __dirname + "/..",
+                default: "swagger.json",
+            }));
 
             app.get("/", (req, res) => {
                 res.writeHead(200, {
