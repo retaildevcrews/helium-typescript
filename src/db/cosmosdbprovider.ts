@@ -85,11 +85,11 @@ export class CosmosDBProvider {
                 return result;
             }
 
-            throw "Cosmos Error: " + status;
+            throw Error("Cosmos Error: " + status);
 
         } catch (err) {
             this.logger.Error(Error(err), err);
-            throw Error(err);
+            throw err;
         }
     }
 
