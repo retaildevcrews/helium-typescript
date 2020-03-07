@@ -52,21 +52,25 @@ export class CosmosDBProvider {
     public async initialize() {
 
         this.logger.Trace("Initializing CosmosDB Container");
-        this.cosmosContainer = await this.cosmosClient.database(this.databaseId).container(this.containerId);
+        try {
+            this.cosmosContainer = await this.cosmosClient.database(this.databaseId).container(this.containerId);
+        } catch (err) {
+            this.logger.Error(Error(err), err);
+        }
     }
 
     /**
      * Runs the given query against CosmosDB.
      * @param query The query to select the documents.
      */
-    public async queryDocuments(query: string): Promise<any[]> {
-        // Wrap all functionality in a promise to avoid forcing the caller to use callbacks
-        return new Promise(async (resolve, reject) => {
+    public async queryDocuments(query: string): Promise<any> {
+        try {
             const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
-
-            resolve(queryResults);
-            reject("Cosmos Error");
-        });
+            return queryResults;
+        } catch (err) {
+            this.logger.Error(Error(err), err);
+            throw Error(err);
+        }
     }
 
     /**
@@ -74,16 +78,19 @@ export class CosmosDBProvider {
      * @param documentId The id of the document to query.
      */
     public async getDocument(documentId: string): Promise<any> {
-
-        return new Promise(async (resolve, reject) => {
-            const { resource: result, statusCode: status } =
-                await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
+        try {
+            const { resource: result, statusCode: status }
+                = await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
             if (status === 200) {
-                resolve(result);
-            } else {
-                reject("Cosmos Error: " + status);
+                return result;
             }
-        });
+
+            throw Error("Cosmos Error: " + status);
+
+        } catch (err) {
+            this.logger.Error(Error(err), err);
+            throw err;
+        }
     }
 
     /**
@@ -127,7 +134,11 @@ export class CosmosDBProvider {
 
         sql += this._actorOrderBy + offsetLimit;
 
-        return await this.queryDocuments(sql);
+        try {
+            return await this.queryDocuments(sql);
+        } catch (err) {
+            this.logger.Error(Error(err), err);
+        }
     }
 
     /**
@@ -206,6 +217,10 @@ export class CosmosDBProvider {
 
         sql += this._movieOrderBy + offsetLimit;
 
-        return await this.queryDocuments(sql);
+        try {
+            return await this.queryDocuments(sql);
+        } catch (err) {
+            this.logger.Error(Error(err), err);
+        }
     }
 }
