@@ -15,7 +15,7 @@ export class FeaturedController implements interfaces.Controller {
     private featuredMovies: string[];
 
     constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-                @inject("ILoggingProvider") private logger: ILoggingProvider) {
+        @inject("ILoggingProvider") private logger: ILoggingProvider) {
         this.cosmosDb = cosmosDb;
         this.logger = logger;
     }
@@ -69,16 +69,16 @@ export class FeaturedController implements interfaces.Controller {
         const movieList: string[] = [];
         const sql = "select m.movieId, m.weight from m where m.type = 'Featured' order by m.weight desc";
 
-        const result = await this.cosmosDb.queryDocuments(sql);
+        const movies = await this.cosmosDb.queryDocuments(sql);
 
-        result.forEach( movie => {
-            for (let i = 0; i < movie.weight; i++) {
-                movieList.push(movie.movieId);
+        movies.forEach(m => {
+            for (let i = 0; i < m.weight; i++) {
+                movieList.push(m.movieId);
             }
         });
 
         // default to The Matrix
-        if ( movieList.length === 0 ) {
+        if (movieList.length === 0) {
             movieList.push("tt0133093");
         }
 
