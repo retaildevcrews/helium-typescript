@@ -135,7 +135,7 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
 
     try {
         // listen for requests
-        server.setConfig((app) => {
+        server.setConfig(app => {
             /**
              * Parse requests of content-type - application/x-www-form-urlencoded
              */

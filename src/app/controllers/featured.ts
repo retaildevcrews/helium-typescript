@@ -71,7 +71,7 @@ export class FeaturedController implements interfaces.Controller {
 
         const result = await this.cosmosDb.queryDocuments(sql);
 
-        result.forEach( (movie) => {
+        result.forEach( movie => {
             for (let i = 0; i < movie.weight; i++) {
                 movieList.push(movie.movieId);
             }
