@@ -47,7 +47,7 @@ export class FeaturedController implements interfaces.Controller {
 
         try {
             if ( this.featuredMovies == null || this.featuredMovies.length === 0 ) {
-                this.featuredMovies = await this.getFeaturedMovieListAsync();
+                this.featuredMovies = await this.getFeaturedMovieList();
             }
 
             if (this.featuredMovies != null && this.featuredMovies.length > 0 ) {
@@ -65,7 +65,7 @@ export class FeaturedController implements interfaces.Controller {
         return res.send(resCode, result);
     }
 
-    private async getFeaturedMovieListAsync(): Promise<string[]> {
+    private async getFeaturedMovieList(): Promise<string[]> {
         const movieList: string[] = [];
         const sql = "select m.movieId, m.weight from m where m.type = 'Featured' order by m.weight desc";
 
