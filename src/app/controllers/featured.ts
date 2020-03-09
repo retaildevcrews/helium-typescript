@@ -12,7 +12,7 @@ import { Movie } from "../models/movie";
 @injectable()
 export class FeaturedController implements interfaces.Controller {
 
-    private _featuredMovies: string[];
+    private featuredMovies: string[];
 
     constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
                 @inject("ILoggingProvider") private logger: ILoggingProvider) {
@@ -46,12 +46,12 @@ export class FeaturedController implements interfaces.Controller {
         let result: Movie;
 
         try {
-            if ( this._featuredMovies == null || this._featuredMovies.length === 0 ) {
-                this._featuredMovies = await this.getFeaturedMovieListAsync();
+            if ( this.featuredMovies == null || this.featuredMovies.length === 0 ) {
+                this.featuredMovies = await this.getFeaturedMovieListAsync();
             }
 
-            if (this._featuredMovies != null && this._featuredMovies.length > 0 ) {
-                const movieId = this._featuredMovies[ Math.floor(Math.random() * ( this._featuredMovies.length - 1 )) ];
+            if (this.featuredMovies != null && this.featuredMovies.length > 0 ) {
+                const movieId = this.featuredMovies[ Math.floor(Math.random() * ( this.featuredMovies.length - 1 )) ];
                 result = await this.cosmosDb.getDocument(movieId);
             }
         } catch (err) {
