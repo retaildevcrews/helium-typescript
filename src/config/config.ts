@@ -22,15 +22,14 @@ export async function getConfigValues(
     let insightsKey: string;
 
     const keyvault: KeyVaultProvider = new KeyVaultProvider(keyVaultUrl, authType, log);
+    
+    await keyvault.ready;
 
     // get Cosmos DB related secrets
     try {
         cosmosDbKey = await keyvault.getSecret(cosmosKey);
-
         cosmosDbUrl = await keyvault.getSecret(cosmosUrl);
-
         database = await keyvault.getSecret(cosmosDatabase);
-
         collection = await keyvault.getSecret(cosmosCollection);
     } catch {
         log.Error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");

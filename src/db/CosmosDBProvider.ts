@@ -22,6 +22,9 @@ export class CosmosDBProvider {
     private readonly _actorOrderBy: string = " order by m.name";
     private readonly _movieSelect: string = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
     private readonly _movieOrderBy: string = " order by m.title";
+    
+    // ready will resolve when the KeyVaultProvider has been initialized and is ready to use
+    public ready: Promise<void>;
 
     /**
      * Creates a new instance of the CosmosDB class.
@@ -43,6 +46,7 @@ export class CosmosDBProvider {
         this.databaseId = database;
         this.containerId = collection;
         this.logger = logger;
+        this.ready = this.initialize();
     }
 
     /**
@@ -57,6 +61,7 @@ export class CosmosDBProvider {
         } catch (err) {
             this.logger.Error(Error(err), err);
         }
+        return;
     }
 
     /**

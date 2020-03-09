@@ -123,11 +123,7 @@ import restify = require("restify");
 
     // initialize cosmos db provider
     const cosmosDb: DatabaseProvider = iocContainer.get<DatabaseProvider>("DatabaseProvider");
-    try {
-        await cosmosDb.initialize();
-    } catch (err) {
-        log.Error(Error(err), "Cosmos failed to initialize: " + err);
-    }
+    await cosmosDb.ready;
 
     // create restify server
     const server = new InversifyRestifyServer(iocContainer);
