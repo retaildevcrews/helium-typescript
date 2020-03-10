@@ -32,7 +32,7 @@ RUN npm install
 # run linters, setup and tests
 FROM dependencies AS test
 COPY . .
-RUN npm run check && npm run build && npm run test-unit
+RUN npm run lint && npm run build && npm run test-unit
  
 #
 # ---- Release ----
