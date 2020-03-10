@@ -54,21 +54,17 @@ export class BunyanLogger implements LoggingProvider {
   public Trace(message: string, id?: string) {
     if (id == null) {
       if (this.customId == null) {
-        // eslint-disable-next-line camelcase, @typescript-eslint/camelcase
-        this.Logger.trace({ corr_id: this.uniqueServerId }, message);
+        this.Logger.trace({ correlationID: this.uniqueServerId }, message);
       } else {
-        // eslint-disable-next-line camelcase, @typescript-eslint/camelcase
-        this.Logger.trace({ corr_id: this.uniqueServerId, custom_id: this.customId }, message);
+        this.Logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
       }
     } else {
       this.customId = id;
-      // eslint-disable-next-line camelcase, @typescript-eslint/camelcase
-      this.Logger.trace({ corr_id: this.uniqueServerId, custom_id: this.customId }, message);
+      this.Logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
     }
   }
-  
+
   public Error(error: Error, errormessage: string) {
-    // eslint-disable-next-line camelcase, @typescript-eslint/camelcase
-    this.Logger.error({ err: error, corr_id: this.uniqueServerId, custom_id: this.customId }, errormessage);
+    this.Logger.error({ err: error, correlationID: this.uniqueServerId, customID: this.customId }, errormessage);
   }
 }
