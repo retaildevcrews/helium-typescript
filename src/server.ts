@@ -1,29 +1,29 @@
 import * as bodyParser from "body-parser";
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
-import { ActorController } from "./app/controllers/actor";
-import { AppInsightsProvider } from "./telem/appinsightsprovider";
-import { BunyanLogger } from "./logging/bunyanLogProvider";
+import { ActorController } from "./app/controllers/ActorController";
+import { AppInsightsProvider } from "./telem/AppInsightsProvider";
+import { BunyanLogger } from "./logging/BunyanLogger";
 import { Container } from "inversify";
-import { CosmosDBProvider } from "./db/cosmosdbprovider";
-import { FeaturedController } from "./app/controllers/featured";
-import { GenreController } from "./app/controllers/genre";
+import { CosmosDBProvider } from "./db/CosmosDBProvider";
+import { FeaturedController } from "./app/controllers/FeaturedController";
+import { GenreController } from "./app/controllers/GenreController";
 import { getConfigValues } from "./config/config";
-import { HealthzController } from "./app/controllers/healthz";
+import { HealthzController } from "./app/controllers/HealthzController";
 import { html } from "./swagger-html";
-import { IDatabaseProvider } from "./db/idatabaseprovider";
-import { ILoggingProvider } from "./logging/iLoggingProvider";
+import { DatabaseProvider } from "./db/DatabaseProvider";
+import { LoggingProvider } from "./logging/LoggingProvider";
 import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-utils";
-import { ITelemProvider } from "./telem/itelemprovider";
-import { MovieController } from "./app/controllers/movie";
+import { TelemProvider } from "./telem/TelemProvider";
+import { MovieController } from "./app/controllers/MovieController";
 import { robotsHandler } from "./middleware/robotsText";
 import { authTypeEnv, keyVaultName, version } from "./config/constants";
 import { CommandLineUtilities } from "./utilities/commandLineUtilities";
+import restify = require("restify");
 // Uncomment this if you want to auto generate swagger json
 // import * as swaggerJSDoc from "swagger-jsdoc";
 
 (async () => {
-    const restify = require("restify");
 
     /**
      * Create an Inversion of Control container using Inversify
@@ -33,8 +33,8 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
     /**
      * Bind the logging provider implementation that you want to use to the container
      */
-    iocContainer.bind<ILoggingProvider>("ILoggingProvider").to(BunyanLogger).inSingletonScope();
-    const log: ILoggingProvider = iocContainer.get<ILoggingProvider>("ILoggingProvider");
+    iocContainer.bind<LoggingProvider>("LoggingProvider").to(BunyanLogger).inSingletonScope();
+    const log: LoggingProvider = iocContainer.get<LoggingProvider>("LoggingProvider");
 
     /**
      * Set Key Vault name/url and authentication type variables
@@ -105,23 +105,24 @@ import { CommandLineUtilities } from "./utilities/commandLineUtilities";
      * Bind the database provider & telemetry provider implementation that you want to use.
      * Also, bind the configuration parameters for the providers.
      */
-    iocContainer.bind<IDatabaseProvider>("IDatabaseProvider").to(CosmosDBProvider).inSingletonScope();
+    iocContainer.bind<DatabaseProvider>("DatabaseProvider").to(CosmosDBProvider).inSingletonScope();
     iocContainer.bind<string>("string").toConstantValue(config.cosmosDbUrl).whenTargetNamed("cosmosDbUrl");
     iocContainer.bind<string>("string").toConstantValue(config.cosmosDbKey).whenTargetNamed("cosmosDbKey");
     iocContainer.bind<string>("string").toConstantValue(config.database).whenTargetNamed("database");
     iocContainer.bind<string>("string").toConstantValue(config.collection).whenTargetNamed("collection");
 
     // Note: the telem object is currently unused, but will be used with Key Rotation
-    let telem: ITelemProvider;
-    // ITelemProvicer/AppInsightsProvider is optional
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let telem: TelemProvider;
+    // TelemProvider/AppInsightsProvider is optional
     if (config.insightsKey) {
         iocContainer.bind<string>("string").toConstantValue(config.insightsKey).whenTargetNamed("instrumentationKey");
-        iocContainer.bind<ITelemProvider>("ITelemProvider").to(AppInsightsProvider).inSingletonScope();
-        telem = iocContainer.get<ITelemProvider>("ITelemProvider");
+        iocContainer.bind<TelemProvider>("TelemProvider").to(AppInsightsProvider).inSingletonScope();
+        telem = iocContainer.get<TelemProvider>("TelemProvider");
     }
 
     // initialize cosmos db provider
-    const cosmosDb: IDatabaseProvider = iocContainer.get<IDatabaseProvider>("IDatabaseProvider");
+    const cosmosDb: DatabaseProvider = iocContainer.get<DatabaseProvider>("DatabaseProvider");
     try {
         await cosmosDb.initialize();
     } catch (err) {

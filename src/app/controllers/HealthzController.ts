@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { IDatabaseProvider } from "../../db/idatabaseprovider";
-import { ILoggingProvider } from "../../logging/iLoggingProvider";
+import { DatabaseProvider } from "../../db/DatabaseProvider";
+import { LoggingProvider } from "../../logging/LoggingProvider";
 import { sqlGenres, webInstanceRole, version } from "../../config/constants";
 import { DateUtilities } from "../../utilities/dateUtilities";
 
@@ -19,8 +19,8 @@ enum IetfStatus {
 @injectable()
 export class HealthzController implements interfaces.Controller {
 
-    constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-                @inject("ILoggingProvider") private logger: ILoggingProvider) {
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
+                @inject("LoggingProvider") private logger: LoggingProvider) {
         this.cosmosDb = cosmosDb;
         this.logger = logger;
     }

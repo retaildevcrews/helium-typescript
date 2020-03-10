@@ -1,6 +1,6 @@
 // HTML for Swagger UI
 
-export const html: string = `<!DOCTYPE html>
+export const html = `<!DOCTYPE html>
                 <html lang="en">
                 <head>
                     <meta charset="UTF-8">

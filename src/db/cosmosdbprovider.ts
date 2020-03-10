@@ -1,9 +1,9 @@
 import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable, named } from "inversify";
-import { ILoggingProvider } from "../logging/iLoggingProvider";
+import { LoggingProvider } from "../logging/LoggingProvider";
 import { QueryUtilities } from "../utilities/queryUtilities";
-import { Actor } from "../app/models/actor";
-import { Movie } from "../app/models/movie";
+import { Actor } from "../app/models/Actor";
+import { Movie } from "../app/models/Movie";
 import { defaultPageSize, maxPageSize } from "../config/constants";
 
 /**
@@ -33,7 +33,7 @@ export class CosmosDBProvider {
                 @inject("string") @named("cosmosDbKey") accessKey: string,
                 @inject("string") @named("database") database: string,
                 @inject("string") @named("collection") collection: string,
-                @inject("ILoggingProvider") private logger: ILoggingProvider) {
+                @inject("LoggingProvider") private logger: LoggingProvider) {
 
         this.cosmosClient = new CosmosClient({
             endpoint: url,
@@ -49,7 +49,7 @@ export class CosmosDBProvider {
      * Initialize the Cosmos DB Container.
      * This is handled in a separate method to avoid calling async operations in the constructor.
      */
-    public async initialize() {
+    public async initialize(): Promise<void> {
 
         this.logger.Trace("Initializing CosmosDB Container");
         try {
@@ -100,8 +100,8 @@ export class CosmosDBProvider {
     public async queryActors(queryParams: any): Promise<Actor[]> {
         let sql: string = this._actorSelect;
 
-        let pageSize: number = 100;
-        let pageNumber: number = 1;
+        let pageSize = 100;
+        let pageNumber = 1;
         let actorName: string = queryParams.q;
 
         // handle paging parameters
@@ -148,8 +148,8 @@ export class CosmosDBProvider {
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         let sql: string = this._movieSelect;
 
-        let pageSize: number = 100;
-        let pageNumber: number = 1;
+        let pageSize = 100;
+        let pageNumber = 1;
         let queryParam: string;
         let actorId: string;
         let genre: string;

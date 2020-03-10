@@ -2,8 +2,8 @@ import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
-import { IDatabaseProvider } from "../../db/idatabaseprovider";
-import { ILoggingProvider } from "../../logging/iLoggingProvider";
+import { DatabaseProvider } from "../../db/DatabaseProvider";
+import { LoggingProvider } from "../../logging/LoggingProvider";
 import { sqlGenres } from "../../config/constants";
 
 /**
@@ -13,8 +13,8 @@ import { sqlGenres } from "../../config/constants";
 @injectable()
 export class GenreController implements interfaces.Controller {
 
-  constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-              @inject("ILoggingProvider") private logger: ILoggingProvider) {
+  constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
+              @inject("LoggingProvider") private logger: LoggingProvider) {
     this.cosmosDb = cosmosDb;
     this.logger = logger;
   }

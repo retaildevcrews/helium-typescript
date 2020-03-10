@@ -3,7 +3,7 @@
  * that abstracts logging/tracing
  */
 
-export interface ILoggingProvider {
+export interface LoggingProvider {
     /**
      * Logs tracing information
      * @param message message to trace

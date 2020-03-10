@@ -1,4 +1,4 @@
-export interface IDatabaseProvider {
+export interface DatabaseProvider {
     /**
      * Initialize the Cosmos DB Container.
      * This is handled in a separate method to avoid calling async operations in the constructor.
