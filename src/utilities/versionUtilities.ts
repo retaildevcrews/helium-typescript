@@ -10,11 +10,8 @@ export class VersionUtilities {
     public static getBuildVersion(): string {
         const lastBuildTime = fs.statSync("./dist/server.js").mtime.toISOString();
 
-        // remove trailing "0" from package.json version
-        let version = process.env.npm_package_version; //.substring(0, 4);
-
-        // add "MMdd.HHmm"
-        version = version + "+" + lastBuildTime.substring(5, 7) + lastBuildTime.substring(8, 10)
+        // add "+MMdd.HHmm"
+        const version = process.env.npm_package_version + "+" + lastBuildTime.substring(5, 7) + lastBuildTime.substring(8, 10)
                   + "." + lastBuildTime.substring(11, 13) + lastBuildTime.substring(14, 16);
 
         return version;
