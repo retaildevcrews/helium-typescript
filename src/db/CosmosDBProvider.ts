@@ -2,8 +2,7 @@ import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable, named } from "inversify";
 import { LoggingProvider } from "../logging/LoggingProvider";
 import { QueryUtilities } from "../utilities/queryUtilities";
-import { Actor } from "../app/models/Actor";
-import { Movie } from "../app/models/Movie";
+import { Actor, Movie } from "../app/models";
 import { defaultPageSize, maxPageSize } from "../config/constants";
 
 /**
