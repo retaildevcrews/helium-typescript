@@ -12,8 +12,6 @@ import { defaultPageSize, maxPageSize } from "../config/constants";
 export class CosmosDBProvider {
 
     private cosmosClient: CosmosClient;
-    private databaseId: string;
-    private containerId: string;
     private cosmosContainer: Container;
     private feedOptions: FeedOptions = { maxItemCount: 2000 };
 
@@ -23,20 +21,14 @@ export class CosmosDBProvider {
      * @param accessKey The CosmosDB access key (primary of secondary).
      * @param logger Logging provider user for tracing/logging.
      */
-    constructor(@inject("string") @named("cosmosDbUrl") private url: string,
-                @inject("string") @named("cosmosDbKey") accessKey: string,
-                @inject("string") @named("database") database: string,
-                @inject("string") @named("collection") collection: string,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
+    constructor(
+        @inject("string") @named("cosmosDbUrl") private url: string,
+        @inject("string") @named("cosmosDbKey") accessKey: string,
+        @inject("string") @named("database") public databaseId: string,
+        @inject("string") @named("collection") public containerId: string,
+        @inject("LoggingProvider") private logger: LoggingProvider) {
 
-        this.cosmosClient = new CosmosClient({
-            endpoint: url,
-            key: accessKey,
-        });
-        this.url = url;
-        this.databaseId = database;
-        this.containerId = collection;
-        this.logger = logger;
+        this.cosmosClient = new CosmosClient({ endpoint: url, key: accessKey });
     }
 
     /**
@@ -145,7 +137,7 @@ export class CosmosDBProvider {
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
         const MOVIE_ORDER_BY = " order by m.title";
-    
+
         let sql: string = MOVIE_SELECT;
 
         let pageSize = 100;

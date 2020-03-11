@@ -13,10 +13,8 @@ import { ValidationUtilities } from "../../utilities/validationUtilities";
 export class ActorController implements interfaces.Controller {
 
     // Instantiate the actor controller
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.cosmosDb = cosmosDb;
-        this.logger = logger;
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider, @inject("LoggingProvider") private logger: LoggingProvider) {
+        
     }
 
     /**

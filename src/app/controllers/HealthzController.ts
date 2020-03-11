@@ -19,10 +19,8 @@ enum IetfStatus {
 @injectable()
 export class HealthzController implements interfaces.Controller {
 
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.cosmosDb = cosmosDb;
-        this.logger = logger;
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider, @inject("LoggingProvider") private logger: LoggingProvider) {
+
     }
 
     /**

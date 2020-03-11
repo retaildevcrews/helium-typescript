@@ -14,12 +14,7 @@ export class KeyVaultProvider {
      * Creates a new instance of the KeyVaultProvider class.
      * @param url The KeyVault testing action URL
      */
-    constructor(private url: string,
-                private authType: string,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.url = url;
-        this.authType = authType;
-        this.logger = logger;
+    constructor(private url: string, private authType: string, @inject("LoggingProvider") private logger: LoggingProvider) {
     }
 
     /**
