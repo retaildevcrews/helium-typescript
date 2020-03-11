@@ -50,11 +50,11 @@ export class CosmosDBProvider {
      */
     public async initialize(): Promise<void> {
 
-        this.logger.Trace("Initializing CosmosDB Container");
+        this.logger.trace("Initializing CosmosDB Container");
         try {
             this.cosmosContainer = await this.cosmosClient.database(this.databaseId).container(this.containerId);
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
         }
     }
 
@@ -67,7 +67,7 @@ export class CosmosDBProvider {
             const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
             return queryResults;
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
             throw Error(err);
         }
     }
@@ -87,7 +87,7 @@ export class CosmosDBProvider {
             throw Error("Cosmos Error: " + status);
 
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
             throw err;
         }
     }
@@ -136,7 +136,7 @@ export class CosmosDBProvider {
         try {
             return await this.queryDocuments(sql);
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
         }
     }
 
@@ -219,7 +219,7 @@ export class CosmosDBProvider {
         try {
             return await this.queryDocuments(sql);
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
         }
     }
 }

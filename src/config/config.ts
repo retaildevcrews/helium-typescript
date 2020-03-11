@@ -33,7 +33,7 @@ export async function getConfigValues(
 
         collection = await keyvault.getSecret(cosmosCollection);
     } catch {
-        log.Error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");
+        log.error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");
         process.exit(1);
     }
 
@@ -41,7 +41,7 @@ export async function getConfigValues(
     try {
         insightsKey = await keyvault.getSecret(appInsightsKey);
     } catch {
-        log.Trace("Application Insights key not set.");
+        log.trace("Application Insights key not set.");
     }
 
     return {

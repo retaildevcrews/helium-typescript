@@ -124,7 +124,7 @@ export class HealthzController implements interfaces.Controller {
             ietfResult.checks = healthChecks;
             return ietfResult;
         } catch (err) {
-            this.logger.Error(Error(), "CosmosException: Healthz: " + err);
+            this.logger.error(Error(), "CosmosException: Healthz: " + err);
             ietfResult.status = IetfStatus.fail;
             ietfResult.cosmosException = err;
             ietfResult.checks = healthChecks;

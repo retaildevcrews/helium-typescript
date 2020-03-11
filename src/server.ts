@@ -122,13 +122,13 @@ import restify = require("restify");
     try {
         await cosmosDb.initialize();
     } catch (err) {
-        log.Error(Error(err), "Cosmos failed to initialize: " + err);
+        log.error(Error(err), "Cosmos failed to initialize: " + err);
     }
 
     // create restify server
     const server = new InversifyRestifyServer(iocContainer);
 
-    log.Trace("Version: " + version);
+    log.trace("Version: " + version);
 
     try {
         // listen for requests
@@ -209,10 +209,10 @@ import restify = require("restify");
                 res.send(version);
             });
         }).build().listen(config.port, () => {
-            log.Trace("Server is listening on port " + config.port);
+            log.trace("Server is listening on port " + config.port);
         });
 
     } catch (err) {
-        log.Error(Error(err), "Error in setting up the server! " + err);
+        log.error(Error(err), "Error in setting up the server! " + err);
     }
 })();

@@ -64,7 +64,7 @@ export class ActorController implements interfaces.Controller {
         
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.Trace("InvalidParameter|" + "getAllActors" + "|" + message);
+            this.logger.trace("InvalidParameter|" + "getAllActors" + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -75,7 +75,7 @@ export class ActorController implements interfaces.Controller {
         try {
             results = await this.cosmosDb.queryActors(req.query);
         } catch (err) {
-            this.logger.Error(Error(), "CosmosException: Healthz: " + err.code + "\n" + err);
+            this.logger.error(Error(), "CosmosException: Healthz: " + err.code + "\n" + err);
             resCode = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
@@ -117,7 +117,7 @@ export class ActorController implements interfaces.Controller {
         
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.Trace("getActorById|" + actorId + "|" + message);
+            this.logger.trace("getActorById|" + actorId + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
