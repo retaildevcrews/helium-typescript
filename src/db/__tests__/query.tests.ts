@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { CosmosClient } from "@azure/cosmos";
-import { CosmosDBProvider } from "../cosmosdbprovider";
+import { CosmosDBProvider } from "../CosmosDBProvider";
 
 jest.mock("@azure/cosmos");
 
