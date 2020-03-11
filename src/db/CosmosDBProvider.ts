@@ -17,11 +17,6 @@ export class CosmosDBProvider {
     private cosmosContainer: Container;
     private feedOptions: FeedOptions = { maxItemCount: 2000 };
 
-    private readonly _actorSelect: string = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
-    private readonly _actorOrderBy: string = " order by m.name";
-    private readonly _movieSelect: string = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
-    private readonly _movieOrderBy: string = " order by m.title";
-
     /**
      * Creates a new instance of the CosmosDB class.
      * @param url The url of the CosmosDB.
@@ -97,7 +92,10 @@ export class CosmosDBProvider {
      * @param queryParams The query params used to select the actor documents.
      */
     public async queryActors(queryParams: any): Promise<Actor[]> {
-        let sql: string = this._actorSelect;
+        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
+        const ACTOR_ORDER_BY = " order by m.name";
+
+        let sql = ACTOR_SELECT;
 
         let pageSize = 100;
         let pageNumber = 1;
@@ -131,7 +129,7 @@ export class CosmosDBProvider {
             }
         }
 
-        sql += this._actorOrderBy + offsetLimit;
+        sql += ACTOR_ORDER_BY + offsetLimit;
 
         try {
             return await this.queryDocuments(sql);
@@ -145,7 +143,10 @@ export class CosmosDBProvider {
      * @param queryParams The query params used to select the movie documents.
      */
     public async queryMovies(queryParams: any): Promise<Movie[]> {
-        let sql: string = this._movieSelect;
+        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
+        const MOVIE_ORDER_BY = " order by m.title";
+    
+        let sql: string = MOVIE_SELECT;
 
         let pageSize = 100;
         let pageNumber = 1;
@@ -214,7 +215,7 @@ export class CosmosDBProvider {
             sql += " and array_contains(m.genres, '" + genre + "')";
         }
 
-        sql += this._movieOrderBy + offsetLimit;
+        sql += MOVIE_ORDER_BY + offsetLimit;
 
         try {
             return await this.queryDocuments(sql);
