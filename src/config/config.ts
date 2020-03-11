@@ -1,5 +1,5 @@
 import { LoggingProvider } from "../logging/LoggingProvider";
-import { KeyVaultProvider } from "../secrets/keyvaultprovider";
+import { KeyVaultProvider } from "../secrets/KeyVaultProvider";
 import {
     cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl,
     appInsightsKey, portConstant,
