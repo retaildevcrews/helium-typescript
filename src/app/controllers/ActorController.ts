@@ -63,6 +63,7 @@ export class ActorController implements interfaces.Controller {
 
         try {
             results = await this.cosmosDb.queryActors(req.query);
+            results = this.removePropSync(results);
         } catch (err) {
             this.logger.Error(Error(), "CosmosException: Healthz: " + err.code + "\n" + err);
             resCode = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -108,6 +109,7 @@ export class ActorController implements interfaces.Controller {
         let result: Actor;
         try {
             result = new Actor(await this.cosmosDb.getDocument(actorId));
+            result.movies = this.removePropSync(result);
         } catch (err) {
             result = err.toString();
 
@@ -119,5 +121,28 @@ export class ActorController implements interfaces.Controller {
         }
 
         return res.send(resCode, result);
+    }
+
+    private removePropSync(data) {
+
+        const buildMovieObj = (movie) => {
+            return { 
+                "movieId": movie.movieId,
+                "title": movie.title,
+                "year": movie.year,
+                "runtime": movie.runtime,
+                "genres": movie.genres
+            }
+        }
+
+        if (Array.isArray(data)) {
+            data.forEach(item => {
+                item.movies = item["movies"].map(buildMovieObj);
+            });
+        
+            return data;
+        }
+
+        return data["movies"].map(buildMovieObj);
     }
 }
