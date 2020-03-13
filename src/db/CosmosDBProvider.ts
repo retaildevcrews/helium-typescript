@@ -189,8 +189,8 @@ export class CosmosDBProvider {
             sql += " and m.rating >= " + queryParams.rating + " ";
         }
 
-        if (queryParams.actorid) {
-            actorId = queryParams.actorid.trim().toLowerCase().replace("'", "''");
+        if (queryParams.actorId) {
+            actorId = queryParams.actorId.trim().toLowerCase().replace("'", "''");
 
             if (actorId) {
                 sql += " and array_contains(m.roles, { actorId: '";

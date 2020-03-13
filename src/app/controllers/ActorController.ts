@@ -5,6 +5,7 @@ import * as HttpStatus from "http-status-codes";
 import { DatabaseProvider } from "../../db/DatabaseProvider";
 import { LoggingProvider } from "../../logging/LoggingProvider";
 import { Actor } from "../models/Actor";
+import { ValidationUtilities } from "../../utilities/validationUtilities";
 
 // Controller implementation for our actors endpoint
 @Controller("/api/actors")
@@ -58,9 +59,19 @@ export class ActorController implements interfaces.Controller {
      */
     @Get("/")
     public async getAllActors(req: Request, res) {
+        // Validate query parameters
+        const { validated: validated, message: message } = ValidationUtilities.validateCommon(req.query);
+        
+        if (!validated) {
+            res.setHeader("Content-Type", "text/plain");
+            this.logger.Trace("InvalidParameter|" + "getAllActors" + "|" + message);
+            return res.send(HttpStatus.BAD_REQUEST, message);
+        }
+
         let resCode: number = HttpStatus.OK;
         let results: Actor[];
 
+        // Execute query
         try {
             results = await this.cosmosDb.queryActors(req.query);
         } catch (err) {
@@ -100,10 +111,16 @@ export class ActorController implements interfaces.Controller {
      */
     @Get("/:id")
     public async getActorById(req, res) {
-
+        // Validate Actor Id parameter
         const actorId: string = req.params.id;
+        const { validated: validated, message: message } = ValidationUtilities.validateActorId(actorId);
+        
+        if (!validated) {
+            res.setHeader("Content-Type", "text/plain");
+            this.logger.Trace("getActorById|" + actorId + "|" + message);
+            return res.send(HttpStatus.BAD_REQUEST, message);
+        }
 
-        // make query, catch errors
         let resCode: number = HttpStatus.OK;
         let result: Actor;
         try {

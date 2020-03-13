@@ -4,6 +4,7 @@ import * as HttpStatus from "http-status-codes";
 import { DatabaseProvider } from "../../db/DatabaseProvider";
 import { LoggingProvider } from "../../logging/LoggingProvider";
 import { Movie } from "../models/Movie";
+import { ValidationUtilities } from "../../utilities/validationUtilities";
 
 /**
  * controller implementation for our movies endpoint
@@ -78,9 +79,19 @@ export class MovieController implements interfaces.Controller {
      */
     @Get("/")
     public async getAllMovies(req, res) {
+        // Validate query parameters
+        const { validated: validated, message: message } = ValidationUtilities.validateMovies(req.query);
+        
+        if (!validated) {
+            res.setHeader("Content-Type", "text/plain");
+            this.logger.Trace("InvalidParameter|" + "getAllMovies" + "|" + message);
+            return res.send(HttpStatus.BAD_REQUEST, message);
+        }
+
         let resCode: number = HttpStatus.OK;
         let results: Movie[];
 
+        // Execute query
         try {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
@@ -119,7 +130,15 @@ export class MovieController implements interfaces.Controller {
      */
     @Get("/:id")
     public async getMovieById(req, res) {
+        // Validate Movie Id parameter
         const movieId: string = req.params.id;
+        const { validated: validated, message: message } = ValidationUtilities.validateMovieId(movieId);
+
+        if (!validated) {
+            res.setHeader("Content-Type", "text/plain");
+            this.logger.Trace("getMovieById|" + movieId + "|" + message);
+            return res.send(HttpStatus.BAD_REQUEST, message);
+        }
 
         let resCode: number = HttpStatus.OK;
         let result: Movie;
