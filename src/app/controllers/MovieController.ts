@@ -1,19 +1,19 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
-import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
-import { IDatabaseProvider } from "../../db/idatabaseprovider";
-import { ILoggingProvider } from "../../logging/iLoggingProvider";
-import { Actor } from "../models/actor";
+import { DatabaseProvider } from "../../db/DatabaseProvider";
+import { LoggingProvider } from "../../logging/LoggingProvider";
+import { Movie } from "../models/Movie";
 
-// Controller implementation for our actors endpoint
-@Controller("/api/actors")
+/**
+ * controller implementation for our movies endpoint
+ */
+@Controller("/api/movies")
 @injectable()
-export class ActorController implements interfaces.Controller {
+export class MovieController implements interfaces.Controller {
 
-    // Instantiate the actor controller
-    constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-                @inject("ILoggingProvider") private logger: ILoggingProvider) {
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
+                @inject("LoggingProvider") private logger: LoggingProvider) {
         this.cosmosDb = cosmosDb;
         this.logger = logger;
     }
@@ -21,14 +21,34 @@ export class ActorController implements interfaces.Controller {
     /**
      * @swagger
      *
-     * /api/actors:
+     * /api/movies:
      *   get:
-     *     description: Retrieve and return all actors.
+     *     description: Retrieve and return all movies!
      *     tags:
-     *       - Actors
+     *       - Movies
      *     parameters:
      *       - name: q
-     *         description: The actor name to filter by.
+     *         description: The term used to search by movie title (rings)
+     *         in: query
+     *         schema:
+     *           type: string
+     *       - name: genre
+     *         description: Movies of a genre (Action)
+     *         in: query
+     *         schema:
+     *           type: string
+     *       - name: year
+     *         description: Get movies by year (2005)
+     *         in: query
+     *         schema:
+     *           type: string
+     *       - name: rating
+     *         description: Get movies with a rating >= rating (8.5)
+     *         in: query
+     *         schema:
+     *           type: string
+     *       - name: actorid
+     *         description: Get movies by Actor Id (nm0000704)
      *         in: query
      *         schema:
      *           type: string
@@ -46,25 +66,24 @@ export class ActorController implements interfaces.Controller {
      *           default: 100
      *     responses:
      *       '200':
-     *         description: List of actor objects
+     *         description: JSON of movie objects
      *         content:
      *           application/json:
      *             schema:
      *               type: array
      *               items:
-     *                 $ref: '#/components/schemas/Actor'
+     *                 $ref: '#/components/schemas/Movie'
      *       default:
      *         description: Unexpected error
      */
     @Get("/")
-    public async getAllActors(req: Request, res) {
+    public async getAllMovies(req, res) {
         let resCode: number = HttpStatus.OK;
-        let results: Actor[];
+        let results: Movie[];
 
         try {
-            results = await this.cosmosDb.queryActors(req.query);
+            results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
-            this.logger.Error(Error(), "CosmosException: Healthz: " + err.code + "\n" + err);
             resCode = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
@@ -74,40 +93,38 @@ export class ActorController implements interfaces.Controller {
     /**
      * @swagger
      *
-     * /api/actors/{id}:
+     * /api/movies/{id}:
      *   get:
-     *     description: Retrieve and return a single actor by actor ID.
+     *     description: Retrieve and return a single movie by movie ID.
      *     tags:
-     *       - Actors
+     *       - Movies
      *     parameters:
      *       - name: id
-     *         description: The ID of the actor to look for.
+     *         description: The ID of the movie to look for.
      *         in: path
      *         required: true
      *         schema:
      *           type: string
      *     responses:
      *       '200':
-     *         description: The actor object
+     *         description: The movie object
      *         content:
      *           application/json:
      *             schema:
-     *               $ref: '#/components/schemas/Actor'
+     *               $ref: '#/components/schemas/Movie'
      *       '404':
-     *         description: An actor with the specified ID was not found.
+     *         description: A movie with the specified ID was not found.
      *       default:
      *         description: Unexpected error
      */
     @Get("/:id")
-    public async getActorById(req, res) {
+    public async getMovieById(req, res) {
+        const movieId: string = req.params.id;
 
-        const actorId: string = req.params.id;
-
-        // make query, catch errors
         let resCode: number = HttpStatus.OK;
-        let result: Actor;
+        let result: Movie;
         try {
-            result = new Actor(await this.cosmosDb.getDocument(actorId));
+            result = new Movie(await this.cosmosDb.getDocument(movieId));
         } catch (err) {
             result = err.toString();
 

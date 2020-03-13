@@ -1,10 +1,10 @@
 import * as bunyan from "bunyan";
 import { injectable } from "inversify";
 import { v4 } from "uuid";
-import { ILoggingProvider } from "./iLoggingProvider";
+import { LoggingProvider } from "./LoggingProvider";
 
 @injectable()
-export class BunyanLogger implements ILoggingProvider {
+export class BunyanLogger implements LoggingProvider {
   private Logger: bunyan;
   private uniqueServerId: string;
   private customId: string;
@@ -54,17 +54,17 @@ export class BunyanLogger implements ILoggingProvider {
   public Trace(message: string, id?: string) {
     if (id == null) {
       if (this.customId == null) {
-        this.Logger.trace({corr_id: this.uniqueServerId}, message);
+        this.Logger.trace({ correlationID: this.uniqueServerId }, message);
       } else {
-        this.Logger.trace({corr_id: this.uniqueServerId, custom_id: this.customId}, message);
+        this.Logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
       }
     } else {
       this.customId = id;
-      this.Logger.trace({corr_id: this.uniqueServerId, custom_id: this.customId}, message);
+      this.Logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
     }
   }
 
   public Error(error: Error, errormessage: string) {
-    this.Logger.error({err: error, corr_id: this.uniqueServerId, custom_id: this.customId}, errormessage);
+    this.Logger.error({ err: error, correlationID: this.uniqueServerId, customID: this.customId }, errormessage);
   }
 }

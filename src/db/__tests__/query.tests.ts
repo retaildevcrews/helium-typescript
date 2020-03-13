@@ -1,11 +1,11 @@
 import "reflect-metadata";
-import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
-import { CosmosDBProvider } from "../cosmosdbprovider";
+import { CosmosClient } from "@azure/cosmos";
+import { CosmosDBProvider } from "../CosmosDBProvider";
 
 jest.mock("@azure/cosmos");
 
 test("Check cosmos client dependency", () => {
-    const query = new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
+    new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
 
     expect(CosmosClient).toHaveBeenCalledTimes(1);
 });

@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { IDatabaseProvider } from "../../db/idatabaseprovider";
-import { ILoggingProvider } from "../../logging/iLoggingProvider";
+import { DatabaseProvider } from "../../db/DatabaseProvider";
+import { LoggingProvider } from "../../logging/LoggingProvider";
 import { sqlGenres, webInstanceRole, version } from "../../config/constants";
 import { DateUtilities } from "../../utilities/dateUtilities";
 
@@ -19,8 +19,8 @@ enum IetfStatus {
 @injectable()
 export class HealthzController implements interfaces.Controller {
 
-    constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-                @inject("ILoggingProvider") private logger: ILoggingProvider) {
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
+                @inject("LoggingProvider") private logger: LoggingProvider) {
         this.cosmosDb = cosmosDb;
         this.logger = logger;
     }
@@ -40,7 +40,7 @@ export class HealthzController implements interfaces.Controller {
     @Get("/")
     public async healthCheck(req, res) {
 
-        const healthCheckResult = await this.runHealthChecksAsync();
+        const healthCheckResult = await this.runHealthChecks();
         const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
         res.setHeader("Content-Type", "text/plain");
@@ -61,7 +61,7 @@ export class HealthzController implements interfaces.Controller {
      */
     @Get("/ietf")
     public async healthCheckIetf(req, res) {
-        const healthCheckResult = await this.runHealthChecksAsync();
+        const healthCheckResult = await this.runHealthChecks();
         const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
         res.setHeader("Content-Type", "application/health+json");
@@ -75,7 +75,7 @@ export class HealthzController implements interfaces.Controller {
     /**
      * Executes all health checks and builds the final ietf result
      */
-    private async runHealthChecksAsync() {
+    private async runHealthChecks() {
         const ietfResult: {[k: string]: any} = {};
         ietfResult.status = IetfStatus.pass;
         ietfResult.serviceId =  "helium-typescript";
@@ -93,19 +93,19 @@ export class HealthzController implements interfaces.Controller {
 
         try {
             healthChecks.getGenres = getGenres;
-            await this.runHealthCheckAsync("/api/genres", 400, healthChecks.getGenres);
+            await this.runHealthCheck("/api/genres", 400, healthChecks.getGenres);
 
             healthChecks.getActorById = getActorById;
-            await this.runHealthCheckAsync("/api/actors/nm0000173", 250, healthChecks.getActorById);
+            await this.runHealthCheck("/api/actors/nm0000173", 250, healthChecks.getActorById);
 
             healthChecks.getMovieById = getMovieById;
-            await this.runHealthCheckAsync("/api/movies/tt0133093", 250, healthChecks.getMovieById);
+            await this.runHealthCheck("/api/movies/tt0133093", 250, healthChecks.getMovieById);
 
             healthChecks.searchMovies = searchMovies;
-            await this.runHealthCheckAsync("/api/movies?q=ring", 400, healthChecks.searchMovies);
+            await this.runHealthCheck("/api/movies?q=ring", 400, healthChecks.searchMovies);
 
             healthChecks.searchActors = searchActors;
-            await this.runHealthCheckAsync("/api/actors?q=nicole", 400, healthChecks.searchActors);
+            await this.runHealthCheck("/api/actors?q=nicole", 400, healthChecks.searchActors);
 
             // if any health check has a warn or down status
             // set overall status to the worst status
@@ -138,7 +138,7 @@ export class HealthzController implements interfaces.Controller {
      * @param target The target duration for the health check endpoint call.
      * @param healthCheckResult The health check entry to update.
      */
-    private async runHealthCheckAsync(endpoint: string, target: number, healthCheckResult: any) {
+    private async runHealthCheck(endpoint: string, target: number, healthCheckResult: any) {
         // start tracking time
         const startDate = new Date();
         const start = process.hrtime();

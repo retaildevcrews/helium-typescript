@@ -10,8 +10,8 @@ import {
     ValidationError,
 } from "class-validator";
 import { IsEqualToProperty } from "../../utilities/validationUtilities";
-import { Actor } from "./actor";
-import { IValidatable } from "./ivalidatable";
+import { Actor } from "./Actor";
+import { Validatable } from "./Validatable";
 
 /**
  * @swagger
@@ -59,7 +59,7 @@ import { IValidatable } from "./ivalidatable";
  *           items:
  *             $ref: '#/components/schemas/Actor'
  */
-export class Movie implements IValidatable {
+export class Movie implements Validatable {
 
     @IsNotEmpty()
     @IsAlphanumeric()
@@ -88,7 +88,7 @@ export class Movie implements IValidatable {
     public title: string;
 
     @Equals("Movie")
-    public type: string = "Movie";
+    public type = "Movie";
 
     @IsNotEmpty()
     @NotEquals((x) => x.trim.length() > 0)

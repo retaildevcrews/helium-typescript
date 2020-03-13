@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { IDatabaseProvider } from "../../db/idatabaseprovider";
-import { ILoggingProvider } from "../../logging/iLoggingProvider";
-import { Movie } from "../models/movie";
+import { DatabaseProvider } from "../../db/DatabaseProvider";
+import { LoggingProvider } from "../../logging/LoggingProvider";
+import { Movie } from "../models/Movie";
 
 /**
  * controller implementation for our featured movie endpoint
@@ -12,10 +12,10 @@ import { Movie } from "../models/movie";
 @injectable()
 export class FeaturedController implements interfaces.Controller {
 
-    private _featuredMovies: string[];
+    private featuredMovies: string[];
 
-    constructor(@inject("IDatabaseProvider") private cosmosDb: IDatabaseProvider,
-                @inject("ILoggingProvider") private logger: ILoggingProvider) {
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
+        @inject("LoggingProvider") private logger: LoggingProvider) {
         this.cosmosDb = cosmosDb;
         this.logger = logger;
     }
@@ -46,12 +46,12 @@ export class FeaturedController implements interfaces.Controller {
         let result: Movie;
 
         try {
-            if ( this._featuredMovies == null || this._featuredMovies.length === 0 ) {
-                this._featuredMovies = await this.getFeaturedMovieListAsync();
+            if ( this.featuredMovies == null || this.featuredMovies.length === 0 ) {
+                this.featuredMovies = await this.getFeaturedMovieList();
             }
 
-            if (this._featuredMovies != null && this._featuredMovies.length > 0 ) {
-                const movieId = this._featuredMovies[ Math.floor(Math.random() * ( this._featuredMovies.length - 1 )) ];
+            if (this.featuredMovies != null && this.featuredMovies.length > 0 ) {
+                const movieId = this.featuredMovies[ Math.floor(Math.random() * ( this.featuredMovies.length - 1 )) ];
                 result = await this.cosmosDb.getDocument(movieId);
             }
         } catch (err) {
@@ -65,20 +65,20 @@ export class FeaturedController implements interfaces.Controller {
         return res.send(resCode, result);
     }
 
-    private async getFeaturedMovieListAsync(): Promise<string[]> {
+    private async getFeaturedMovieList(): Promise<string[]> {
         const movieList: string[] = [];
         const sql = "select m.movieId, m.weight from m where m.type = 'Featured' order by m.weight desc";
 
-        const result = await this.cosmosDb.queryDocuments(sql);
+        const movies = await this.cosmosDb.queryDocuments(sql);
 
-        result.forEach( (movie) => {
-            for (let i = 0; i < movie.weight; i++) {
-                movieList.push(movie.movieId);
+        movies.forEach(m => {
+            for (let i = 0; i < m.weight; i++) {
+                movieList.push(m.movieId);
             }
         });
 
         // default to The Matrix
-        if ( movieList.length === 0 ) {
+        if (movieList.length === 0) {
             movieList.push("tt0133093");
         }
 

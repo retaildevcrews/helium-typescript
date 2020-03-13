@@ -1,5 +1,5 @@
-import { ILoggingProvider } from "../logging/iLoggingProvider";
-import { KeyVaultProvider } from "../secrets/keyvaultprovider";
+import { LoggingProvider } from "../logging/LoggingProvider";
+import { KeyVaultProvider } from "../secrets/KeyVaultProvider";
 import {
     cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl,
     appInsightsKey, portConstant,
@@ -9,10 +9,7 @@ import {
 export async function getConfigValues(
     keyVaultUrl: string,
     authType: string,
-    log: ILoggingProvider): Promise<{
-        port: string, cosmosDbKey: string, cosmosDbUrl: string,
-        database: string, collection: string, insightsKey: string,
-    }> {
+    log: LoggingProvider): Promise<ConfigValues> {
 
     // use default port from constants
     const port = portConstant;
@@ -55,4 +52,13 @@ export async function getConfigValues(
         collection,
         insightsKey,
     };
+}
+
+export interface ConfigValues {
+    port: string;
+    cosmosDbKey: string;
+    cosmosDbUrl: string;
+    database: string;
+    collection: string;
+    insightsKey: string;
 }

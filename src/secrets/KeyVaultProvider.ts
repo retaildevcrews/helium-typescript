@@ -1,6 +1,6 @@
 import { SecretClient } from "@azure/keyvault-secrets";
 import { inject, injectable } from "inversify";
-import { ILoggingProvider } from "../logging/iLoggingProvider";
+import { LoggingProvider } from "../logging/LoggingProvider";
 import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 
 /**
@@ -16,7 +16,7 @@ export class KeyVaultProvider {
      */
     constructor(private url: string,
                 private authType: string,
-                @inject("ILoggingProvider") private logger: ILoggingProvider) {
+                @inject("LoggingProvider") private logger: LoggingProvider) {
         this.url = url;
         this.authType = authType;
         this.logger = logger;
