@@ -1,16 +1,3 @@
-import {
-    Equals,
-    IsAlphanumeric,
-    IsLowercase,
-    IsNotEmpty,
-    NotEquals,
-    validate,
-    ValidateIf,
-    ValidationArguments,
-    ValidationError,
-} from "class-validator";
-import { IsEqualToProperty } from "../../utilities/validationUtilities";
-import { Validatable } from "./Validatable";
 import { Movie } from "./Movie";
 
 /**
@@ -55,41 +42,14 @@ import { Movie } from "./Movie";
  *           items:
  *             $ref: '#/components/schemas/Movie'
  */
-export class Actor implements Validatable {
+export class Actor {
 
-    @IsNotEmpty()
-    @IsAlphanumeric()
     public id: string;
-
-    @IsNotEmpty()
-    @IsAlphanumeric()
     public actorId: string;
-
-    @ValidateIf((x) => x.name !== undefined)
-    @IsEqualToProperty("name", (x) => (x as string).toLowerCase(),
-        {
-            message: (args: ValidationArguments) => {
-                if ((args.object as Actor).name !== undefined) {
-                    return `textSearch must be equal to ${(args.object as Actor).name.toLowerCase()}`;
-                } else {
-                    return `textSearch must equal the lowercased version of the object's ${args.targetName} property`;
-                }
-            },
-        })
-    @IsLowercase()
-    public textSearch: string;
-
-    @IsNotEmpty()
-    @NotEquals((x) => x.trim.length() > 0)
     public name: string;
-
-    @Equals("Actor")
-    public type = "Actor";
-
-    @IsNotEmpty()
-    @NotEquals((x) => x.trim.length() > 0)
+    public textSearch: string;
+    public type: string;
     public partitionKey: string;
-
     public birthYear?: number;
     public deathYear?: number;
     public profession?: string[];
@@ -108,9 +68,5 @@ export class Actor implements Validatable {
             this.profession = data.profession;
             this.movies = data.movies;
         }
-    }
-
-    public validate(): Promise<ValidationError[]> {
-        return validate(this);
     }
 }

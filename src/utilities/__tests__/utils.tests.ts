@@ -1,6 +1,5 @@
 import { QueryUtilities } from "../queryUtilities";
 import { DateUtilities } from "../dateUtilities";
-import { IsEqualToProperty } from "../validationUtilities";
 import { VersionUtilities } from "../versionUtilities";
 
 test("Get partition key", () => {
@@ -17,10 +16,6 @@ test("Get Timings", () => {
   expect(DateUtilities.getDurationMS([ 1800216, 25 ])).toEqual(expect.any(String));
   expect(DateUtilities.getDurationMS([ 1800216, 25 ])).toBe("1800216000");
 });
-
-test("Get Validation", () => {
-  expect(IsEqualToProperty("hello")).toEqual(expect.any(Function));
- });
 
 test("Get Build Version", () => {
   expect(VersionUtilities.getBuildVersion()).toEqual(expect.any(String));
