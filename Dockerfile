@@ -1,5 +1,5 @@
 # ---- Base Node ----
-FROM node:current-alpine AS base
+FROM node:lts AS base
 
 ### Optional: Set Proxy Variables
 # ENV http_proxy {value}
@@ -10,9 +10,8 @@ FROM node:current-alpine AS base
 # ENV NO_PROXY {value}
 
 # Create a user
-RUN adduser -S appuser
+RUN adduser appuser --system
 WORKDIR /app
-COPY scripts ./scripts
 EXPOSE 4120
 COPY package.json .
  
@@ -20,10 +19,7 @@ COPY package.json .
 # ---- Dependencies ----
 FROM base AS dependencies
 RUN npm set progress=false && npm config set depth 0
-RUN apk add --no-cache --virtual .gyp \
-        make \
-        python \
-        && npm install --production 
+RUN npm install --production
 RUN cp -R node_modules prod_node_modules
 RUN npm install
  
@@ -36,10 +32,10 @@ RUN npm run lint && npm run build && npm run test-unit
  
 #
 # ---- Release ----
-FROM base AS release
+FROM node:lts-alpine AS release
 # Tell docker that all commands in this step should run as the appuser user
 USER appuser
 COPY --from=dependencies /app/prod_node_modules ./node_modules
 COPY --from=test /app/dist ./dist
 COPY --from=test /app/swagger/swagger.json ./swagger/swagger.json
-ENTRYPOINT [ "sh", "./scripts/start-service.sh" ]
+ENTRYPOINT ["/usr/local/bin/npm", "start"]
