@@ -13,10 +13,8 @@ import { ValidationUtilities } from "../../utilities/validationUtilities";
 @injectable()
 export class MovieController implements interfaces.Controller {
 
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.cosmosDb = cosmosDb;
-        this.logger = logger;
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider, @inject("LoggingProvider") private logger: LoggingProvider) {
+        
     }
 
     /**
@@ -84,7 +82,7 @@ export class MovieController implements interfaces.Controller {
         
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.Trace("InvalidParameter|" + "getAllMovies" + "|" + message);
+            this.logger.trace("InvalidParameter|" + "getAllMovies" + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -136,7 +134,7 @@ export class MovieController implements interfaces.Controller {
 
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.Trace("getMovieById|" + movieId + "|" + message);
+            this.logger.trace("getMovieById|" + movieId + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 

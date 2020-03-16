@@ -5,7 +5,7 @@ import { LoggingProvider } from "./LoggingProvider";
 
 @injectable()
 export class BunyanLogger implements LoggingProvider {
-  private Logger: bunyan;
+  private logger: bunyan;
   private uniqueServerId: string;
   private customId: string;
 
@@ -31,7 +31,7 @@ export class BunyanLogger implements LoggingProvider {
    *   Logging from external libraries used by your app or very detailed application logging.
    */
   constructor() {
-    this.Logger = bunyan.createLogger({
+    this.logger = bunyan.createLogger({
       name: "bunyanLog",
       serializers: {
         req: bunyan.stdSerializers.req,
@@ -51,20 +51,20 @@ export class BunyanLogger implements LoggingProvider {
     this.uniqueServerId = v4();
   }
 
-  public Trace(message: string, id?: string) {
+  public trace(message: string, id?: string) {
     if (id == null) {
       if (this.customId == null) {
-        this.Logger.trace({ correlationID: this.uniqueServerId }, message);
+        this.logger.trace({ correlationID: this.uniqueServerId }, message);
       } else {
-        this.Logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
+        this.logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
       }
     } else {
       this.customId = id;
-      this.Logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
+      this.logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
     }
   }
 
-  public Error(error: Error, errormessage: string) {
-    this.Logger.error({ err: error, correlationID: this.uniqueServerId, customID: this.customId }, errormessage);
+  public error(error: Error, errormessage: string) {
+    this.logger.error({ err: error, correlationID: this.uniqueServerId, customID: this.customId }, errormessage);
   }
 }

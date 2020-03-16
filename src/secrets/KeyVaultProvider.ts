@@ -14,12 +14,7 @@ export class KeyVaultProvider {
      * Creates a new instance of the KeyVaultProvider class.
      * @param url The KeyVault testing action URL
      */
-    constructor(private url: string,
-                private authType: string,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.url = url;
-        this.authType = authType;
-        this.logger = logger;
+    constructor(private url: string, private authType: string, @inject("LoggingProvider") private logger: LoggingProvider) {
     }
 
     /**
@@ -36,10 +31,10 @@ export class KeyVaultProvider {
             return secret as string;
         } catch (err) {
             if (name === "AppInsightsKey") {
-                this.logger.Trace("App Insights Key not set");
+                this.logger.trace("App Insights Key not set");
                 return " ";
             } else {
-                this.logger.Error(Error(), "Unable to find secret " + name + " " + err);
+                this.logger.error(Error(), "Unable to find secret " + name + " " + err);
                 throw new Error(`Unable to find secret ${name}`);
             }
         }

@@ -19,10 +19,8 @@ enum IetfStatus {
 @injectable()
 export class HealthzController implements interfaces.Controller {
 
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.cosmosDb = cosmosDb;
-        this.logger = logger;
+    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider, @inject("LoggingProvider") private logger: LoggingProvider) {
+
     }
 
     /**
@@ -124,7 +122,7 @@ export class HealthzController implements interfaces.Controller {
             ietfResult.checks = healthChecks;
             return ietfResult;
         } catch (err) {
-            this.logger.Error(Error(), "CosmosException: Healthz: " + err);
+            this.logger.error(Error(), "CosmosException: Healthz: " + err);
             ietfResult.status = IetfStatus.fail;
             ietfResult.cosmosException = err;
             ietfResult.checks = healthChecks;

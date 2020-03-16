@@ -1,21 +1,17 @@
 import * as bodyParser from "body-parser";
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
-import { ActorController } from "./app/controllers/ActorController";
+import { ActorController, MovieController, FeaturedController, GenreController, HealthzController } from "./app/controllers";
 import { AppInsightsProvider } from "./telem/AppInsightsProvider";
 import { BunyanLogger } from "./logging/BunyanLogger";
 import { Container } from "inversify";
 import { CosmosDBProvider } from "./db/CosmosDBProvider";
-import { FeaturedController } from "./app/controllers/FeaturedController";
-import { GenreController } from "./app/controllers/GenreController";
 import { getConfigValues } from "./config/config";
-import { HealthzController } from "./app/controllers/HealthzController";
 import { html } from "./swagger-html";
 import { DatabaseProvider } from "./db/DatabaseProvider";
 import { LoggingProvider } from "./logging/LoggingProvider";
 import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-utils";
 import { TelemProvider } from "./telem/TelemProvider";
-import { MovieController } from "./app/controllers/MovieController";
 import { robotsHandler } from "./middleware/robotsText";
 import { authTypeEnv, keyVaultName, version } from "./config/constants";
 import { CommandLineUtilities } from "./utilities/commandLineUtilities";
@@ -126,13 +122,13 @@ import restify = require("restify");
     try {
         await cosmosDb.initialize();
     } catch (err) {
-        log.Error(Error(err), "Cosmos failed to initialize: " + err);
+        log.error(Error(err), "Cosmos failed to initialize: " + err);
     }
 
     // create restify server
     const server = new InversifyRestifyServer(iocContainer);
 
-    log.Trace("Version: " + version);
+    log.trace("Version: " + version);
 
     try {
         // listen for requests
@@ -213,10 +209,10 @@ import restify = require("restify");
                 res.send(version);
             });
         }).build().listen(config.port, () => {
-            log.Trace("Server is listening on port " + config.port);
+            log.trace("Server is listening on port " + config.port);
         });
 
     } catch (err) {
-        log.Error(Error(err), "Error in setting up the server! " + err);
+        log.error(Error(err), "Error in setting up the server! " + err);
     }
 })();

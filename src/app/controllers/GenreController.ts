@@ -13,10 +13,8 @@ import { sqlGenres } from "../../config/constants";
 @injectable()
 export class GenreController implements interfaces.Controller {
 
-  constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
-              @inject("LoggingProvider") private logger: LoggingProvider) {
-    this.cosmosDb = cosmosDb;
-    this.logger = logger;
+  constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider, @inject("LoggingProvider") private logger: LoggingProvider) {
+  
   }
 
   /**
