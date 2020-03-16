@@ -18,12 +18,20 @@ export class KeyVaultProvider {
      * @param url The KeyVault testing action URL
      */
     constructor(private url: string,
-                private authType: string,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
+        private authType: string,
+        @inject("LoggingProvider") private logger: LoggingProvider) {
         this.url = url;
         this.authType = authType;
         this.logger = logger;
-        this.ready = this.initialize();
+
+        try {
+            this.ready = this.initialize();
+        }
+        catch (e) {
+            const errorText = "An error occurred attempting to connect to the Azure Key vault.";
+            this.logger.Error(e, errorText);
+            throw new Error(errorText);
+        }
     }
 
     /**
