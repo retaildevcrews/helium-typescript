@@ -65,7 +65,7 @@ export class FeaturedController implements interfaces.Controller {
 
     private async getFeaturedMovieList(): Promise<string[]> {
         const movieList: string[] = [];
-        const sql = "select m.movieId, m.weight from m where m.type = 'Featured' order by m.weight desc";
+        const sql = "select m.movieId, m.weight from m where m.type = 'Featured'";
 
         const movies = await this.cosmosDb.queryDocuments(sql);
 

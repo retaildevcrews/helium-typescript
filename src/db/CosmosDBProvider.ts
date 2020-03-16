@@ -85,7 +85,7 @@ export class CosmosDBProvider {
      */
     public async queryActors(queryParams: any): Promise<Actor[]> {
         const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
-        const ACTOR_ORDER_BY = " order by m.name";
+        const ACTOR_ORDER_BY = " order by m.textSearch";
 
         let sql = ACTOR_SELECT;
 
@@ -136,7 +136,7 @@ export class CosmosDBProvider {
      */
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
-        const MOVIE_ORDER_BY = " order by m.title";
+        const MOVIE_ORDER_BY = " order by m.textSearch";
 
         let sql: string = MOVIE_SELECT;
 
