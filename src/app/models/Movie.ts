@@ -1,17 +1,4 @@
-import {
-    Equals,
-    IsAlphanumeric,
-    IsLowercase,
-    IsNotEmpty,
-    NotEquals,
-    validate,
-    ValidateIf,
-    ValidationArguments,
-    ValidationError,
-} from "class-validator";
-import { IsEqualToProperty } from "../../utilities/validationUtilities";
 import { Actor } from "./Actor";
-import { Validatable } from "./Validatable";
 
 /**
  * @swagger
@@ -59,41 +46,14 @@ import { Validatable } from "./Validatable";
  *           items:
  *             $ref: '#/components/schemas/Actor'
  */
-export class Movie implements Validatable {
+export class Movie {
 
-    @IsNotEmpty()
-    @IsAlphanumeric()
     public id: string;
-
-    @IsNotEmpty()
-    @IsAlphanumeric()
     public movieId: string;
-
-    @ValidateIf((x) => x.title !== undefined)
-    @IsEqualToProperty("title", (x) => (x as string).toLowerCase(),
-        {
-            message: (args: ValidationArguments) => {
-                if ((args.object as Movie).title !== undefined) {
-                    return `textSearch must be equal to ${(args.object as Movie).title.toLowerCase()}`;
-                } else {
-                    return `textSearch must equal the lowercased version of the object's ${args.targetName} property`;
-                }
-            },
-        })
-    @IsLowercase()
-    public textSearch: string;
-
-    @IsNotEmpty()
-    @NotEquals((x) => x.trim.length() > 0)
     public title: string;
-
-    @Equals("Movie")
-    public type = "Movie";
-
-    @IsNotEmpty()
-    @NotEquals((x) => x.trim.length() > 0)
+    public textSearch: string;
+    public type: string;
     public partitionKey: string;
-
     public year?: number;
     public runtime?: number;
     public rating?: number;
@@ -118,9 +78,5 @@ export class Movie implements Validatable {
             this.genres = data.genres;
             this.roles = data.roles;
         }
-    }
-
-    public validate(): Promise<ValidationError[]> {
-        return validate(this);
     }
 }

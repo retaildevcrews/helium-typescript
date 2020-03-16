@@ -18,3 +18,12 @@ export const defaultPageSize = 100;
 export const maxPageSize = 1000;
 
 export const sqlGenres = "SELECT VALUE m.genre FROM m where m.type = 'Genre'";
+
+export const invalidMovieIDMessage = "Invalid Movie ID parameter";
+export const invalidActorIDMessage = "Invalid Actor ID parameter";
+export const invalidQSearchMessage = "Invalid q (search) parameter";
+export const invalidPageNumberMessage = "Invalid PageNumber parameter";
+export const invalidPageSizeMessage = "Invalid PageSize parameter"
+export const invalidGenreMessage = "Invalid Genre parameter";
+export const invalidYearMessage = "Invalid Year parameter";
+export const invalidRatingMessage = "Invalid Rating parameter";

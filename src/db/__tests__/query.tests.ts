@@ -80,7 +80,7 @@ describe("Query Movies", () => {
         const query = new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
         query.queryDocuments = jest.fn();
 
-        test("Defualt params sent to DB", () => {
+        test("Default params sent to DB", () => {
             query.queryMovies({});
             const call = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie'  order by m.title offset 0 limit 100 ";
 
@@ -131,7 +131,7 @@ describe("Query Movies", () => {
 
         test("Params with a actorID", () => {
             query.queryMovies({actorId: "nm0000401"});
-            const call = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie'  order by m.title offset 0 limit 100 ";
+            const call = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie'  and array_contains(m.roles, { actorId: 'nm0000401' }, true)  order by m.title offset 0 limit 100 ";
 
             expect(query.queryDocuments).toBeCalledWith(call);
         });
