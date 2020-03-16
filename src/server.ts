@@ -1,17 +1,17 @@
 import * as bodyParser from "body-parser";
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
-import { ActorController, MovieController, FeaturedController, GenreController, HealthzController } from "./app/controllers";
-import { AppInsightsProvider } from "./telem/AppInsightsProvider";
-import { BunyanLogger } from "./logging/BunyanLogger";
+import { ActorController, MovieController, FeaturedController, GenreController, HealthzController } from "./controllers";
+import { AppInsightsService } from "./services/AppInsightsService";
+import { BunyanLogService } from "./services/BunyanLogService";
 import { Container } from "inversify";
-import { CosmosDBProvider } from "./db/CosmosDBProvider";
+import { CosmosDBService } from "./services/CosmosDBService";
 import { getConfigValues } from "./config/config";
 import { html } from "./swagger-html";
-import { DatabaseProvider } from "./db/DatabaseProvider";
-import { LoggingProvider } from "./logging/LoggingProvider";
+import { DataService } from "./services/DataService";
+import { LogService } from "./services/LogService";
 import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-utils";
-import { TelemProvider } from "./telem/TelemProvider";
+import { TelemetryService } from "./services/TelemetryService";
 import { robotsHandler } from "./middleware/robotsText";
 import { authTypeEnv, keyVaultName, version } from "./config/constants";
 import { CommandLineUtilities } from "./utilities/commandLineUtilities";
@@ -27,10 +27,10 @@ import restify = require("restify");
     const iocContainer: Container = new Container();
 
     /**
-     * Bind the logging provider implementation that you want to use to the container
+     * Bind the logging service implementation that you want to use to the container
      */
-    iocContainer.bind<LoggingProvider>("LoggingProvider").to(BunyanLogger).inSingletonScope();
-    const log: LoggingProvider = iocContainer.get<LoggingProvider>("LoggingProvider");
+    iocContainer.bind<LogService>("LogService").to(BunyanLogService).inSingletonScope();
+    const log: LogService = iocContainer.get<LogService>("LogService");
 
     /**
      * Set Key Vault name/url and authentication type variables
@@ -98,10 +98,10 @@ import restify = require("restify");
     iocContainer.bind<interfaces.Controller>(TYPE.Controller).to(HealthzController).whenTargetNamed("HealthzController");
 
     /**
-     * Bind the database provider & telemetry provider implementation that you want to use.
-     * Also, bind the configuration parameters for the providers.
+     * Bind the dataservice & telemetry service implementation that you want to use.
+     * Also, bind the configuration parameters for the services.
      */
-    iocContainer.bind<DatabaseProvider>("DatabaseProvider").to(CosmosDBProvider).inSingletonScope();
+    iocContainer.bind<DataService>("DataService").to(CosmosDBService).inSingletonScope();
     iocContainer.bind<string>("string").toConstantValue(config.cosmosDbUrl).whenTargetNamed("cosmosDbUrl");
     iocContainer.bind<string>("string").toConstantValue(config.cosmosDbKey).whenTargetNamed("cosmosDbKey");
     iocContainer.bind<string>("string").toConstantValue(config.database).whenTargetNamed("database");
@@ -109,16 +109,16 @@ import restify = require("restify");
 
     // Note: the telem object is currently unused, but will be used with Key Rotation
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    let telem: TelemProvider;
-    // TelemProvider/AppInsightsProvider is optional
+    let telem: TelemetryService;
+    // TelemetryService/AppInsightsService is optional
     if (config.insightsKey) {
         iocContainer.bind<string>("string").toConstantValue(config.insightsKey).whenTargetNamed("instrumentationKey");
-        iocContainer.bind<TelemProvider>("TelemProvider").to(AppInsightsProvider).inSingletonScope();
-        telem = iocContainer.get<TelemProvider>("TelemProvider");
+        iocContainer.bind<TelemetryService>("TelemetryService").to(AppInsightsService).inSingletonScope();
+        telem = iocContainer.get<TelemetryService>("TelemetryService");
     }
 
-    // initialize cosmos db provider
-    const cosmosDb: DatabaseProvider = iocContainer.get<DatabaseProvider>("DatabaseProvider");
+    // initialize cosmos db service
+    const cosmosDb: DataService = iocContainer.get<DataService>("DataService");
     try {
         await cosmosDb.initialize();
     } catch (err) {
@@ -166,7 +166,7 @@ import restify = require("restify");
             // Uncomment this if you want to auto generate swagger json
             // const options: any = {
             //     // Path to the API docs
-            //     apis: [`${__dirname}/app/models/*.js`, `${__dirname}/app/controllers/*.js`],
+            //     apis: [`${__dirname}/models/*.js`, `${__dirname}/controllers/*.js`],
             //     definition: {
             //         info: {
             //             title: "Helium", // Title (required)

@@ -1,4 +1,4 @@
-export interface TelemProvider {
+export interface TelemetryService {
     /**
      * Sends an event with the given name to App Insights
      * @param eventName Name of event to track
