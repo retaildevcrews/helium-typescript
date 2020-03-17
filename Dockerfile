@@ -1,5 +1,5 @@
 # ---- Base Node ----
-FROM node:current-alpine AS base
+FROM node:lts AS base
 
 ### Optional: Set Proxy Variables
 # ENV http_proxy {value}
@@ -9,37 +9,29 @@ FROM node:current-alpine AS base
 # ENV no_proxy {value}
 # ENV NO_PROXY {value}
 
-# Create a user
-RUN adduser -S appuser
 WORKDIR /app
-COPY scripts ./scripts
-EXPOSE 4120
-COPY package.json .
- 
-#
-# ---- Dependencies ----
-FROM base AS dependencies
+COPY . .
+
+### TODO - can any of these be combined to reduce layers? 
 RUN npm set progress=false && npm config set depth 0
-RUN apk add --no-cache --virtual .gyp \
-        make \
-        python \
-        && npm install --production 
+RUN npm install --production
 RUN cp -R node_modules prod_node_modules
 RUN npm install
- 
-#
-# ---- Test ----
-# run linters, setup and tests
-FROM dependencies AS test
-COPY . .
 RUN npm run lint && npm run build && npm run test-unit
  
-#
 # ---- Release ----
-FROM base AS release
-# Tell docker that all commands in this step should run as the appuser user
-USER appuser
-COPY --from=dependencies /app/prod_node_modules ./node_modules
-COPY --from=test /app/dist ./dist
-COPY --from=test /app/swagger/swagger.json ./swagger/swagger.json
-ENTRYPOINT [ "sh", "./scripts/start-service.sh" ]
+FROM node:lts-alpine AS release
+
+EXPOSE 4120
+WORKDIR /app
+
+### run as helium user
+RUN adduser -S helium
+USER helium
+
+COPY --from=base /app/package.json .
+COPY --from=base /app/prod_node_modules ./node_modules
+COPY --from=base /app/dist ./dist
+COPY --from=base /app/swagger/swagger.json ./swagger/swagger.json
+
+ENTRYPOINT ["/usr/local/bin/npm", "start"]
