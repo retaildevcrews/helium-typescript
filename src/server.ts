@@ -74,7 +74,7 @@ import restify = require("restify");
     // Exit if missing Key Vault Name
     if (!keyVaultUrl) {
         console.log("Key Vault name missing.");
-        process.exit(1);
+        process.exit(-1);
     } else if (!keyVaultUrl.startsWith("https://")) {
         keyVaultUrl = "https://" + keyVaultUrl + ".vault.azure.net/";
     }
@@ -87,6 +87,11 @@ import restify = require("restify");
 
     // Get config values from Key Vault
     const config = await getConfigValues(keyVaultUrl, authType, log);
+
+    // Exit if failed to connect to Key Vault
+    if (config === undefined) {
+        process.exit(-1);
+    }
 
     /**
      *  Bind the Controller classes for the Controllers you want in your server
@@ -118,9 +123,10 @@ import restify = require("restify");
     }
 
     // initialize cosmos db service
-    const cosmosDb: DataService = iocContainer.get<DataService>("DataService");
+    let cosmosDb: DataService;
     try {
-        await cosmosDb.initialize();
+        cosmosDb = iocContainer.get<DataService>("DataService");
+        await cosmosDb.ready;
     } catch (err) {
         log.error(Error(err), "Cosmos failed to initialize: " + err);
     }

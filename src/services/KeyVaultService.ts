@@ -10,11 +10,22 @@ import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 export class KeyVaultService {
     private client: SecretClient;
 
+    // ready will resolve when the KeyVaultProvider has been initialized and is ready to use
+    public ready: Promise<void>;
+
     /**
      * Creates a new instance of the KeyVaultService class.
      * @param url The KeyVault testing action URL
      */
     constructor(private url: string, private authType: string, @inject("LogService") private logger: LogService) {
+        try {
+            this.ready = this.initialize();
+        }
+        catch (e) {
+            const errorText = "An error occurred attempting to connect to the Azure Key vault.";
+            this.logger.error(e, errorText);
+            throw new Error(errorText);
+        }
     }
 
     /**
@@ -22,9 +33,7 @@ export class KeyVaultService {
      * @param name The name of the secret.
      */
     public async getSecret(name: string): Promise<string> {
-        if (this.client == null) {
-            await this._initialize();
-        }
+        await this.ready;
 
         try {
             const { value: secret } = await this.client.getSecret(name);
@@ -40,11 +49,7 @@ export class KeyVaultService {
         }
     }
 
-    /**
-     * Initialized the KeyVault client.
-     * This is handled in a separate method to avoid calling async operations in the constructor.
-     */
-    private async _initialize() {
+    private async initialize() {
 
         // Use specified authentication type (either MSI or CLI)
         const creds: any = this.authType === "MSI" ?
@@ -52,5 +57,6 @@ export class KeyVaultService {
             await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 
         this.client = new SecretClient(this.url, creds);
+        return;
     }
 }
