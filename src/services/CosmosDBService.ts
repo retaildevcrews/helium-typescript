@@ -15,6 +15,8 @@ export class CosmosDBService {
     private cosmosContainer: Container;
     private feedOptions: FeedOptions = { maxItemCount: 2000 };
 
+    public ready: Promise<void>;
+
     /**
      * Creates a new instance of the CosmosDB class.
      * @param url The url of the CosmosDB.
@@ -29,6 +31,7 @@ export class CosmosDBService {
         @inject("LogService") private logger: LogService) {
 
         this.cosmosClient = new CosmosClient({ endpoint: url, key: accessKey });
+        this.ready = this.initialize();
     }
 
     /**
