@@ -14,16 +14,21 @@ export async function getConfigValues(
     // use default port from constants
     const port = portConstant;
 
-    // cosmosDbKey comes from KeyVault
+    // cosmos db secrets come from KeyVault
     let cosmosDbKey: string;
     let cosmosDbUrl: string;
     let database: string;
     let collection: string;
     let insightsKey: string;
 
-    const keyvault: KeyVaultProvider = new KeyVaultProvider(keyVaultUrl, authType, log);
-    
-    await keyvault.ready;
+    let keyvault: KeyVaultProvider;
+    try {
+        keyvault = new KeyVaultProvider(keyVaultUrl, authType, log);
+        await keyvault.ready;
+    } catch (err) {
+        log.Error(Error(), "Key Vault Exception: " + err);
+        return;
+    }
 
     // get Cosmos DB related secrets
     try {
@@ -33,7 +38,7 @@ export async function getConfigValues(
         collection = await keyvault.getSecret(cosmosCollection);
     } catch {
         log.Error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");
-        process.exit(1);
+        return;
     }
 
     // get optional App Insights Key
