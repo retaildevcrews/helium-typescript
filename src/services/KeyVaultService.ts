@@ -1,20 +1,20 @@
 import { SecretClient } from "@azure/keyvault-secrets";
 import { inject, injectable } from "inversify";
-import { LoggingProvider } from "../logging/LoggingProvider";
+import { LogService } from "./LogService";
 import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 
 /**
  * Handles accessing secrets from Azure Key vault.
  */
 @injectable()
-export class KeyVaultProvider {
+export class KeyVaultService {
     private client: SecretClient;
 
     /**
-     * Creates a new instance of the KeyVaultProvider class.
+     * Creates a new instance of the KeyVaultService class.
      * @param url The KeyVault testing action URL
      */
-    constructor(private url: string, private authType: string, @inject("LoggingProvider") private logger: LoggingProvider) {
+    constructor(private url: string, private authType: string, @inject("LogService") private logger: LogService) {
     }
 
     /**

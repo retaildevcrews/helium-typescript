@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { DatabaseProvider } from "../../db/DatabaseProvider";
-import { LoggingProvider } from "../../logging/LoggingProvider";
+import { DataService } from "../services/DataService";
+import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
 
 /**
@@ -14,7 +14,7 @@ export class FeaturedController implements interfaces.Controller {
 
     private featuredMovies: string[];
 
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider, @inject("LoggingProvider") private logger: LoggingProvider) {
+    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
     
     }
 

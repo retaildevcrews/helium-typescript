@@ -1,18 +1,18 @@
 import "reflect-metadata";
 import { CosmosClient } from "@azure/cosmos";
-import { CosmosDBProvider } from "../CosmosDBProvider";
+import { CosmosDBService } from "./CosmosDBService";
 
 jest.mock("@azure/cosmos");
 
 test("Check cosmos client dependency", () => {
-    new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
+    new CosmosDBService("http://www.db.com", "dbkey", "db", "collection", null);
 
     expect(CosmosClient).toHaveBeenCalledTimes(1);
 });
 
 describe("Query Actors", () => {
     test("Expected output", () => {
-        const query = new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
+        const query = new CosmosDBService("http://www.db.com", "dbkey", "db", "collection", null);
         query.queryDocuments = jest.fn().mockResolvedValue(["Lawrence Fishburn"]);
 
         expect(query.queryActors({})).resolves.toEqual(["Lawrence Fishburn"]);
@@ -20,7 +20,7 @@ describe("Query Actors", () => {
 
     describe("Expected SQL statement given the argument", () => {
 
-        const query = new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
+        const query = new CosmosDBService("http://www.db.com", "dbkey", "db", "collection", null);
         query.queryDocuments = jest.fn();
 
         test("Default params sent to DB", () => {
@@ -70,14 +70,14 @@ describe("Query Actors", () => {
 
 describe("Query Movies", () => {
     test("Expected output", () => {
-        const query = new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
+        const query = new CosmosDBService("http://www.db.com", "dbkey", "db", "collection", null);
         query.queryDocuments = jest.fn().mockResolvedValue(["The Matrix"]);
 
         expect(query.queryMovies({})).resolves.toEqual(["The Matrix"]);
     });
 
     describe("Expected SQL statement given the argument", () => {
-        const query = new CosmosDBProvider("http://www.db.com", "dbkey", "db", "collection", null);
+        const query = new CosmosDBService("http://www.db.com", "dbkey", "db", "collection", null);
         query.queryDocuments = jest.fn();
 
         test("Default params sent to DB", () => {

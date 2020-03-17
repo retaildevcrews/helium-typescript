@@ -1,15 +1,15 @@
 import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable, named } from "inversify";
-import { LoggingProvider } from "../logging/LoggingProvider";
+import { LogService } from "./LogService";
 import { QueryUtilities } from "../utilities/queryUtilities";
-import { Actor, Movie } from "../app/models";
+import { Actor, Movie } from "../models";
 import { defaultPageSize, maxPageSize } from "../config/constants";
 
 /**
  * Handles executing queries against CosmosDB
  */
 @injectable()
-export class CosmosDBProvider {
+export class CosmosDBService {
 
     private cosmosClient: CosmosClient;
     private cosmosContainer: Container;
@@ -19,14 +19,14 @@ export class CosmosDBProvider {
      * Creates a new instance of the CosmosDB class.
      * @param url The url of the CosmosDB.
      * @param accessKey The CosmosDB access key (primary of secondary).
-     * @param logger Logging provider user for tracing/logging.
+     * @param logger Logging service user for tracing/logging.
      */
     constructor(
         @inject("string") @named("cosmosDbUrl") private url: string,
         @inject("string") @named("cosmosDbKey") accessKey: string,
         @inject("string") @named("database") public databaseId: string,
         @inject("string") @named("collection") public containerId: string,
-        @inject("LoggingProvider") private logger: LoggingProvider) {
+        @inject("LogService") private logger: LogService) {
 
         this.cosmosClient = new CosmosClient({ endpoint: url, key: accessKey });
     }

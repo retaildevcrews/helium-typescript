@@ -1,9 +1,9 @@
 /**
- * Logging and Tracing Provider Interface
+ * Logging and Tracing Service Interface
  * that abstracts logging/tracing
  */
 
-export interface LoggingProvider {
+export interface LogService {
     /**
      * Logs tracing information
      * @param message message to trace

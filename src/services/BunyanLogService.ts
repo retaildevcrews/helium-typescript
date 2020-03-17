@@ -1,10 +1,10 @@
 import * as bunyan from "bunyan";
 import { injectable } from "inversify";
 import { v4 } from "uuid";
-import { LoggingProvider } from "./LoggingProvider";
+import { LogService } from "./LogService";
 
 @injectable()
-export class BunyanLogger implements LoggingProvider {
+export class BunyanLogService implements LogService {
   private logger: bunyan;
   private uniqueServerId: string;
   private customId: string;

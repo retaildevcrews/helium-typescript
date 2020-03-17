@@ -2,10 +2,10 @@ import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
-import { DatabaseProvider } from "../../db/DatabaseProvider";
-import { LoggingProvider } from "../../logging/LoggingProvider";
+import { DataService } from "../services/DataService";
+import { LogService } from "../services/LogService";
 import { Actor } from "../models/Actor";
-import { ValidationUtilities } from "../../utilities/validationUtilities";
+import { ValidationUtilities } from "../utilities/validationUtilities";
 
 // Controller implementation for our actors endpoint
 @Controller("/api/actors")
@@ -13,7 +13,7 @@ import { ValidationUtilities } from "../../utilities/validationUtilities";
 export class ActorController implements interfaces.Controller {
 
     // Instantiate the actor controller
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider, @inject("LoggingProvider") private logger: LoggingProvider) {
+    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
         
     }
 
