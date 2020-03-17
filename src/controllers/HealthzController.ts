@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { DatabaseProvider } from "../../db/DatabaseProvider";
-import { LoggingProvider } from "../../logging/LoggingProvider";
-import { sqlGenres, webInstanceRole, version } from "../../config/constants";
-import { DateUtilities } from "../../utilities/dateUtilities";
+import { DataService } from "../services/DataService";
+import { LogService } from "../services/LogService";
+import { sqlGenres, webInstanceRole, version } from "../config/constants";
+import { DateUtilities } from "../utilities/dateUtilities";
 
 enum IetfStatus {
     pass = "pass",
@@ -19,10 +19,8 @@ enum IetfStatus {
 @injectable()
 export class HealthzController implements interfaces.Controller {
 
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.cosmosDb = cosmosDb;
-        this.logger = logger;
+    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
+
     }
 
     /**
@@ -124,7 +122,7 @@ export class HealthzController implements interfaces.Controller {
             ietfResult.checks = healthChecks;
             return ietfResult;
         } catch (err) {
-            this.logger.Error(Error(), "CosmosException: Healthz: " + err);
+            this.logger.error(Error(), "CosmosException: Healthz: " + err);
             ietfResult.status = IetfStatus.fail;
             ietfResult.cosmosException = err;
             ietfResult.checks = healthChecks;

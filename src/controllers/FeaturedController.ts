@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { DatabaseProvider } from "../../db/DatabaseProvider";
-import { LoggingProvider } from "../../logging/LoggingProvider";
+import { DataService } from "../services/DataService";
+import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
 
 /**
@@ -14,10 +14,8 @@ export class FeaturedController implements interfaces.Controller {
 
     private featuredMovies: string[];
 
-    constructor(@inject("DatabaseProvider") private cosmosDb: DatabaseProvider,
-        @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.cosmosDb = cosmosDb;
-        this.logger = logger;
+    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
+    
     }
 
     /**
@@ -67,7 +65,7 @@ export class FeaturedController implements interfaces.Controller {
 
     private async getFeaturedMovieList(): Promise<string[]> {
         const movieList: string[] = [];
-        const sql = "select m.movieId, m.weight from m where m.type = 'Featured' order by m.weight desc";
+        const sql = "select m.movieId, m.weight from m where m.type = 'Featured'";
 
         const movies = await this.cosmosDb.queryDocuments(sql);
 

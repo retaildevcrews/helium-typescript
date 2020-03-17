@@ -1,5 +1,5 @@
-import { LoggingProvider } from "../logging/LoggingProvider";
-import { KeyVaultProvider } from "../secrets/KeyVaultProvider";
+import { LogService } from "../services/LogService";
+import { KeyVaultService } from "../services/KeyVaultService";
 import {
     cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl,
     appInsightsKey, portConstant,
@@ -9,7 +9,7 @@ import {
 export async function getConfigValues(
     keyVaultUrl: string,
     authType: string,
-    log: LoggingProvider): Promise<ConfigValues> {
+    log: LogService): Promise<ConfigValues> {
 
     // use default port from constants
     const port = portConstant;
@@ -21,12 +21,12 @@ export async function getConfigValues(
     let collection: string;
     let insightsKey: string;
 
-    let keyvault: KeyVaultProvider;
+    let keyvault: KeyVaultService;
     try {
-        keyvault = new KeyVaultProvider(keyVaultUrl, authType, log);
+        keyvault = new KeyVaultService(keyVaultUrl, authType, log);
         await keyvault.ready;
     } catch (err) {
-        log.Error(Error(), "Key Vault Exception: " + err);
+        log.error(Error(), "Key Vault Exception: " + err);
         return;
     }
 
@@ -37,7 +37,7 @@ export async function getConfigValues(
         database = await keyvault.getSecret(cosmosDatabase);
         collection = await keyvault.getSecret(cosmosCollection);
     } catch {
-        log.Error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");
+        log.error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");
         return;
     }
 
@@ -45,7 +45,7 @@ export async function getConfigValues(
     try {
         insightsKey = await keyvault.getSecret(appInsightsKey);
     } catch {
-        log.Trace("Application Insights key not set.");
+        log.trace("Application Insights key not set.");
     }
 
     return {

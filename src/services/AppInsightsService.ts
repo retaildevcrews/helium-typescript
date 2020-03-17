@@ -5,7 +5,7 @@ import { inject, injectable, named } from "inversify";
  * Handles sending telemetry data via AppInsights
  */
 @injectable()
-export class AppInsightsProvider {
+export class AppInsightsService {
 
     private telemClient: ApplicationInsights.TelemetryClient;
 

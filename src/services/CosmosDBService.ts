@@ -1,52 +1,34 @@
 import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable, named } from "inversify";
-import { LoggingProvider } from "../logging/LoggingProvider";
+import { LogService } from "./LogService";
 import { QueryUtilities } from "../utilities/queryUtilities";
-import { Actor } from "../app/models/Actor";
-import { Movie } from "../app/models/Movie";
+import { Actor, Movie } from "../models";
 import { defaultPageSize, maxPageSize } from "../config/constants";
 
 /**
  * Handles executing queries against CosmosDB
  */
 @injectable()
-export class CosmosDBProvider {
+export class CosmosDBService {
 
     private cosmosClient: CosmosClient;
-    private databaseId: string;
-    private containerId: string;
     private cosmosContainer: Container;
     private feedOptions: FeedOptions = { maxItemCount: 2000 };
-
-    private readonly _actorSelect: string = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
-    private readonly _actorOrderBy: string = " order by m.name";
-    private readonly _movieSelect: string = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
-    private readonly _movieOrderBy: string = " order by m.title";
-    
-    // ready will resolve when the KeyVaultProvider has been initialized and is ready to use
-    public ready: Promise<void>;
 
     /**
      * Creates a new instance of the CosmosDB class.
      * @param url The url of the CosmosDB.
      * @param accessKey The CosmosDB access key (primary of secondary).
-     * @param logger Logging provider user for tracing/logging.
+     * @param logger Logging service user for tracing/logging.
      */
-    constructor(@inject("string") @named("cosmosDbUrl") private url: string,
-                @inject("string") @named("cosmosDbKey") accessKey: string,
-                @inject("string") @named("database") database: string,
-                @inject("string") @named("collection") collection: string,
-                @inject("LoggingProvider") private logger: LoggingProvider) {
+    constructor(
+        @inject("string") @named("cosmosDbUrl") private url: string,
+        @inject("string") @named("cosmosDbKey") accessKey: string,
+        @inject("string") @named("database") public databaseId: string,
+        @inject("string") @named("collection") public containerId: string,
+        @inject("LogService") private logger: LogService) {
 
-        this.cosmosClient = new CosmosClient({
-            endpoint: url,
-            key: accessKey,
-        });
-        this.url = url;
-        this.databaseId = database;
-        this.containerId = collection;
-        this.logger = logger;
-        this.ready = this.initialize();
+        this.cosmosClient = new CosmosClient({ endpoint: url, key: accessKey });
     }
 
     /**
@@ -55,11 +37,11 @@ export class CosmosDBProvider {
      */
     public async initialize(): Promise<void> {
 
-        this.logger.Trace("Initializing CosmosDB Container");
+        this.logger.trace("Initializing CosmosDB Container");
         try {
             this.cosmosContainer = await this.cosmosClient.database(this.databaseId).container(this.containerId);
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
         }
         return;
     }
@@ -73,7 +55,7 @@ export class CosmosDBProvider {
             const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
             return queryResults;
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
             throw Error(err);
         }
     }
@@ -93,7 +75,7 @@ export class CosmosDBProvider {
             throw Error("Cosmos Error: " + status);
 
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
             throw err;
         }
     }
@@ -103,7 +85,10 @@ export class CosmosDBProvider {
      * @param queryParams The query params used to select the actor documents.
      */
     public async queryActors(queryParams: any): Promise<Actor[]> {
-        let sql: string = this._actorSelect;
+        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
+        const ACTOR_ORDER_BY = " order by m.textSearch";
+
+        let sql = ACTOR_SELECT;
 
         let pageSize = 100;
         let pageNumber = 1;
@@ -137,12 +122,12 @@ export class CosmosDBProvider {
             }
         }
 
-        sql += this._actorOrderBy + offsetLimit;
+        sql += ACTOR_ORDER_BY + offsetLimit;
 
         try {
             return await this.queryDocuments(sql);
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
         }
     }
 
@@ -151,7 +136,10 @@ export class CosmosDBProvider {
      * @param queryParams The query params used to select the movie documents.
      */
     public async queryMovies(queryParams: any): Promise<Movie[]> {
-        let sql: string = this._movieSelect;
+        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
+        const MOVIE_ORDER_BY = " order by m.textSearch";
+
+        let sql: string = MOVIE_SELECT;
 
         let pageSize = 100;
         let pageNumber = 1;
@@ -220,12 +208,12 @@ export class CosmosDBProvider {
             sql += " and array_contains(m.genres, '" + genre + "')";
         }
 
-        sql += this._movieOrderBy + offsetLimit;
+        sql += MOVIE_ORDER_BY + offsetLimit;
 
         try {
             return await this.queryDocuments(sql);
         } catch (err) {
-            this.logger.Error(Error(err), err);
+            this.logger.error(Error(err), err);
         }
     }
 }

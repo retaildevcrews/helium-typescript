@@ -1,35 +1,29 @@
 import { SecretClient } from "@azure/keyvault-secrets";
 import { inject, injectable } from "inversify";
-import { LoggingProvider } from "../logging/LoggingProvider";
+import { LogService } from "./LogService";
 import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 
 /**
  * Handles accessing secrets from Azure Key vault.
  */
 @injectable()
-export class KeyVaultProvider {
+export class KeyVaultService {
     private client: SecretClient;
 
     // ready will resolve when the KeyVaultProvider has been initialized and is ready to use
     public ready: Promise<void>;
 
     /**
-     * Creates a new instance of the KeyVaultProvider class.
+     * Creates a new instance of the KeyVaultService class.
      * @param url The KeyVault testing action URL
      */
-    constructor(private url: string,
-        private authType: string,
-        @inject("LoggingProvider") private logger: LoggingProvider) {
-        this.url = url;
-        this.authType = authType;
-        this.logger = logger;
-
+    constructor(private url: string, private authType: string, @inject("LogService") private logger: LogService) {
         try {
             this.ready = this.initialize();
         }
         catch (e) {
             const errorText = "An error occurred attempting to connect to the Azure Key vault.";
-            this.logger.Error(e, errorText);
+            this.logger.error(e, errorText);
             throw new Error(errorText);
         }
     }
@@ -46,10 +40,10 @@ export class KeyVaultProvider {
             return secret as string;
         } catch (err) {
             if (name === "AppInsightsKey") {
-                this.logger.Trace("App Insights Key not set");
+                this.logger.trace("App Insights Key not set");
                 return " ";
             } else {
-                this.logger.Error(Error(), "Unable to find secret " + name + " " + err);
+                this.logger.error(Error(), "Unable to find secret " + name + " " + err);
                 throw new Error(`Unable to find secret ${name}`);
             }
         }

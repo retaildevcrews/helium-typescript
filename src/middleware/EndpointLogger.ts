@@ -1,6 +1,6 @@
 import * as restify from "restify";
 import { Container } from "inversify";
-import { LoggingProvider } from "../logging/LoggingProvider";
+import { LogService } from "../services/LogService";
 
 /**
  * Endpoint logger
@@ -9,7 +9,7 @@ import { LoggingProvider } from "../logging/LoggingProvider";
  */
 export default function responseDuration(container: Container) {
     // get the log client
-    const log: LoggingProvider = container.get<LoggingProvider>("LoggingProvider");
+    const log: LogService = container.get<LogService>("LogService");
 
     // return a function with the correct middleware signature
     return function responseStatus(req: restify.Request, res: restify.Response, next) {
@@ -19,7 +19,7 @@ export default function responseDuration(container: Container) {
             if (res.statusCode > 399) {
                 // create string unique to this action at this endpoint
                 const apiName = `${req.method} ${req.url}`;
-                log.Trace(apiName + "  Result: " + res.statusCode, req.getId());
+                log.trace(apiName + "  Result: " + res.statusCode, req.getId());
             }
         }));
 
