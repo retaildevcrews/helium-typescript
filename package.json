@@ -13,8 +13,8 @@
     "build": "gulp scripts",
     "docker-build": "docker build -t helium:canary .",
     "docker-run": "docker run -it -p 8080:8080 helium:canary",
-    "lint": "eslint 'src/**/*.ts' --max-warnings=0",
-    "fix": "eslint 'src/**/*.ts' --fix"
+    "lint": "eslint src/**/*.ts --max-warnings=0",
+    "fix": "eslint src/**/*.ts --fix"
   },
   "repository": {
     "type": "git",
