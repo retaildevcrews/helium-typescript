@@ -2,16 +2,11 @@ import * as bodyParser from "body-parser";
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
 import { ActorController, MovieController, FeaturedController, GenreController, HealthzController } from "./controllers";
-import { AppInsightsService } from "./services/AppInsightsService";
-import { BunyanLogService } from "./services/BunyanLogService";
+import { AppInsightsService, BunyanLogService, CosmosDBService, DataService, TelemetryService, LogService } from "./services";
 import { Container } from "inversify";
-import { CosmosDBService } from "./services/CosmosDBService";
-import { getConfigValues } from "./config/config";
+import { getConfigValues, ConfigValues } from "./config/config";
 import { html } from "./swagger-html";
-import { DataService } from "./services/DataService";
-import { LogService } from "./services/LogService";
 import { interfaces, InversifyRestifyServer, TYPE } from "inversify-restify-utils";
-import { TelemetryService } from "./services/TelemetryService";
 import { robotsHandler } from "./middleware/robotsText";
 import { authTypeEnv, keyVaultName, version } from "./config/constants";
 import { CommandLineUtilities } from "./utilities/commandLineUtilities";
@@ -105,10 +100,7 @@ import restify = require("restify");
      * Also, bind the configuration parameters for the services.
      */
     iocContainer.bind<DataService>("DataService").to(CosmosDBService).inSingletonScope();
-    iocContainer.bind<string>("string").toConstantValue(config.cosmosDbUrl).whenTargetNamed("cosmosDbUrl");
-    iocContainer.bind<string>("string").toConstantValue(config.cosmosDbKey).whenTargetNamed("cosmosDbKey");
-    iocContainer.bind<string>("string").toConstantValue(config.database).whenTargetNamed("database");
-    iocContainer.bind<string>("string").toConstantValue(config.collection).whenTargetNamed("collection");
+    iocContainer.bind<ConfigValues>("ConfigValues").toConstantValue(config);
 
     // Note: the telem object is currently unused, but will be used with Key Rotation
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

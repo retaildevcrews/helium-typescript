@@ -13,7 +13,10 @@ import { ValidationUtilities } from "../utilities/validationUtilities";
 export class ActorController implements interfaces.Controller {
 
     // Instantiate the actor controller
-    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
+    constructor(
+        @inject("DataService") private dataService: DataService,
+        @inject("LogService") private logger: LogService
+    ) {
         
     }
 
@@ -33,7 +36,7 @@ export class ActorController implements interfaces.Controller {
 
         // Execute query
         try {
-            results = await this.cosmosDb.queryActors(req.query);
+            results = await this.dataService.queryActors(req.query);
         } catch (err) {
             // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
@@ -65,7 +68,7 @@ export class ActorController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let result: Actor;
         try {
-            result = new Actor(await this.cosmosDb.getDocument(actorId));
+            result = new Actor(await this.dataService.getDocument(actorId));
         } catch (err) {
             // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");

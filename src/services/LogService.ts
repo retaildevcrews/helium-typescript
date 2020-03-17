@@ -14,7 +14,7 @@ export interface LogService {
     /**
      * Logs an error with the error code and the error message string specified
      * @param error error to log
-     * @param errormessage Message to log
+     * @param errorMessage Message to log
      */
-    error(error: Error, errormessage: string): void;
+    error(error: Error, errorMessage: string): void;
 }

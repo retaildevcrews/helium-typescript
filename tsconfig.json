@@ -9,7 +9,9 @@
     ],
     "types": [
       "reflect-metadata",
-      "jest"
+      "mocha",
+      "chai",
+      "node"
     ],
     "moduleResolution": "node",
     "experimentalDecorators": true,
