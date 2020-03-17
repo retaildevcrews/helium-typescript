@@ -98,7 +98,7 @@ import restify = require("restify");
     iocContainer.bind<interfaces.Controller>(TYPE.Controller).to(HealthzController).whenTargetNamed("HealthzController");
 
     /**
-     * Bind the dataservice & telemetry service implementation that you want to use.
+     * Bind the data service & telemetry service implementation that you want to use.
      * Also, bind the configuration parameters for the services.
      */
     iocContainer.bind<DataService>("DataService").to(CosmosDBService).inSingletonScope();
