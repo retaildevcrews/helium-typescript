@@ -4,7 +4,7 @@ import { inject, injectable, named } from "inversify";
 // import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
 // import { defaultPageSize, maxPageSize } from "../config/constants";
-import { DataService } from ".";
+import { DataService, LogService } from ".";
 
 /**
  * Handles executing queries against CosmosDB
@@ -12,14 +12,12 @@ import { DataService } from ".";
 @injectable()
 export class JsonDataService implements DataService {
 
-    // private cosmosClient: CosmosClient;
-    // private cosmosContainer: Container;
-    // private feedOptions: FeedOptions = { maxItemCount: 2000 };
+    ready: Promise<void>;
 
     constructor(
         @inject("string") @named("url") private url: string,
         @inject("LogService") private logger: LogService) {
-
+        this.ready = this.initialize();
     }
 
     public async initialize(): Promise<void> {

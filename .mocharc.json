@@ -4,7 +4,7 @@
     ],
     "spec": "test/**/*.ts",
     "require": [
-        "ts-node/register",
+        "ts-node/register/transpile-only",
         "source-map-support/register"
     ]
 }
