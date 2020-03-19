@@ -6,3 +6,4 @@ coverage
 ### OSX ###
 # General
 .DS_Store
+.nyc_output

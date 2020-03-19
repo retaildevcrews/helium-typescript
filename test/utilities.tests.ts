@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities } from ".";
+import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, CommandLineUtilities } from "../src/utilities";
 import {
   invalidActorIDMessage,
   invalidGenreMessage,
@@ -9,7 +9,7 @@ import {
   invalidQSearchMessage,
   invalidRatingMessage,
   invalidYearMessage
-} from "../config/constants"
+} from "../src/config/constants"
 
 describe("QueryUtilities", () => {
   describe("getPartitionKey", () => {
@@ -32,6 +32,17 @@ describe("DateUtilities", () => {
     it("should return correct type", () => {
       assert.typeOf(DateUtilities.getTimer(), "function");
     });
+    it("should time for a select duration accurately enough", () => {
+      const timer = DateUtilities.getTimer();
+      const VALUE = 2000;
+      let result;
+      setTimeout(() => {
+        result = timer();
+
+        // make sure the timer result is within 5% of the target
+        assert.isTrue(((result / VALUE) - 1) < 0.05);
+      }, VALUE);
+    })
   });
   describe("getDurationMS", () => {
     it("should return correct type", () => {

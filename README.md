@@ -49,12 +49,7 @@ There is a known warning for a peer dependency on canvas.  However, the reported
 
 Build the container using Docker
 
-- The unit tests run as part of the Docker build process. You can also run the unit tests manually.
-
-```bash
-
-npm run test-unit
-
+- The unit tests run as part of the Docker build process. You can also run the unit tests manually using `npm test`, with watch using `npm run test:watch`, and with test coverage using `npm run test:coverage`.
 ```
 
 - For instructions on building the container with ACR, please see the Helium [readme](https://github.com/retaildevcrews/helium)
