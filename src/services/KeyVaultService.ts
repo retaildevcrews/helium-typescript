@@ -67,6 +67,7 @@ export class KeyVaultService {
             } catch (e) {
                 if (Date.now() <= timeout && this.authType === "MSI") {
                     this.logger.trace("KeyVault: Retry");
+                    // Wait 1 second and retry (continue while loop) 
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
                     throw new Error(e);
