@@ -2,6 +2,8 @@ import { SecretClient } from "@azure/keyvault-secrets";
 import { inject, injectable } from "inversify";
 import { LogService } from "./LogService";
 import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
+import azureIdentity = require("@azure/identity");
+import { cosmosUrl } from "../config/constants";
 
 /**
  * Handles accessing secrets from Azure Key vault.
@@ -10,7 +12,7 @@ import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 export class KeyVaultService {
     private client: SecretClient;
 
-    // ready will resolve when the KeyVaultProvider has been initialized and is ready to use
+    // Ready will resolve when the KeyVaultProvider has been initialized and is ready to use
     public ready: Promise<void>;
 
     /**
@@ -29,34 +31,48 @@ export class KeyVaultService {
     }
 
     /**
-     * Returns the latest version of the names secret.
+     * Returns the latest version of the name's secret.
      * @param name The name of the secret.
      */
     public async getSecret(name: string): Promise<string> {
-        await this.ready;
 
         try {
             const { value: secret } = await this.client.getSecret(name);
             return secret as string;
-        } catch (err) {
+        } catch (e) {
             if (name === "AppInsightsKey") {
                 this.logger.trace("App Insights Key not set");
                 return " ";
             } else {
-                this.logger.error(Error(), "Unable to find secret " + name + " " + err);
                 throw new Error(`Unable to find secret ${name}`);
             }
         }
     }
 
     private async initialize() {
+        const timeout = Date.now() + 90000;
 
-        // Use specified authentication type (either MSI or CLI)
-        const creds: any = this.authType === "MSI" ?
-            await msRestNodeAuth.loginWithAppServiceMSI({ resource: "https://vault.azure.net" }) :
-            await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
+        while (true){
+            try {
+                // Use specified authentication type (either MSI or CLI)
+                const creds: any = this.authType === "MSI" ?
+                    new azureIdentity.ManagedIdentityCredential() :
+                    await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 
-        this.client = new SecretClient(this.url, creds);
-        return;
+                this.client = new SecretClient(this.url, creds);
+
+                // Test getSecret to validate successful Key Vault connection
+                await this.getSecret(cosmosUrl);
+                return;
+            } catch (e) {
+                if (Date.now() <= timeout && this.authType === "MSI") {
+                    this.logger.trace("KeyVault: Retry");
+                    // Wait 1 second and retry (continue while loop) 
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                } else {
+                    throw new Error(e);
+                }
+            }
+        }
     }
 }
