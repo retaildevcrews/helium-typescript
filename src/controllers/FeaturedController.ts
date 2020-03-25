@@ -30,14 +30,19 @@ export class FeaturedController implements interfaces.Controller {
 
             if (this.featuredMovies != null && this.featuredMovies.length > 0 ) {
                 const movieId = this.featuredMovies[ Math.floor(Math.random() * ( this.featuredMovies.length - 1 )) ];
-                result = await this.cosmosDb.getDocument(movieId);
+                result = new Movie(await this.cosmosDb.getDocument(movieId));
             }
         } catch (err) {
-            if (err.toString().includes("NotFound")) {
-                resCode = HttpStatus.NOT_FOUND;
-            } else {
+            // TODO: Refactor error handling/response/logging to reduce duplication
+            res.setHeader("Content-Type", "text/plain");
+            if (err.code == undefined){
                 resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            } else {
+                resCode = err.code;
             }
+
+            this.logger.error(Error(err), "FeaturedControllerException");
+            return res.send(resCode, "FeaturedControllerException");
         }
 
         return res.send(resCode, result);

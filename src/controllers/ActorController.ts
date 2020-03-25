@@ -35,8 +35,16 @@ export class ActorController implements interfaces.Controller {
         try {
             results = await this.cosmosDb.queryActors(req.query);
         } catch (err) {
-            this.logger.error(Error(), "CosmosException: Healthz: " + err.code + "\n" + err);
-            resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            // TODO: Refactor error handling/response/logging to reduce duplication
+            res.setHeader("Content-Type", "text/plain");
+            if (err.code == undefined){
+                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            } else {
+                resCode = err.code;
+            }
+
+            this.logger.error(Error(err), "ActorControllerException: " + err.toString());
+            return res.send(resCode, "ActorControllerException");
         }
 
         return res.send(resCode, results);
@@ -59,12 +67,21 @@ export class ActorController implements interfaces.Controller {
         try {
             result = new Actor(await this.cosmosDb.getDocument(actorId));
         } catch (err) {
-            result = err.toString();
-
-            if (err.toString().includes("404")) {
-                resCode = HttpStatus.NOT_FOUND;
-            } else {
+            // TODO: Refactor error handling/response/logging to reduce duplication
+            res.setHeader("Content-Type", "text/plain");
+            if (err.code == undefined){
                 resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            } else {
+                resCode = err.code;
+            }
+
+            if (resCode == HttpStatus.NOT_FOUND || err.toString().includes("404")){
+                resCode = HttpStatus.NOT_FOUND;
+                this.logger.trace("Actor Not Found: " + actorId);
+                return res.send(resCode, "Actor Not Found");
+            } else {
+                this.logger.error(Error(err), "ActorControllerException: " + err.toString());
+                return res.send(resCode, "ActorControllerException");
             }
         }
 

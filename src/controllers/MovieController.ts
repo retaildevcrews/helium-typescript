@@ -35,7 +35,16 @@ export class MovieController implements interfaces.Controller {
         try {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
-            resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            // TODO: Refactor error handling/response/logging to reduce duplication
+            res.setHeader("Content-Type", "text/plain");
+            if (err.code == undefined){
+                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            } else {
+                resCode = err.code;
+            }
+
+            this.logger.error(Error(err), "MovieControllerException: " + err.toString());
+            return res.send(resCode, "MovieControllerException");
         }
 
         return res.send(resCode, results);
@@ -58,12 +67,21 @@ export class MovieController implements interfaces.Controller {
         try {
             result = new Movie(await this.cosmosDb.getDocument(movieId));
         } catch (err) {
-            result = err.toString();
-
-            if (err.toString().includes("404")) {
-                resCode = HttpStatus.NOT_FOUND;
-            } else {
+            // TODO: Refactor error handling/response/logging to reduce duplication
+            res.setHeader("Content-Type", "text/plain");
+            if (err.code == undefined){
                 resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            } else {
+                resCode = err.code;
+            }
+
+            if (resCode == HttpStatus.NOT_FOUND || err.toString().includes("404")){
+                resCode = HttpStatus.NOT_FOUND;
+                this.logger.trace("Movie Not Found: " + movieId);
+                return res.send(resCode, "Movie Not Found");
+            } else {
+                this.logger.error(Error(err), "MovieControllerException: " + err.toString());
+                return res.send(resCode, "MovieControllerException");
             }
         }
 

@@ -21,10 +21,20 @@ export class GenreController implements interfaces.Controller {
   public async getAllGenres(req: Request, res) {
     let resCode: number = HttpStatus.OK;
     let results: string[];
+
     try {
       results = await this.cosmosDb.queryDocuments(sqlGenres);
     } catch (err) {
-      resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      // TODO: Refactor error handling/response/logging to reduce duplication
+      res.setHeader("Content-Type", "text/plain");
+      if (err.code == undefined){
+        resCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      } else {
+        resCode = err.code;
+      }
+
+      this.logger.error(Error(err), "GenreControllerException: " + err.toString());
+      return res.send(resCode, "GenreControllerException");
     }
 
     return res.send(resCode, results);

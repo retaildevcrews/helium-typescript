@@ -98,9 +98,9 @@ export class HealthzController implements interfaces.Controller {
             ietfResult.checks = healthChecks;
             return ietfResult;
         } catch (err) {
-            this.logger.error(Error(), "CosmosException: Healthz: " + err);
+            this.logger.error(Error(err), "HealthzException: " + err.toString());
             ietfResult.status = IetfStatus.fail;
-            ietfResult.cosmosException = err;
+            ietfResult.cosmosException = err.toString();
             ietfResult.checks = healthChecks;
             return ietfResult;
         }
@@ -143,15 +143,15 @@ export class HealthzController implements interfaces.Controller {
 
             // calculate duration in ms
             healthCheckResult.observedValue = DateUtilities.getDurationMS(process.hrtime(start));
-        } catch (e) {
+        } catch (err) {
             // calculate duration
             // log exception and fail status, and re-throw exception
             healthCheckResult.observedValue = DateUtilities.getDurationMS(process.hrtime(start));
             healthCheckResult.status = IetfStatus.fail;
             healthCheckResult.affectedEndpoints = [ endpoint ];
-            healthCheckResult.message = e.toString();
+            healthCheckResult.message = err.toString();
 
-            throw e;
+            throw err;
         }
 
         // set to warn if target duration is not met

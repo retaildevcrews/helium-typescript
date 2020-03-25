@@ -187,8 +187,8 @@ export class CosmosDBService {
             try {
                 genreResult = await this.getDocument(queryParams.genre.trim().toLowerCase());
                 genre = genreResult.genre;
-            } catch (e) {
-                if (e.toString().includes("404")) {
+            } catch (err) {
+                if (err.toString().includes("404")) {
                     // return empty array if no genre found
                     return [];
                 }
