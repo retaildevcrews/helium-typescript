@@ -127,11 +127,7 @@ export class CosmosDBService {
 
         sql += ACTOR_ORDER_BY + offsetLimit;
 
-        try {
-            return await this.queryDocuments(sql);
-        } catch (err) {
-            this.logger.error(Error(err), err);
-        }
+        return await this.queryDocuments(sql);
     }
 
     /**
@@ -213,10 +209,6 @@ export class CosmosDBService {
 
         sql += MOVIE_ORDER_BY + offsetLimit;
 
-        try {
-            return await this.queryDocuments(sql);
-        } catch (err) {
-            this.logger.error(Error(err), err);
-        }
+        return await this.queryDocuments(sql);
     }
 }
