@@ -41,7 +41,7 @@ export class FeaturedController implements interfaces.Controller {
                 resCode = err.code;
             }
 
-            this.logger.error(Error(err), "FeaturedControllerException");
+            this.logger.error(Error(err), "FeaturedControllerException: " + err.toString());
             return res.send(resCode, "FeaturedControllerException");
         }
 
