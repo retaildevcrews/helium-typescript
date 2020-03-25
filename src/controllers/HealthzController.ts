@@ -23,18 +23,6 @@ export class HealthzController implements interfaces.Controller {
 
     }
 
-    /**
-     * @swagger
-     *
-     * /healthz:
-     *   get:
-     *     description: Returns a plain text health status (Healthy, Degraded or Unhealthy)
-     *     tags:
-     *       - Healthz
-     *     responses:
-     *       '200':
-     *         description: Returns a plain text health status as text/plain
-     */
     @Get("/")
     public async healthCheck(req, res) {
 
@@ -45,18 +33,6 @@ export class HealthzController implements interfaces.Controller {
         return res.send(resCode, healthCheckResult.status);
     }
 
-    /**
-     * @swagger
-     *
-     * /healthz/ietf:
-     *   get:
-     *     description: Returns an IETF (draft) health+json representation of the full Health Check
-     *     tags:
-     *       - Healthz
-     *     responses:
-     *       '200':
-     *         description: Returns an IETF (draft) health+json representation of the full Health Check
-     */
     @Get("/ietf")
     public async healthCheckIetf(req, res) {
         const healthCheckResult = await this.runHealthChecks();
@@ -90,20 +66,20 @@ export class HealthzController implements interfaces.Controller {
         const searchActors: {[k: string]: any} = {};
 
         try {
-            healthChecks.getGenres = getGenres;
-            await this.runHealthCheck("/api/genres", 400, healthChecks.getGenres);
+            healthChecks["getGenres:responseTime"] = getGenres;
+            await this.runHealthCheck("getGenres", "/api/genres", 400, healthChecks["getGenres:responseTime"]);
 
-            healthChecks.getActorById = getActorById;
-            await this.runHealthCheck("/api/actors/nm0000173", 250, healthChecks.getActorById);
+            healthChecks["getActorById:responseTime"] = getActorById;
+            await this.runHealthCheck("getActorById", "/api/actors/nm0000173", 250, healthChecks["getActorById:responseTime"]);
 
-            healthChecks.getMovieById = getMovieById;
-            await this.runHealthCheck("/api/movies/tt0133093", 250, healthChecks.getMovieById);
+            healthChecks["getMovieById:responseTime"] = getMovieById;
+            await this.runHealthCheck("getMovieById", "/api/movies/tt0133093", 250, healthChecks["getMovieById:responseTime"]);
 
-            healthChecks.searchMovies = searchMovies;
-            await this.runHealthCheck("/api/movies?q=ring", 400, healthChecks.searchMovies);
+            healthChecks["searchMovies:responseTime"] = searchMovies;
+            await this.runHealthCheck("searchMovies", "/api/movies?q=ring", 400, healthChecks["searchMovies:responseTime"]);
 
-            healthChecks.searchActors = searchActors;
-            await this.runHealthCheck("/api/actors?q=nicole", 400, healthChecks.searchActors);
+            healthChecks["searchActors:responseTime"] = searchActors;
+            await this.runHealthCheck("searchActors", "/api/actors?q=nicole", 400, healthChecks["searchActors:responseTime"]);
 
             // if any health check has a warn or down status
             // set overall status to the worst status
@@ -122,9 +98,9 @@ export class HealthzController implements interfaces.Controller {
             ietfResult.checks = healthChecks;
             return ietfResult;
         } catch (err) {
-            this.logger.error(Error(), "CosmosException: Healthz: " + err);
+            this.logger.error(Error(err), "HealthzException: " + err.toString());
             ietfResult.status = IetfStatus.fail;
-            ietfResult.cosmosException = err;
+            ietfResult.cosmosException = err.toString();
             ietfResult.checks = healthChecks;
             return ietfResult;
         }
@@ -132,18 +108,20 @@ export class HealthzController implements interfaces.Controller {
 
     /**
      * Executes a health check and builds the result
+     * @param componentId The component Id.
      * @param endpoint The affected endpoint for the health check to run.
      * @param target The target duration for the health check endpoint call.
      * @param healthCheckResult The health check entry to update.
      */
-    private async runHealthCheck(endpoint: string, target: number, healthCheckResult: any) {
+    private async runHealthCheck(componentId: string, endpoint: string, target: number, healthCheckResult: any) {
         // start tracking time
         const startDate = new Date();
         const start = process.hrtime();
 
         // build health check result following ietf standard
         healthCheckResult.status = IetfStatus.pass;
-        healthCheckResult.componentType = "CosmosDB";
+        healthCheckResult.componentId = componentId;
+        healthCheckResult.componentType = "datastore";
         healthCheckResult.observedUnit = "ms";
         healthCheckResult.observedValue = 0;
         healthCheckResult.targetValue = target;
@@ -165,15 +143,15 @@ export class HealthzController implements interfaces.Controller {
 
             // calculate duration in ms
             healthCheckResult.observedValue = DateUtilities.getDurationMS(process.hrtime(start));
-        } catch (e) {
+        } catch (err) {
             // calculate duration
             // log exception and fail status, and re-throw exception
             healthCheckResult.observedValue = DateUtilities.getDurationMS(process.hrtime(start));
             healthCheckResult.status = IetfStatus.fail;
             healthCheckResult.affectedEndpoints = [ endpoint ];
-            healthCheckResult.message = e;
+            healthCheckResult.message = err.toString();
 
-            throw e;
+            throw err;
         }
 
         // set to warn if target duration is not met

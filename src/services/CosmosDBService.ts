@@ -54,13 +54,8 @@ export class CosmosDBService {
      * @param query The query to select the documents.
      */
     public async queryDocuments(query: string): Promise<any> {
-        try {
-            const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
-            return queryResults;
-        } catch (err) {
-            this.logger.error(Error(err), err);
-            throw Error(err);
-        }
+        const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
+        return queryResults;
     }
 
     /**
@@ -68,19 +63,14 @@ export class CosmosDBService {
      * @param documentId The id of the document to query.
      */
     public async getDocument(documentId: string): Promise<any> {
-        try {
-            const { resource: result, statusCode: status }
-                = await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
-            if (status === 200) {
-                return result;
-            }
-
-            throw Error("Cosmos Error: " + status);
-
-        } catch (err) {
-            this.logger.error(Error(err), err);
-            throw err;
+        const { resource: result, statusCode: status }
+            = await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
+        if (status === 200) {
+            return result;
         }
+        
+        // 404 not found does not throw an error
+        throw Error("Cosmos Error: " + status);
     }
 
     /**
@@ -127,11 +117,7 @@ export class CosmosDBService {
 
         sql += ACTOR_ORDER_BY + offsetLimit;
 
-        try {
-            return await this.queryDocuments(sql);
-        } catch (err) {
-            this.logger.error(Error(err), err);
-        }
+        return await this.queryDocuments(sql);
     }
 
     /**
@@ -201,8 +187,8 @@ export class CosmosDBService {
             try {
                 genreResult = await this.getDocument(queryParams.genre.trim().toLowerCase());
                 genre = genreResult.genre;
-            } catch (e) {
-                if (e.toString().includes("404")) {
+            } catch (err) {
+                if (err.toString().includes("404")) {
                     // return empty array if no genre found
                     return [];
                 }
@@ -213,10 +199,6 @@ export class CosmosDBService {
 
         sql += MOVIE_ORDER_BY + offsetLimit;
 
-        try {
-            return await this.queryDocuments(sql);
-        } catch (err) {
-            this.logger.error(Error(err), err);
-        }
+        return await this.queryDocuments(sql);
     }
 }
