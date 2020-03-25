@@ -17,64 +17,6 @@ export class MovieController implements interfaces.Controller {
         
     }
 
-    /**
-     * @swagger
-     *
-     * /api/movies:
-     *   get:
-     *     description: Retrieve and return all movies!
-     *     tags:
-     *       - Movies
-     *     parameters:
-     *       - name: q
-     *         description: The term used to search by movie title (rings)
-     *         in: query
-     *         schema:
-     *           type: string
-     *       - name: genre
-     *         description: Movies of a genre (Action)
-     *         in: query
-     *         schema:
-     *           type: string
-     *       - name: year
-     *         description: Get movies by year (2005)
-     *         in: query
-     *         schema:
-     *           type: string
-     *       - name: rating
-     *         description: Get movies with a rating >= rating (8.5)
-     *         in: query
-     *         schema:
-     *           type: string
-     *       - name: actorid
-     *         description: Get movies by Actor Id (nm0000704)
-     *         in: query
-     *         schema:
-     *           type: string
-     *       - name: pageNumber
-     *         description: 1 based page index
-     *         in: query
-     *         schema:
-     *           type: integer
-     *           default: 1
-     *       - name: pageSize
-     *         description: page size (1000 max)
-     *         in: query
-     *         schema:
-     *           type: integer
-     *           default: 100
-     *     responses:
-     *       '200':
-     *         description: JSON of movie objects
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/Movie'
-     *       default:
-     *         description: Unexpected error
-     */
     @Get("/")
     public async getAllMovies(req, res) {
         // Validate query parameters
@@ -99,33 +41,6 @@ export class MovieController implements interfaces.Controller {
         return res.send(resCode, results);
     }
 
-    /**
-     * @swagger
-     *
-     * /api/movies/{id}:
-     *   get:
-     *     description: Retrieve and return a single movie by movie ID.
-     *     tags:
-     *       - Movies
-     *     parameters:
-     *       - name: id
-     *         description: The ID of the movie to look for.
-     *         in: path
-     *         required: true
-     *         schema:
-     *           type: string
-     *     responses:
-     *       '200':
-     *         description: The movie object
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/Movie'
-     *       '404':
-     *         description: A movie with the specified ID was not found.
-     *       default:
-     *         description: Unexpected error
-     */
     @Get("/:id")
     public async getMovieById(req, res) {
         // Validate Movie Id parameter

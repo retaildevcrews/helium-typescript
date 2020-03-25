@@ -23,18 +23,6 @@ export class HealthzController implements interfaces.Controller {
 
     }
 
-    /**
-     * @swagger
-     *
-     * /healthz:
-     *   get:
-     *     description: Returns a plain text health status (Healthy, Degraded or Unhealthy)
-     *     tags:
-     *       - Healthz
-     *     responses:
-     *       '200':
-     *         description: Returns a plain text health status as text/plain
-     */
     @Get("/")
     public async healthCheck(req, res) {
 
@@ -45,18 +33,6 @@ export class HealthzController implements interfaces.Controller {
         return res.send(resCode, healthCheckResult.status);
     }
 
-    /**
-     * @swagger
-     *
-     * /healthz/ietf:
-     *   get:
-     *     description: Returns an IETF (draft) health+json representation of the full Health Check
-     *     tags:
-     *       - Healthz
-     *     responses:
-     *       '200':
-     *         description: Returns an IETF (draft) health+json representation of the full Health Check
-     */
     @Get("/ietf")
     public async healthCheckIetf(req, res) {
         const healthCheckResult = await this.runHealthChecks();

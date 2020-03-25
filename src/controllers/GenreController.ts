@@ -17,26 +17,6 @@ export class GenreController implements interfaces.Controller {
   
   }
 
-  /**
-   * @swagger
-   *
-   * /api/genres:
-   *   get:
-   *     description: Retrieve and return all genres.
-   *     tags:
-   *       - Genres
-   *     responses:
-   *       '200':
-   *         description: List of genres objects
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: array
-   *               items:
-   *                 type: string
-   *       default:
-   *         description: Unexpected error
-   */
   @Get("/")
   public async getAllGenres(req: Request, res) {
     let resCode: number = HttpStatus.OK;

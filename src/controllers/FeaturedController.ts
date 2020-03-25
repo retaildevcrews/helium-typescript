@@ -18,26 +18,6 @@ export class FeaturedController implements interfaces.Controller {
     
     }
 
-    /**
-     * @swagger
-     *
-     * /api/featured/movie:
-     *   get:
-     *     description: Returns a random movie from the featured movie list as a JSON Movie
-     *     tags:
-     *       - Featured
-     *     responses:
-     *       '200':
-     *         description: JSON movie object
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/Movie'
-     *       default:
-     *         description: Unexpected error
-     */
     @Get("/movie")
     public async getFeaturedMovie(req, res) {
         let resCode: number = HttpStatus.OK;

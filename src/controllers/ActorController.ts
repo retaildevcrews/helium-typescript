@@ -17,44 +17,6 @@ export class ActorController implements interfaces.Controller {
         
     }
 
-    /**
-     * @swagger
-     *
-     * /api/actors:
-     *   get:
-     *     description: Retrieve and return all actors.
-     *     tags:
-     *       - Actors
-     *     parameters:
-     *       - name: q
-     *         description: The actor name to filter by.
-     *         in: query
-     *         schema:
-     *           type: string
-     *       - name: pageNumber
-     *         description: 1 based page index
-     *         in: query
-     *         schema:
-     *           type: integer
-     *           default: 1
-     *       - name: pageSize
-     *         description: page size (1000 max)
-     *         in: query
-     *         schema:
-     *           type: integer
-     *           default: 100
-     *     responses:
-     *       '200':
-     *         description: List of actor objects
-     *         content:
-     *           application/json:
-     *             schema:
-     *               type: array
-     *               items:
-     *                 $ref: '#/components/schemas/Actor'
-     *       default:
-     *         description: Unexpected error
-     */
     @Get("/")
     public async getAllActors(req: Request, res) {
         // Validate query parameters
@@ -80,33 +42,6 @@ export class ActorController implements interfaces.Controller {
         return res.send(resCode, results);
     }
 
-    /**
-     * @swagger
-     *
-     * /api/actors/{id}:
-     *   get:
-     *     description: Retrieve and return a single actor by actor ID.
-     *     tags:
-     *       - Actors
-     *     parameters:
-     *       - name: id
-     *         description: The ID of the actor to look for.
-     *         in: path
-     *         required: true
-     *         schema:
-     *           type: string
-     *     responses:
-     *       '200':
-     *         description: The actor object
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/Actor'
-     *       '404':
-     *         description: An actor with the specified ID was not found.
-     *       default:
-     *         description: Unexpected error
-     */
     @Get("/:id")
     public async getActorById(req, res) {
         // Validate Actor Id parameter

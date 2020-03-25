@@ -1,51 +1,5 @@
 import { Actor } from "./Actor";
 
-/**
- * @swagger
- *
- * components:
- *   schemas:
- *     Movie:
- *       type: object
- *       required:
- *         - id
- *         - movieId
- *         - textSearch
- *         - title
- *         - type
- *         - partitionKey
- *       properties:
- *         id:
- *           type: string
- *         movieId:
- *           type: string
- *         textSearch:
- *           type: string
- *         title:
- *           type: string
- *         type:
- *           type: string
- *           enum:
- *             - Movie
- *         partitionKey:
- *           type: string
- *         year:
- *           type: number
- *         runtime:
- *           type: number
- *         rating:
- *           type: number
- *         votes:
- *           type: number
- *         genres:
- *           type: array
- *           items:
- *             type: string
- *         roles:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/Actor'
- */
 export class Movie {
 
     public id: string;

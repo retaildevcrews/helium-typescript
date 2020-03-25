@@ -16,8 +16,6 @@ import { robotsHandler } from "./middleware/robotsText";
 import { authTypeEnv, keyVaultName, version } from "./config/constants";
 import { CommandLineUtilities } from "./utilities/commandLineUtilities";
 import restify = require("restify");
-// Uncomment this if you want to auto generate swagger json
-// import * as swaggerJSDoc from "swagger-jsdoc";
 
 (async () => {
 
@@ -168,29 +166,6 @@ import restify = require("restify");
              * This function logs the endpoint being called and measures duration taken for the call.
              */
             app.use(EndpointLogger(iocContainer));
-
-            // Uncomment this if you want to auto generate swagger json
-            // const options: any = {
-            //     // Path to the API docs
-            //     apis: [`${__dirname}/models/*.js`, `${__dirname}/controllers/*.js`],
-            //     definition: {
-            //         info: {
-            //             title: "Helium", // Title (required)
-            //             version: {version}, // Version (required)
-            //         },
-            //         openapi: "3.0.2", // Specification (optional, defaults to swagger: "2.0")
-            //     },
-            // };
-
-            // Initialize swagger-jsdoc -> returns validated swagger spec in json format
-            // Uncomment this if you want to auto generate swagger json
-            // const swaggerSpec: any = swaggerJSDoc(options);
-
-            // Uncomment this if you want to auto generate swagger json
-            // app.get("/swagger.json", (req, res) => {
-            //     res.setHeader("Content-Type", "application/json");
-            //     res.send(swaggerSpec);
-            // });
 
             app.get("/swagger/*", restify.plugins.serveStatic({
                 directory: __dirname + "/..",
