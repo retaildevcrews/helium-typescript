@@ -1,6 +1,4 @@
-/**
- * Utilities for determining build version.
- */
+// utilities for determining build version.
 import fs = require("fs");
 
 export class VersionUtilities {

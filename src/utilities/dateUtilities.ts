@@ -1,6 +1,4 @@
-/**
- * Utilities for date/time functions.
- */
+// utilities for date/time functions.
 export class DateUtilities {
 
     public static getTimer() {
@@ -8,7 +6,7 @@ export class DateUtilities {
         return () => Date.now() - start;
     }
 
-    // Calculate duration (in ms) from node process hrtime
+    // calculate duration (in ms) from node process hrtime
     public static getDurationMS(hrtime: [number, number]): string {
 
         // convert to milliseconds

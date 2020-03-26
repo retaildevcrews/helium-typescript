@@ -4,9 +4,7 @@ import {
     invalidRatingMessage, invalidYearMessage
 } from "../config/constants";
 
-/**
- * Utilities for validating API parameters.
- */
+// utilities for validating API parameters.
 export class ValidationUtilities {
 
     // 

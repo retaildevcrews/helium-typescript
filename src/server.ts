@@ -7,7 +7,7 @@ import { interfaces, TYPE } from "inversify-restify-utils";
 import { HeliumServer } from "./HeliumServer";
 import { CommandLineUtilities } from "./utilities";
 
-// Uncomment this if you want to auto generate swagger json
+// uncomment this if you want to auto generate swagger json
 // import * as swaggerJSDoc from "swagger-jsdoc";
 
 // main

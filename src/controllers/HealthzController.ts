@@ -12,9 +12,7 @@ enum IetfStatus {
     fail = "fail",
 }
 
-/**
- * controller implementation for our healthz endpoint
- */
+// controller implementation for our healthz endpoint
 @Controller("/healthz")
 @injectable()
 export class HealthzController implements interfaces.Controller {

@@ -6,9 +6,7 @@ import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
 import { ValidationUtilities } from "../utilities/validationUtilities";
 
-/**
- * controller implementation for our movies endpoint
- */
+// controller implementation for our movies endpoint
 @Controller("/api/movies")
 @injectable()
 export class MovieController implements interfaces.Controller {

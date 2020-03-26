@@ -2,9 +2,7 @@ import { inject, injectable, named } from "inversify";
 import { Actor, Movie } from "../models";
 import { DataService, LogService } from ".";
 
-/**
- * Handles executing queries against CosmosDB
- */
+// handles executing queries against CosmosDB
 @injectable()
 export class JsonDataService implements DataService {
 

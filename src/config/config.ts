@@ -5,7 +5,7 @@ import {
     appInsightsKey, portConstant,
 } from "./constants";
 
-// Gets configuration details needed to connect to KeyVault, CosmosDB, and AppInsights.
+// gets configuration details needed to connect to KeyVault, CosmosDB, and AppInsights.
 export async function getConfigValues(
     keyVaultUrl: string,
     authType: string,

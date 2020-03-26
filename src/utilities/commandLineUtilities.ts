@@ -2,9 +2,7 @@ import commandLineArgs = require("command-line-args");
 import { LogService } from "../services";
 import { isNull } from "util";
 
-/**
- * Utilities for handling command line arguments.
- */
+// utilities for handling command line arguments.
 export class CommandLineUtilities {
 
     public static parseArguments(logService?: LogService): { authType: string; keyVaultName: string } {

@@ -5,9 +5,7 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
 
-/**
- * controller implementation for our featured movie endpoint
- */
+// controller implementation for our featured movie endpoint
 @Controller("/api/featured")
 @injectable()
 export class FeaturedController implements interfaces.Controller {
