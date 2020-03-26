@@ -30,6 +30,7 @@ export class JsonDataService implements DataService {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async queryDocuments(query: string): Promise<any> {
         try {
             // fetch results
@@ -39,15 +40,18 @@ export class JsonDataService implements DataService {
             throw Error(err);
         }
     }
-
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async getDocument(documentId: string): Promise<any> {
         throw Error("Method not yet implemented");
     }
     
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async queryActors(queryParams: any): Promise<Actor[]> {
         throw Error("Method not yet implemented");
     }
     
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         throw Error("Method not yet implemented");
     }
