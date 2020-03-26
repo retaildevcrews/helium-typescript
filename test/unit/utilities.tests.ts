@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, CommandLineUtilities } from "../src/utilities";
+import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities } from "../../src/utilities";
 import {
   invalidActorIDMessage,
   invalidGenreMessage,
@@ -9,7 +9,7 @@ import {
   invalidQSearchMessage,
   invalidRatingMessage,
   invalidYearMessage
-} from "../src/config/constants"
+} from "../../src/config/constants"
 
 describe("QueryUtilities", () => {
   describe("getPartitionKey", () => {

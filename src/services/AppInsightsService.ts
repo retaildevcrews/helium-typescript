@@ -1,5 +1,6 @@
 import * as ApplicationInsights from "applicationinsights";
-import { inject, injectable, named } from "inversify";
+import { inject, injectable } from "inversify";
+import { ConfigValues } from "../config/config";
 
 /**
  * Handles sending telemetry data via AppInsights
@@ -7,26 +8,28 @@ import { inject, injectable, named } from "inversify";
 @injectable()
 export class AppInsightsService {
 
-    private telemClient: ApplicationInsights.TelemetryClient;
+    private telemetryClient: ApplicationInsights.TelemetryClient;
 
     /**
      * Creates a new instance of the App Insights client.
      * @param instrumentationKey The key needed to register your app with App Insights
      */
-    constructor(@inject("string") @named("instrumentationKey") instrumentationKey: string) {
-        // Setup Application insights with the automatic collection and dependency tracking enabled
-        ApplicationInsights.setup(instrumentationKey)
-        .setAutoDependencyCorrelation(true)
-        .setAutoCollectRequests(true)
-        .setAutoCollectPerformance(true)
-        .setAutoCollectExceptions(true)
-        .setAutoCollectDependencies(true)
-        .setAutoCollectConsole(true)
-        .setUseDiskRetryCaching(true)
-        .start();
-
-        // Create the Application insights telemetry client to write custom events to
-        this.telemClient = ApplicationInsights.defaultClient;
+    constructor(@inject("ConfigValues") configValues: ConfigValues) {
+        if(configValues.insightsKey) {
+            // Setup Application insights with the automatic collection and dependency tracking enabled
+            ApplicationInsights.setup(configValues.insightsKey)
+                .setAutoDependencyCorrelation(true)
+                .setAutoCollectRequests(true)
+                .setAutoCollectPerformance(true)
+                .setAutoCollectExceptions(true)
+                .setAutoCollectDependencies(true)
+                .setAutoCollectConsole(true)
+                .setUseDiskRetryCaching(true)
+                .start();
+    
+            // Create the Application insights telemetry client to write custom events to
+            this.telemetryClient = ApplicationInsights.defaultClient;
+        }
     }
 
     /**
@@ -35,6 +38,7 @@ export class AppInsightsService {
      * @param eventName Name of event to track
      */
     public trackEvent(eventName: string) {
-        this.telemClient.trackEvent({name: eventName});
+        if(this.telemetryClient)
+            this.telemetryClient.trackEvent({ name: eventName });
     }
 }

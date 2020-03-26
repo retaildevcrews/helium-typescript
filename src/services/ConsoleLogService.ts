@@ -5,9 +5,9 @@ import { injectable } from "inversify";
 export class ConsoleLogService implements LogService {
     trace(message: string, id?: string): void {
         id;
-        console.log(`${message}`);
+        console.log(`LOG TRACE: ${message}`);
     }
     error(error: Error, errorMessage: string): void {
-        console.error(errorMessage);
+        console.error(`LOG ERROR: ${errorMessage}`);
     }
 }

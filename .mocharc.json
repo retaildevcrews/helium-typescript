@@ -2,9 +2,9 @@
     "extension": [
         "ts"
     ],
-    "spec": "test/**/*.ts",
     "require": [
         "ts-node/register/transpile-only",
         "source-map-support/register"
-    ]
+    ],
+    "timeout": 10000
 }
