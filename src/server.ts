@@ -19,10 +19,10 @@ import { CommandLineUtilities } from "./utilities";
     const logService = container.get<LogService>("LogService");
     
     // parse command line arguments to get the key vault url and auth type
-    const argumentValues = CommandLineUtilities.parseArguments();
+    const args = CommandLineUtilities.parseArguments();
     
     // retrieve configuration
-    const config = await getConfigValues(argumentValues.keyVaultName, argumentValues.authType, logService);
+    const config = await getConfigValues(args["keyvault-name"], args["auth-type"], logService);
     if(!config) process.exit(-1);
 
     // setup ioc container
