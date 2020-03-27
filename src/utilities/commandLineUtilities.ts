@@ -1,20 +1,22 @@
 import { keyVaultName, authTypeEnv } from "../config/constants";
 import commandLineArgs = require("command-line-args");
+import { LogService } from "../services";
+import { isNull } from "util";
 
 /**
  * Utilities for handling command line arguments.
  */
 export class CommandLineUtilities {
 
-    public static parseArguments(): { authType: string; keyVaultName: string } {
+    public static parseArguments(logService?: LogService): { authType: string; keyVaultName: string } {
         const environmentVariables = {
-            keyVaultName: process.env[keyVaultName],
-            authType: process.env[authTypeEnv]
+            [keyVaultName]: process.env[keyVaultName],
+            [authTypeEnv]: process.env[authTypeEnv]
         }
 
         const argumentOptions = [
-            { name: "keyVaultName", alias: "k" },
-            { name: "authType", alias: "a" },
+            { name: keyVaultName, alias: "k" },
+            { name: authTypeEnv, alias: "a" },
             { name: "help", alias: "h" }
         ];
 
@@ -22,14 +24,22 @@ export class CommandLineUtilities {
         const values = { ...environmentVariables, ...commandLineArgs(argumentOptions) };
 
         // validate arguments
-        if (!values.keyVaultName)
-            throw new Error("Missing keyVaultName argument");
-        if (!values.authType)
-            values.authType = "MSI";
-        if (values.authType.toUpperCase() != "MSI" && values.authType.toUpperCase() != "CLI")
-            throw new Error("Invalid authentication type");
-        if (!values.keyVaultName.startsWith("https://"))
-            values.keyVaultName = `https://${values.keyVaultName}.vault.azure.net`;
+        if (isNull(values.help)) {
+            CommandLineUtilities.showHelp();
+            process.exit(0);
+        }
+        else {
+            if (!values[keyVaultName])
+                throw new Error(`Missing ${keyVaultName} argument`);
+            if (!values[authTypeEnv]) {
+                values[authTypeEnv] = "MSI";
+                if(logService) logService.trace(`No ${authTypeEnv} provided. Defaulting to 'MSI'.`);
+            }
+            if (values[authTypeEnv].toUpperCase() != "MSI" && values[authTypeEnv].toUpperCase() != "CLI")
+                throw new Error("Invalid authentication type");
+            if (!values[keyVaultName].startsWith("https://"))
+                values[keyVaultName] = `https://${values[keyVaultName]}.vault.azure.net`;
+        }
 
         return values;
     }
@@ -37,20 +47,17 @@ export class CommandLineUtilities {
     // Output CLI argument usage instructions to console
     // Optional parameter to display error/context message
     public static showHelp(message?: string) {
-        if (message) {
-            console.log(message);
-        }
+        if (message) console.log(message);
 
         console.log(`\n
             Usage: npm start -- ...
-            Required:
-              --kvname Key Vault Name - name or full URL of the Azure Key Vault
-                (can alternatively be set with environment variable KeyVaultName)
-            Optional:
-              [-h] [--help] - display command line usage
-              [--authtype authentication type] - Valid types: 
-                MSI - managed identity (default)
-                CLI - Azure CLI cached credentials`
+            -k  \t--kvname      \tKey Vault Name - name or full URL of the Azure Key Vault
+                \t              \t(can alternatively be set with environment variable KeyVaultName)
+            -a  \t--authtype    \tauthentication type] - Valid types: 
+                \t              \tMSI - managed identity (default)
+                \t              \tCLI - Azure CLI cached credentials
+            -h  \t--help        \tdisplay command line usage
+            `
         );
     }
 }
