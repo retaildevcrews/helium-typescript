@@ -20,15 +20,15 @@ export class HeliumServer {
 
     constructor(private container: Container) {
         this.inversifyServer = new InversifyRestifyServer(this.container);
-        if(this.container.isBound("TelemetryService"))
+        if (this.container.isBound("TelemetryService"))
             this.container.get<TelemetryService>("TelemetryService")
         this.dataService = this.container.get<DataService>("DataService");
         this.logService = this.container.get<LogService>("LogService");
         this.configValues = this.container.get<ConfigValues>("ConfigValues");
-        this.server = this.serverSetup();
+        this.server = this.createRestifyServer();
     }
 
-    serverSetup() {
+    createRestifyServer() {
         return this.inversifyServer.setConfig(app => {
             // middleware
             app
@@ -65,12 +65,9 @@ export class HeliumServer {
         }).build();
     }
 
-    public async start() {
-        return new Promise(resolve => {
-            this.server.listen(this.configValues.port, () => {
-                this.logService.trace(`Server is listening on port ${this.configValues.port}`);
-                resolve();
-            });
+    public start() {
+        this.server.listen(this.configValues.port, () => {
+            this.logService.trace(`Server is listening on port ${this.configValues.port}`);
         });
     }
 

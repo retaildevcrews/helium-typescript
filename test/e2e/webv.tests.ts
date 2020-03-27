@@ -15,7 +15,9 @@ import { CommandLineUtilities } from "../../src/utilities";
 let heliumServer: HeliumServer;
 let exec;
 
-before(async () => {
+before(async function() {
+    this.timeout(30000);
+
     exec = promisify(childProcess.exec);
 
     console.log("Setting up server for test...");
@@ -45,7 +47,7 @@ before(async () => {
 
     // instantiate and start the server
     heliumServer = new HeliumServer(container);
-    await heliumServer.start();
+    heliumServer.start();
     return;
 });
 
@@ -61,10 +63,8 @@ it("Run webv against the running server", async function () {
     
     let exitCode;
     try {
-        await exec(command, {
-            cwd: "../webvalidate/src/app/bin/Debug/netcoreapp3.1",
-            maxBuffer: (1024 * 1024 * 4)
-        });
+        const { stdout } = await exec(command, { cwd: "../webvalidate/src/app/bin/Debug/netcoreapp3.1" });
+        console.log(stdout);
     }
     catch (exc) {
         exitCode = exc.code;

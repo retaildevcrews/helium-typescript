@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities } from "../../src/utilities";
+import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, CommandLineUtilities } from "../../src/utilities";
 import {
   invalidActorIDMessage,
   invalidGenreMessage,
@@ -323,6 +323,56 @@ describe("ValidationUtilities", () => {
       const { validated, message } = ValidationUtilities.validateMovies({ actorId: "actor" });
       assert.isFalse(validated);
       assert.equal(message, invalidActorIDMessage);
+    });
+  });
+});
+
+describe("CommandLineUtilities", () => {
+  describe("parseArguments", () => {
+    // save the command line arguments so they can be restored after each test
+    const argvSave = process.argv.slice(); // TODO: use deep copy
+    const specIndex = argvSave.findIndex(a => a.includes("test/unit/**/*.ts"));
+    if(specIndex >= 0) argvSave.splice(specIndex, 1);
+
+    it("(positive test case)", () => {
+      
+    });
+    
+    it("should throw if --keyVaultName (or -k) is missing", () => {
+      assert.throws(() => CommandLineUtilities.parseArguments(), /Missing keyVaultName argument/);
+    });
+    
+    it("should default --authType (-a) to MSI", () => {
+      process.argv.push("--keyVaultName");
+      process.argv.push("abc");
+      const { authType } = CommandLineUtilities.parseArguments();
+      assert(authType == "MSI");
+    });
+
+    it("should throw if the value of authType is not valid ", () => {
+      process.argv.push("--keyVaultName");
+      process.argv.push("xyz");
+      process.argv.push("--authType");
+      process.argv.push("def");
+      assert.throw(() => CommandLineUtilities.parseArguments(), /Invalid authentication type/);
+    });
+
+    it("should expand the key vault URL if only the name was provided", () => {
+      process.argv.push("--keyVaultName");
+      process.argv.push("abc");
+      const { keyVaultName } = CommandLineUtilities.parseArguments();
+      assert(keyVaultName == "https://abc.vault.azure.net");
+    })
+
+    it.skip("should show help when --help (-h) is provided", () => {
+      process.argv.push("--help");
+      process.argv.push("abc");
+      const { keyVaultName } = CommandLineUtilities.parseArguments();
+      assert(keyVaultName == "https://abc.vault.azure.net");
+    })
+
+    afterEach(() => {
+      process.argv = argvSave.slice();
     });
   });
 });
