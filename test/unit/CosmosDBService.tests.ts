@@ -1,3 +1,7 @@
+// TODO: write new CosmosDBService tests
+// we pulled this test logic when we switched from jest to mocha
+// keeping the existing logic commented for reference
+
 // import "reflect-metadata";
 // import { mockery } from "mockery";
 // // import { CosmosClient } from "@azure/cosmos";
