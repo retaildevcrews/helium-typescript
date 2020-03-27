@@ -1,9 +1,5 @@
-// import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable, named } from "inversify";
-// import { LogService } from "./LogService";
-// import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
-// import { defaultPageSize, maxPageSize } from "../config/constants";
 import { DataService, LogService } from ".";
 
 /**
@@ -33,8 +29,8 @@ export class JsonDataService implements DataService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async queryDocuments(query: string): Promise<any> {
         try {
-            // fetch results
-            // return results;
+            // TODO: fetch results
+            // TODO: return results;
         } catch (err) {
             this.logger.error(Error(err), err);
             throw Error(err);
