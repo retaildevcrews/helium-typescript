@@ -26,6 +26,8 @@ export class HeliumServer {
         this.logService = this.container.get<LogService>("LogService");
         this.configValues = this.container.get<ConfigValues>("ConfigValues");
         this.server = this.createRestifyServer();
+
+        this.logService.trace(`Version: ${version}`);
     }
 
     createRestifyServer() {
