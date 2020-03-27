@@ -1,5 +1,4 @@
 /* eslint-disable prefer-arrow-callback */
-
 import "reflect-metadata";
 import { assert } from "chai";
 import { promisify } from "util";
@@ -30,10 +29,8 @@ before(async function() {
     process.argv.splice(specIndex, 1);
     
     // retrieve configuration
-    const argumentValues = CommandLineUtilities.parseArguments();
-    console.log(argumentValues);
-    // TODO: drop out if there were errors parsing args
-    const config = await getConfigValues(argumentValues.keyVaultName, argumentValues.authType, logService);
+    const args = CommandLineUtilities.parseArguments();
+    const config: ConfigValues = await getConfigValues(args["keyvault-name"], args["auth_type"], logService);
 
     // setup an ioc container for test
     // these could be replaced with mocks if necessary

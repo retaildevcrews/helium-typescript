@@ -332,43 +332,38 @@ describe("CommandLineUtilities", () => {
     // save the command line arguments so they can be restored after each test
     const argvSave = process.argv.slice(); // TODO: use deep copy
     const specIndex = argvSave.findIndex(a => a.includes("test/unit/**/*.ts"));
-    if(specIndex >= 0) argvSave.splice(specIndex, 1);
+    if (specIndex >= 0) argvSave.splice(specIndex, 1);
 
     it("(positive test case)", () => {
-      
-    });
-    
-    it("should throw if --keyVaultName (or -k) is missing", () => {
-      assert.throws(() => CommandLineUtilities.parseArguments(), /Missing keyVaultName argument/);
-    });
-    
-    it("should default --authType (-a) to MSI", () => {
-      process.argv.push("--keyVaultName");
-      process.argv.push("abc");
-      const { authType } = CommandLineUtilities.parseArguments();
-      assert(authType == "MSI");
+      // TODO: implement a positive use case
     });
 
-    it("should throw if the value of authType is not valid ", () => {
-      process.argv.push("--keyVaultName");
-      process.argv.push("xyz");
-      process.argv.push("--authType");
-      process.argv.push("def");
+    it("should throw if keyvault-name is missing", () => {
+      assert.throws(() => CommandLineUtilities.parseArguments(), /^Missing keyvault-name.*/);
+    });
+
+    it("should default --auth-type to MSI", () => {
+      process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+      const args = CommandLineUtilities.parseArguments();
+      assert(args["auth-type"] == "MSI");
+    });
+    
+    it("should throw if the value of auth-type is not valid", () => {
+      process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+      process.argv = process.argv.concat(["--auth-type", "def"]);
       assert.throw(() => CommandLineUtilities.parseArguments(), /Invalid authentication type/);
     });
-
-    it("should expand the key vault URL if only the name was provided", () => {
-      process.argv.push("--keyVaultName");
-      process.argv.push("abc");
-      const { keyVaultName } = CommandLineUtilities.parseArguments();
-      assert(keyVaultName == "https://abc.vault.azure.net");
+    
+    // TODO: fix keyvaultname name
+    it("should expand the keyvault URL if only the name was provided", () => {
+      process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+      const args = CommandLineUtilities.parseArguments();
+      assert(args["keyvault-name"] == "https://abc.vault.azure.net");
     })
-
-    it.skip("should show help when --help (-h) is provided", () => {
-      process.argv.push("--help");
-      process.argv.push("abc");
-      const { keyVaultName } = CommandLineUtilities.parseArguments();
-      assert(keyVaultName == "https://abc.vault.azure.net");
+    
+    it("should show help when --help is provided", () => {
+      process.argv = process.argv.concat(["--help"]);
+      // TODO: finish this
     })
 
     afterEach(() => {

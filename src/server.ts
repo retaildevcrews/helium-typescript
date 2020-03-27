@@ -6,7 +6,6 @@ import { getConfigValues, ConfigValues } from "./config/config";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { HeliumServer } from "./HeliumServer";
 import { CommandLineUtilities } from "./utilities";
-import { keyVaultName, authTypeEnv } from "./config/constants";
 
 // Uncomment this if you want to auto generate swagger json
 // import * as swaggerJSDoc from "swagger-jsdoc";
@@ -23,7 +22,7 @@ import { keyVaultName, authTypeEnv } from "./config/constants";
     const argumentValues = CommandLineUtilities.parseArguments();
     
     // retrieve configuration
-    const config = await getConfigValues(argumentValues[keyVaultName], argumentValues[authTypeEnv], logService);
+    const config = await getConfigValues(argumentValues.keyVaultName, argumentValues.authType, logService);
     if(!config) process.exit(-1);
 
     // setup ioc container
