@@ -1,15 +1,17 @@
 import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
-import { inject, injectable, named } from "inversify";
+import { inject, injectable } from "inversify";
 import { LogService } from "./LogService";
 import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
 import { defaultPageSize, maxPageSize } from "../config/constants";
+import { DataService } from "./DataService";
+import { ConfigValues } from "../config/config";
 
 /**
  * Handles executing queries against CosmosDB
  */
 @injectable()
-export class CosmosDBService {
+export class CosmosDBService implements DataService {
 
     private cosmosClient: CosmosClient;
     private cosmosContainer: Container;
@@ -23,14 +25,8 @@ export class CosmosDBService {
      * @param accessKey The CosmosDB access key (primary of secondary).
      * @param logger Logging service user for tracing/logging.
      */
-    constructor(
-        @inject("string") @named("cosmosDbUrl") private url: string,
-        @inject("string") @named("cosmosDbKey") accessKey: string,
-        @inject("string") @named("database") public databaseId: string,
-        @inject("string") @named("collection") public containerId: string,
-        @inject("LogService") private logger: LogService) {
-
-        this.cosmosClient = new CosmosClient({ endpoint: url, key: accessKey });
+    constructor(@inject("ConfigValues") private config: ConfigValues, @inject("LogService") private logger: LogService) {
+        this.cosmosClient = new CosmosClient({ endpoint: config.cosmosDbUrl, key: config.cosmosDbKey });
         this.ready = this.initialize();
     }
 
@@ -42,7 +38,7 @@ export class CosmosDBService {
 
         this.logger.trace("Initializing CosmosDB Container");
         try {
-            this.cosmosContainer = await this.cosmosClient.database(this.databaseId).container(this.containerId);
+            this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
         } catch (err) {
             this.logger.error(Error(err), err);
         }

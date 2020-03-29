@@ -17,7 +17,7 @@ RUN npm set progress=false && npm config set depth 0
 RUN npm install --production
 RUN cp -R node_modules prod_node_modules
 RUN npm install
-RUN npm run lint && npm run build && npm run test-unit
+RUN npm run lint && npm run build && npm test
  
 # ---- Release ----
 FROM node:lts-alpine AS release

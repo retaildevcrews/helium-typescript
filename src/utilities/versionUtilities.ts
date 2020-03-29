@@ -1,7 +1,7 @@
 /**
  * Utilities for determining build version.
  */
-import * as fs from "fs";
+import fs = require("fs");
 
 export class VersionUtilities {
 
@@ -12,7 +12,7 @@ export class VersionUtilities {
 
         // add "+MMdd.HHmm"
         const version = process.env.npm_package_version + "+" + lastBuildTime.substring(5, 7) + lastBuildTime.substring(8, 10)
-                  + "." + lastBuildTime.substring(11, 13) + lastBuildTime.substring(14, 16);
+            + "." + lastBuildTime.substring(11, 13) + lastBuildTime.substring(14, 16);
 
         return version;
     }

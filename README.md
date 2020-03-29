@@ -49,12 +49,7 @@ There is a known warning for a peer dependency on canvas.  However, the reported
 
 Build the container using Docker
 
-- The unit tests run as part of the Docker build process. You can also run the unit tests manually.
-
-```bash
-
-npm run test-unit
-
+- The unit tests run as part of the Docker build process. You can also run the unit tests manually using `npm test`, with watch using `npm run test:watch`, and with test coverage using `npm run test:coverage`.
 ```
 
 - For instructions on building the container with ACR, please see the Helium [readme](https://github.com/retaildevcrews/helium)
@@ -95,11 +90,11 @@ npm run build
 
 # run the app with command line args
 # for local run, you need to specify CLI authentication type
-npm start -- --kvname {name of your keyvault} --authtype CLI
+npm start -- --keyvault-name {name of your keyvault} --auth-type CLI
 
 # alternatively you can set the following environment variables and run without command line args
-export KeyVaultName={name of your keyvault}
-export AUTH_TYPE=CLI
+export keyvault-name={name of your keyvault}
+export auth-type=CLI
 
 npm start
 
@@ -123,10 +118,10 @@ docker build -t helium-dev -f Dockerfile-Dev .
 # $He_Name is set to the name of your key vault
 
 # option using command line args
-docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--kvname" "${He_Name}" "--authtype" "CLI"
+docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--keyvault-name" "${He_Name}" "--auth-type" "CLI"
 
 # option using environment variables
-docker run -d -p 4120:4120 -e KeyVaultName=$He_Name -e AUTH_TYPE=CLI --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
+docker run -d -p 4120:4120 -e HE_KEYVAULT_NAME=$He_Name -e HE_AUTH_TYPE=CLI --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
 
 # check the logs
 # re-run until the application started message appears

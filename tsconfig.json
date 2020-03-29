@@ -9,17 +9,19 @@
     ],
     "types": [
       "reflect-metadata",
-      "jest"
+      "mocha",
+      "chai",
+      "node"
     ],
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "sourceMap": true
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "src/**/__tests__"
+    "node_modules"
   ]
 }

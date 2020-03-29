@@ -5,10 +5,7 @@ export class DateUtilities {
 
     public static getTimer() {
         const start: number = Date.now();
-
-        return () => {
-            return Date.now() - start;
-        };
+        return () => Date.now() - start;
     }
 
     // Calculate duration (in ms) from node process hrtime
