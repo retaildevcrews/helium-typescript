@@ -8,6 +8,16 @@ export class ErrorHandlingUtilities {
         "ActorController": {
             "error": "ActorControllerException",
             "message": "Actor Not Found"
+        },
+        "GenreController": {
+            "error": "GenreControllerException"
+        },
+        "FeaturedController": {
+            "error": "FeaturedControllerException"
+        },
+        "MovieController": {
+            "error": "MovieControllerException",
+            "message": "Movie Not Found"
         }
     }
 

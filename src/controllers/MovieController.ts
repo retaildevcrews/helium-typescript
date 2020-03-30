@@ -5,6 +5,7 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
 import { ValidationUtilities } from "../utilities/validationUtilities";
+import { ErrorHandlingUtilities } from "../utilities/errorHandlingUtilities";
 
 /**
  * controller implementation for our movies endpoint
@@ -28,23 +29,16 @@ export class MovieController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        let resCode: number = HttpStatus.OK;
+        const resCode: number = HttpStatus.OK;
         let results: Movie[];
 
         // Execute query
         try {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
-
-            this.logger.error(Error(err), "MovieControllerException: " + err.toString());
-            return res.send(resCode, "MovieControllerException");
+            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse();
+            return res.send(resCode, message);
         }
 
         return res.send(resCode, results);
@@ -62,27 +56,14 @@ export class MovieController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        let resCode: number = HttpStatus.OK;
+        const resCode: number = HttpStatus.OK;
         let result: Movie;
         try {
             result = new Movie(await this.cosmosDb.getDocument(movieId));
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
-
-            if (resCode == HttpStatus.NOT_FOUND || err.toString().includes("404")){
-                resCode = HttpStatus.NOT_FOUND;
-                this.logger.trace("Movie Not Found: " + movieId);
-                return res.send(resCode, "Movie Not Found");
-            } else {
-                this.logger.error(Error(err), "MovieControllerException: " + err.toString());
-                return res.send(resCode, "MovieControllerException");
-            }
+            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse(movieId);
+            return res.send(resCode, message);
         }
 
         return res.send(resCode, result);

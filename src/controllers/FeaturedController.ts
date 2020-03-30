@@ -4,6 +4,7 @@ import * as HttpStatus from "http-status-codes";
 import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
+import { ErrorHandlingUtilities } from "../utilities/errorHandlingUtilities";
 
 /**
  * controller implementation for our featured movie endpoint
@@ -20,7 +21,7 @@ export class FeaturedController implements interfaces.Controller {
 
     @Get("/movie")
     public async getFeaturedMovie(req, res) {
-        let resCode: number = HttpStatus.OK;
+        const resCode: number = HttpStatus.OK;
         let result: Movie;
 
         try {
@@ -33,16 +34,9 @@ export class FeaturedController implements interfaces.Controller {
                 result = new Movie(await this.cosmosDb.getDocument(movieId));
             }
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
-
-            this.logger.error(Error(err), "FeaturedControllerException: " + err.toString());
-            return res.send(resCode, "FeaturedControllerException");
+            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse();
+            return res.send(resCode, message);
         }
 
         return res.send(resCode, result);
