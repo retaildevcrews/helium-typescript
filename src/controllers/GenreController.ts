@@ -6,9 +6,7 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { sqlGenres } from "../config/constants";
 
-/**
- * controller implementation for our genres endpoint
- */
+// controller implementation for our genres endpoint
 @Controller("/api/genres")
 @injectable()
 export class GenreController implements interfaces.Controller {

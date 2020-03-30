@@ -7,12 +7,12 @@ import { LogService } from "../services/LogService";
 import { Actor } from "../models/Actor";
 import { ValidationUtilities } from "../utilities/validationUtilities";
 
-// Controller implementation for our actors endpoint
+// controller implementation for our actors endpoint
 @Controller("/api/actors")
 @injectable()
 export class ActorController implements interfaces.Controller {
 
-    // Instantiate the actor controller
+    // instantiate the actor controller
     constructor(
         @inject("DataService") private dataService: DataService,
         @inject("LogService") private logger: LogService
@@ -22,7 +22,7 @@ export class ActorController implements interfaces.Controller {
 
     @Get("/")
     public async getAllActors(req: Request, res) {
-        // Validate query parameters
+        // validate query parameters
         const { validated: validated, message: message } = ValidationUtilities.validateCommon(req.query);
         
         if (!validated) {
@@ -34,7 +34,7 @@ export class ActorController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let results: Actor[];
 
-        // Execute query
+        // execute query
         try {
             results = await this.dataService.queryActors(req.query);
         } catch (err) {
@@ -55,7 +55,7 @@ export class ActorController implements interfaces.Controller {
 
     @Get("/:id")
     public async getActorById(req, res) {
-        // Validate Actor Id parameter
+        // validate Actor Id parameter
         const actorId: string = req.params.id;
         const { validated: validated, message: message } = ValidationUtilities.validateActorId(actorId);
         

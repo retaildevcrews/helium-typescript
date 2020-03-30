@@ -2,9 +2,7 @@ import * as ApplicationInsights from "applicationinsights";
 import { inject, injectable } from "inversify";
 import { ConfigValues } from "../config/config";
 
-/**
- * Handles sending telemetry data via AppInsights
- */
+// handles sending telemetry data via AppInsights
 @injectable()
 export class AppInsightsService {
 

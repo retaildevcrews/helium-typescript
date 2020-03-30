@@ -5,9 +5,7 @@ import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 import azureIdentity = require("@azure/identity");
 import { cosmosUrl } from "../config/constants";
 
-/**
- * Handles accessing secrets from Azure Key vault.
- */
+// handles accessing secrets from Azure Key vault.
 @injectable()
 export class KeyVaultService {
     private client: SecretClient;

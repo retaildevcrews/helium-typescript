@@ -7,9 +7,7 @@ import { defaultPageSize, maxPageSize } from "../config/constants";
 import { DataService } from "./DataService";
 import { ConfigValues } from "../config/config";
 
-/**
- * Handles executing queries against CosmosDB
- */
+// handles executing queries against CosmosDB
 @injectable()
 export class CosmosDBService implements DataService {
 

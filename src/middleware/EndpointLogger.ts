@@ -2,11 +2,7 @@ import * as restify from "restify";
 import { Container } from "inversify";
 import { LogService } from "../services/LogService";
 
-/**
- * Endpoint logger
- * Adds failure logs to every endpoint
- * @param container The inversify container with the logger client
- */
+// adds failure logs to every endpoint
 export default function responseDuration(container: Container) {
     // get the log client
     const log: LogService = container.get<LogService>("LogService");

@@ -1,4 +1,4 @@
-/* eslint-disable prefer-arrow-callback */
+// eslint-disable prefer-arrow-callback
 import "reflect-metadata";
 import { assert } from "chai";
 import { promisify } from "util";
