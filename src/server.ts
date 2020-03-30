@@ -23,7 +23,7 @@ import { CommandLineUtilities } from "./utilities";
     
     // retrieve configuration
     const config = await getConfigValues(args["keyvault-name"], args["auth-type"], logService);
-    if(!config) process.exit(-1);
+    if (!config) process.exit(-1);
 
     // setup ioc container
     container.bind<ConfigValues>("ConfigValues").toConstantValue(config);
@@ -35,6 +35,14 @@ import { CommandLineUtilities } from "./utilities";
     container.bind<DataService>("DataService").to(CosmosDBService).inSingletonScope();
     container.bind<TelemetryService>("TelemetryService").to(AppInsightsService).inSingletonScope();
     
+    // the telem object is currently unused, but will be used with Key Rotation
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let telemetryService: TelemetryService;
+    // telemetry service is optional
+    if (config.insightsKey) {
+        container.get<TelemetryService>("TelemetryService");
+    }
+
     // instantiate the server
     const heliumServer = new HeliumServer(container);
 

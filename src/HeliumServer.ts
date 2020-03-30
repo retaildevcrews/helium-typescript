@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
-import { DataService, TelemetryService, LogService } from "./services";
+import { DataService, LogService } from "./services";
 import { Container } from "inversify";
 import { InversifyRestifyServer } from "inversify-restify-utils";
 import { ConfigValues } from "./config/config";
@@ -13,15 +13,12 @@ import restify = require("restify");
 export class HeliumServer {
     private server: restify.Server;
     private inversifyServer: InversifyRestifyServer;
-    private telemetryService: TelemetryService;
     private dataService: DataService;
     private logService: LogService;
     private configValues: ConfigValues;
 
     constructor(private container: Container) {
         this.inversifyServer = new InversifyRestifyServer(this.container);
-        if (this.container.isBound("TelemetryService"))
-            this.container.get<TelemetryService>("TelemetryService")
         this.dataService = this.container.get<DataService>("DataService");
         this.logService = this.container.get<LogService>("LogService");
         this.configValues = this.container.get<ConfigValues>("ConfigValues");
