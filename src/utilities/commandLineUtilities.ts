@@ -9,8 +9,8 @@ export class CommandLineUtilities {
 
         // environment variables
         const env = {
-            "keyvault-name": process.env.HE_KEYVAULT_NAME,
-            "auth-type": process.env.HE_AUTH_TYPE
+            "keyvault-name": process.env.KEYVAULT_NAME,
+            "auth-type": process.env.AUTH_TYPE
         }
 
         // cli args
@@ -31,7 +31,7 @@ export class CommandLineUtilities {
         }
         else {
             if (!values["keyvault-name"])
-                throw new Error("Missing keyvault-name argument (or HE_KEYVAULT_NAME environment variable).");
+                throw new Error("Missing keyvault-name argument (or KEYVAULT_NAME environment variable).");
             if (!values["auth-type"]) {
                 values["auth-type"] = "MSI";
                 if(logService) logService.trace("No authorization type provided. Defaulting to 'MSI'.");

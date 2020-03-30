@@ -121,7 +121,7 @@ docker build -t helium-dev -f Dockerfile-Dev .
 docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--keyvault-name" "${He_Name}" "--auth-type" "CLI"
 
 # option using environment variables
-docker run -d -p 4120:4120 -e HE_KEYVAULT_NAME=$He_Name -e HE_AUTH_TYPE=CLI --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
+docker run -d -p 4120:4120 -e KEYVAULT_NAME=$He_Name -e AUTH_TYPE=CLI --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
 
 # check the logs
 # re-run until the application started message appears
