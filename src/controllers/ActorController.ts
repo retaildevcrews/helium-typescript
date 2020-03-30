@@ -6,6 +6,8 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Actor } from "../models/Actor";
 import { ValidationUtilities } from "../utilities/validationUtilities";
+import { ErrorHandlingUtilities } from "../utilities/errorHandlingUtilities";
+
 
 // Controller implementation for our actors endpoint
 @Controller("/api/actors")
@@ -31,23 +33,16 @@ export class ActorController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        let resCode: number = HttpStatus.OK;
+        const resCode: number = HttpStatus.OK;
         let results: Actor[];
 
         // Execute query
         try {
             results = await this.dataService.queryActors(req.query);
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
-
-            this.logger.error(Error(err), "ActorControllerException: " + err.toString());
-            return res.send(resCode, "ActorControllerException");
+            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse();
+            return res.send(resCode, message);
         }
 
         return res.send(resCode, results);
@@ -65,27 +60,14 @@ export class ActorController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        let resCode: number = HttpStatus.OK;
+        const resCode: number = HttpStatus.OK;
         let result: Actor;
         try {
             result = new Actor(await this.dataService.getDocument(actorId));
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
-
-            if (resCode == HttpStatus.NOT_FOUND || err.toString().includes("404")){
-                resCode = HttpStatus.NOT_FOUND;
-                this.logger.trace("Actor Not Found: " + actorId);
-                return res.send(resCode, "Actor Not Found");
-            } else {
-                this.logger.error(Error(err), "ActorControllerException: " + err.toString());
-                return res.send(resCode, "ActorControllerException");
-            }
+            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse(actorId);
+            return res.send(resCode, message);
         }
 
         return res.send(resCode, result);
