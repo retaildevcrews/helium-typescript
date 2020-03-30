@@ -12,10 +12,9 @@ export class AppInsightsService {
 
     /**
      * Creates a new instance of the App Insights client.
-     * @param instrumentationKey The key needed to register your app with App Insights
      */
     constructor(@inject("ConfigValues") configValues: ConfigValues) {
-        if(configValues.insightsKey) {
+        if (configValues.insightsKey) {
             // Setup Application insights with the automatic collection and dependency tracking enabled
             ApplicationInsights.setup(configValues.insightsKey)
                 .setAutoDependencyCorrelation(true)
@@ -38,7 +37,7 @@ export class AppInsightsService {
      * @param eventName Name of event to track
      */
     public trackEvent(eventName: string) {
-        if(this.telemetryClient)
+        if (this.telemetryClient)
             this.telemetryClient.trackEvent({ name: eventName });
     }
 }
