@@ -1,10 +1,9 @@
 export interface DataService {
-    ready: Promise<void>;
     /**
-     * Initialize the Cosmos DB Container.
+     * Connect to the Cosmos DB Container.
      * This is handled in a separate method to avoid calling async operations in the constructor.
      */
-    initialize();
+    connect();
 
     /**
      * Runs the given query against CosmosDB.

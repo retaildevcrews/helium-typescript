@@ -10,23 +10,11 @@ import { cosmosUrl } from "../config/constants";
 export class KeyVaultService {
     private client: SecretClient;
 
-    // Ready will resolve when the KeyVaultProvider has been initialized and is ready to use
-    public ready: Promise<void>;
-
     /**
      * Creates a new instance of the KeyVaultService class.
      * @param url The KeyVault testing action URL
      */
-    constructor(private url: string, private authType: string, @inject("LogService") private logger: LogService) {
-        try {
-            this.ready = this.initialize();
-        }
-        catch (e) {
-            const errorText = "An error occurred attempting to connect to the Azure Key vault.";
-            this.logger.error(e, errorText);
-            throw new Error(errorText);
-        }
-    }
+    constructor(private url: string, private authType: string, @inject("LogService") private logger: LogService) {}
 
     /**
      * Returns the latest version of the name's secret.
@@ -47,7 +35,7 @@ export class KeyVaultService {
         }
     }
 
-    private async initialize() {
+    public async connect() {
         const timeout = Date.now() + 90000;
 
         while (true){

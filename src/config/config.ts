@@ -24,7 +24,7 @@ export async function getConfigValues(
     let keyvault: KeyVaultService;
     try {
         keyvault = new KeyVaultService(keyVaultUrl, authType, log);
-        await keyvault.ready;
+        await keyvault.connect();
     } catch (err) {
         log.error(Error(), "Key Vault Exception: " + err);
         return;

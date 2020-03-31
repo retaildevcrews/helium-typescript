@@ -6,16 +6,12 @@ import { DataService, LogService } from ".";
 @injectable()
 export class JsonDataService implements DataService {
 
-    ready: Promise<void>;
-
     constructor(
         @inject("string") @named("url") private url: string,
         @inject("LogService") private logger: LogService) {
-        this.ready = this.initialize();
     }
 
-    public async initialize(): Promise<void> {
-
+    public async connect() {
         this.logger.trace("Initializing Json Data Service");
         try {
 
