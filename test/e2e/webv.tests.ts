@@ -9,7 +9,7 @@ import { getConfigValues, ConfigValues } from "../../src/config/config";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { DataService, CosmosDBService, LogService, ConsoleLogService } from "../../src/services";
 import { Container } from "inversify";
-import { CommandLineUtilities } from "../../src/utilities";
+import { parseArguments } from "../../src/utilities/commandLineUtilities";
 
 let heliumServer: HeliumServer;
 let exec;
@@ -29,7 +29,7 @@ before(async function() {
     process.argv.splice(specIndex, 1);
     
     // retrieve configuration
-    const args = CommandLineUtilities.parseArguments();
+    const args = parseArguments();
     const config: ConfigValues = await getConfigValues(args["keyvault-name"], args["auth_type"], logService);
 
     // setup an ioc container for test

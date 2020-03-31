@@ -5,7 +5,7 @@ import { Container } from "inversify";
 import { getConfigValues, ConfigValues } from "./config/config";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { HeliumServer } from "./HeliumServer";
-import { CommandLineUtilities } from "./utilities";
+import { parseArguments } from "./utilities/commandLineUtilities";
 
 // main
 (async function main() {
@@ -16,10 +16,10 @@ import { CommandLineUtilities } from "./utilities";
     const logService = container.get<LogService>("LogService");
     
     // parse command line arguments to get the key vault url and auth type
-    const args = CommandLineUtilities.parseArguments();
+    const {"keyvault-name": keyVaultName, "auth-type": authType} = parseArguments();
     
     // retrieve configuration
-    const config = await getConfigValues(args["keyvault-name"], args["auth-type"], logService);
+    const config = await getConfigValues(keyVaultName, authType, logService);
     if (!config) process.exit(-1);
 
     // setup ioc container

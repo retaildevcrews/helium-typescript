@@ -1,6 +1,7 @@
 import { assert } from "chai";
 import * as HttpStatus from "http-status-codes";
-import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, CommandLineUtilities, getHttpStatusCode } from "../../src/utilities";
+import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, getHttpStatusCode } from "../../src/utilities";
+import { parseArguments } from "../../src/utilities/commandLineUtilities";
 import {
   invalidActorIDMessage,
   invalidGenreMessage,
@@ -340,24 +341,24 @@ describe("CommandLineUtilities", () => {
     });
 
     it("should throw if keyvault-name is missing", () => {
-      assert.throws(() => CommandLineUtilities.parseArguments(), /^Missing keyvault-name.*/);
+      assert.throws(() => parseArguments(), /^Missing keyvault-name.*/);
     });
 
     it("should default --auth-type to MSI", () => {
       process.argv = process.argv.concat(["--keyvault-name", "abc"]);
-      const args = CommandLineUtilities.parseArguments();
+      const args = parseArguments();
       assert(args["auth-type"] == "MSI");
     });
     
     it("should throw if the value of auth-type is not valid", () => {
       process.argv = process.argv.concat(["--keyvault-name", "abc"]);
       process.argv = process.argv.concat(["--auth-type", "def"]);
-      assert.throw(() => CommandLineUtilities.parseArguments(), /Invalid authentication type/);
+      assert.throw(() => parseArguments(), /Invalid authentication type/);
     });
     
     it("should expand the keyvault URL if only the name was provided", () => {
       process.argv = process.argv.concat(["--keyvault-name", "abc"]);
-      const args = CommandLineUtilities.parseArguments();
+      const args = parseArguments();
       assert(args["keyvault-name"] == "https://abc.vault.azure.net");
     })
     
