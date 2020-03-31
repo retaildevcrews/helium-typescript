@@ -5,7 +5,7 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
 import { ValidationUtilities } from "../utilities/validationUtilities";
-import { ErrorHandlingUtilities } from "../utilities/errorHandlingUtilities";
+import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 /**
  * controller implementation for our movies endpoint
@@ -29,7 +29,7 @@ export class MovieController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        const resCode: number = HttpStatus.OK;
+        let resCode: number = HttpStatus.OK;
         let results: Movie[];
 
         // Execute query
@@ -37,8 +37,9 @@ export class MovieController implements interfaces.Controller {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
             res.setHeader("Content-Type", "text/plain");
-            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse();
-            return res.send(resCode, message);
+            resCode = getHttpStatusCode(err);
+            this.logger.error(Error(err), "MovieControllerException: " + err.toString());
+            return res.send(resCode, "MovieControllerException");
         }
 
         return res.send(resCode, results);
@@ -56,14 +57,21 @@ export class MovieController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        const resCode: number = HttpStatus.OK;
+        let resCode: number = HttpStatus.OK;
         let result: Movie;
         try {
             result = new Movie(await this.cosmosDb.getDocument(movieId));
         } catch (err) {
             res.setHeader("Content-Type", "text/plain");
-            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse(movieId);
-            return res.send(resCode, message);
+            resCode = getHttpStatusCode(err);
+
+            if (resCode === HttpStatus.NOT_FOUND) {
+                this.logger.trace("Actor Not Found: " + movieId);
+                return res.send(resCode, "Actor Not Found");
+            }
+
+            this.logger.error(Error(err), "MovieControllerException: " + err.toString());
+            return res.send(resCode, "MovieControllerException");
         }
 
         return res.send(resCode, result);

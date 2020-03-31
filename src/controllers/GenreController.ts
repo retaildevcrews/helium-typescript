@@ -5,7 +5,7 @@ import * as HttpStatus from "http-status-codes";
 import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { sqlGenres } from "../config/constants";
-import { ErrorHandlingUtilities } from "../utilities/errorHandlingUtilities";
+import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 /**
  * controller implementation for our genres endpoint
@@ -20,15 +20,16 @@ export class GenreController implements interfaces.Controller {
 
   @Get("/")
   public async getAllGenres(req: Request, res) {
-    const resCode: number = HttpStatus.OK;
+    let resCode: number = HttpStatus.OK;
     let results: string[];
 
     try {
       results = await this.cosmosDb.queryDocuments(sqlGenres);
     } catch (err) {
       res.setHeader("Content-Type", "text/plain");
-      const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse();
-      return res.send(resCode, message);
+      resCode = getHttpStatusCode(err);
+      this.logger.error(Error(err), "GenreControllerException: " + err.toString());
+      return res.send(resCode, "GenreControllerException");
     }
 
     return res.send(resCode, results);

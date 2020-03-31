@@ -4,7 +4,7 @@ import * as HttpStatus from "http-status-codes";
 import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
-import { ErrorHandlingUtilities } from "../utilities/errorHandlingUtilities";
+import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 /**
  * controller implementation for our featured movie endpoint
@@ -21,7 +21,7 @@ export class FeaturedController implements interfaces.Controller {
 
     @Get("/movie")
     public async getFeaturedMovie(req, res) {
-        const resCode: number = HttpStatus.OK;
+        let resCode: number = HttpStatus.OK;
         let result: Movie;
 
         try {
@@ -35,8 +35,9 @@ export class FeaturedController implements interfaces.Controller {
             }
         } catch (err) {
             res.setHeader("Content-Type", "text/plain");
-            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse();
-            return res.send(resCode, message);
+            resCode = getHttpStatusCode(err);
+            this.logger.error(Error(err), "FeaturedControllerException: " + err.toString());
+            return res.send(resCode, "FeaturedControllerException");
         }
 
         return res.send(resCode, result);

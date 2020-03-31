@@ -6,7 +6,7 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Actor } from "../models/Actor";
 import { ValidationUtilities } from "../utilities/validationUtilities";
-import { ErrorHandlingUtilities } from "../utilities/errorHandlingUtilities";
+import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 
 // Controller implementation for our actors endpoint
@@ -33,7 +33,7 @@ export class ActorController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        const resCode: number = HttpStatus.OK;
+        let resCode: number = HttpStatus.OK;
         let results: Actor[];
 
         // Execute query
@@ -41,8 +41,9 @@ export class ActorController implements interfaces.Controller {
             results = await this.dataService.queryActors(req.query);
         } catch (err) {
             res.setHeader("Content-Type", "text/plain");
-            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse();
-            return res.send(resCode, message);
+            resCode = getHttpStatusCode(err);
+            this.logger.error(Error(err), "ActorControllerException: " + err.toString());
+            return res.send(resCode, "ActorControllerException");
         }
 
         return res.send(resCode, results);
@@ -60,14 +61,21 @@ export class ActorController implements interfaces.Controller {
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
-        const resCode: number = HttpStatus.OK;
+        let resCode: number = HttpStatus.OK;
         let result: Actor;
         try {
             result = new Actor(await this.dataService.getDocument(actorId));
         } catch (err) {
             res.setHeader("Content-Type", "text/plain");
-            const {resCode: resCode, message: message} = new ErrorHandlingUtilities(err, this.constructor.name, this.logger).returnResponse(actorId);
-            return res.send(resCode, message);
+            resCode = getHttpStatusCode(err);
+
+            if (resCode === HttpStatus.NOT_FOUND) {
+                this.logger.trace("Actor Not Found: " + actorId);
+                return res.send(resCode, "Actor Not Found");
+            }
+
+            this.logger.error(Error(err), "ActorControllerException: " + err.toString());
+            return res.send(resCode, "ActorControllerException");
         }
 
         return res.send(resCode, result);
