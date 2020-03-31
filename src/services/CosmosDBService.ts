@@ -34,20 +34,20 @@ export class CosmosDBService implements DataService {
         return;
     }
 
-    // runs the given query against CosmosDB.
+    // runs the given query against CosmosDB
     public async queryDocuments(query: string): Promise<any> {
         const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
         return queryResults;
     }
 
-    // retrieves a specific document by Id.
+    // retrieves a specific document by id
     public async getDocument(documentId: string): Promise<any> {
         const { resource: result, statusCode: status }
             = await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
         if (status === 200) {
             return result;
         }
-        
+
         // 404 not found does not throw an error
         throw Error("Cosmos Error: " + status);
     }
@@ -59,36 +59,16 @@ export class CosmosDBService implements DataService {
 
         let sql = ACTOR_SELECT;
 
-        let pageSize = 100;
-        let pageNumber = 1;
         let actorName: string = queryParams.q;
 
-        // handle paging parameters
-        // fall back to default values if none provided in query
-        pageSize = (queryParams.pageSize) ? queryParams.pageSize : pageSize;
-        pageNumber = (queryParams.pageNumber) ? queryParams.pageNumber : pageNumber;
-
-        if (pageSize < 1) {
-            pageSize = defaultPageSize;
-        } else if (pageSize > maxPageSize) {
-            pageSize = maxPageSize;
-        }
-
-        pageNumber--;
-
-        if (pageNumber < 0) {
-            pageNumber = 0;
-        }
+        const { size: pageSize, number: pageNumber } = this.conditionPages(queryParams.pageSize, queryParams.pageNumber);
 
         const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
         // apply search term if provided in query
         if (actorName) {
             actorName = actorName.trim().toLowerCase().replace("'", "''");
-
-            if (actorName) {
-                sql += " and contains(m.textSearch, '" + actorName + "')";
-            }
+            if (actorName) sql += " and contains(m.textSearch, '" + actorName + "')";
         }
 
         sql += ACTOR_ORDER_BY + offsetLimit;
@@ -98,60 +78,30 @@ export class CosmosDBService implements DataService {
 
     // runs the given query for movies against the database.
     public async queryMovies(queryParams: any): Promise<Movie[]> {
-        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
-        const MOVIE_ORDER_BY = " order by m.textSearch, m.movieId";
+        const SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
+        const ORDER_BY = " order by m.textSearch, m.movieId";
 
-        let sql: string = MOVIE_SELECT;
+        let sql: string = SELECT;
 
-        let pageSize = 100;
-        let pageNumber = 1;
         let queryParam: string;
         let actorId: string;
         let genre: string;
 
-        // handle paging parameters
-        // fall back to default values if none provided in query
-        pageSize = (queryParams.pageSize) ? queryParams.pageSize : pageSize;
-        pageNumber = (queryParams.pageNumber) ? queryParams.pageNumber : pageNumber;
-
-        if (pageSize < 1) {
-            pageSize = defaultPageSize;
-        } else if (pageSize > maxPageSize) {
-            pageSize = maxPageSize;
-        }
-
-        pageNumber--;
-
-        if (pageNumber < 0) {
-            pageNumber = 0;
-        }
-
-        const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
+        const { size: pageSize, number: pageNumber } = this.conditionPages(queryParams.pageSize, queryParams.pageNumber);
+        const offsetLimit = ` offset ${pageNumber * pageSize} limit ${pageSize} `;
 
         // handle query parameters and build sql query
         if (queryParams.q) {
             queryParam = queryParams.q.trim().toLowerCase().replace("'", "''");
-            if (queryParam) {
-                sql += " and contains(m.textSearch, '" + queryParam + "') ";
-            }
+            if (queryParam) sql += ` and contains(m.textSearch, '${queryParam}') `;
         }
 
-        if (queryParams.year > 0) {
-            sql += " and m.year = " + queryParams.year + " ";
-        }
-
-        if (queryParams.rating > 0) {
-            sql += " and m.rating >= " + queryParams.rating + " ";
-        }
+        if (queryParams.year > 0) sql += ` and m.year = ${queryParams.year} `;
+        if (queryParams.rating > 0) sql += ` and m.rating >= ${queryParams.rating} `;
 
         if (queryParams.actorId) {
             actorId = queryParams.actorId.trim().toLowerCase().replace("'", "''");
-
-            if (actorId) {
-                sql += " and array_contains(m.roles, { actorId: '";
-                sql += actorId;
-                sql += "' }, true) ";
-            }
+            if (actorId) sql += ` and array_contains(m.roles, { actorId: '${actorId}' }, true) `;
         }
 
         if (queryParams.genre) {
@@ -161,17 +111,31 @@ export class CosmosDBService implements DataService {
                 genreResult = await this.getDocument(queryParams.genre.trim().toLowerCase());
                 genre = genreResult.genre;
             } catch (err) {
-                if (err.toString().includes("404")) {
-                    // return empty array if no genre found
-                    return [];
-                }
+                // return empty array if no genre found
+                if (err.toString().includes("404")) return [];
             }
 
-            sql += " and array_contains(m.genres, '" + genre + "')";
+            sql += ` and array_contains(m.genres, '${genre}')`;
         }
 
-        sql += MOVIE_ORDER_BY + offsetLimit;
+        sql += ORDER_BY + offsetLimit;
 
         return await this.queryDocuments(sql);
     }
+
+    conditionPages(size, number) {
+        // default values
+        size = size || defaultPageSize;
+        number = number || 1;
+
+        // make sure size is between 1 and the max
+        size = Math.max(1, size);
+        size = Math.min(maxPageSize, size);
+
+        // make sure number is at least 0
+        number = Math.max(number--, 0);
+
+        return { size, number };
+    }
+
 }
