@@ -66,8 +66,8 @@ export class MovieController implements interfaces.Controller {
             resCode = getHttpStatusCode(err);
 
             if (resCode === HttpStatus.NOT_FOUND) {
-                this.logger.trace("Actor Not Found: " + movieId);
-                return res.send(resCode, "Actor Not Found");
+                this.logger.trace("Movie Not Found: " + movieId);
+                return res.send(resCode, "Movie Not Found");
             }
 
             this.logger.error(Error(err), "MovieControllerException: " + err.toString());
