@@ -10,13 +10,9 @@ import { cosmosUrl } from "../config/constants";
 export class KeyVaultService {
     private client: SecretClient;
 
-    // Ready will resolve when the KeyVaultProvider has been initialized and is ready to use
+    // will resolve when the KeyVaultProvider has been initialized and is ready to use
     public ready: Promise<void>;
 
-    /**
-     * Creates a new instance of the KeyVaultService class.
-     * @param url The KeyVault testing action URL
-     */
     constructor(private url: string, private authType: string, @inject("LogService") private logger: LogService) {
         try {
             this.ready = this.initialize();
@@ -28,10 +24,7 @@ export class KeyVaultService {
         }
     }
 
-    /**
-     * Returns the latest version of the name's secret.
-     * @param name The name of the secret.
-     */
+    // returns the latest version of the name's secret
     public async getSecret(name: string): Promise<string> {
 
         try {
@@ -52,20 +45,21 @@ export class KeyVaultService {
 
         while (true){
             try {
-                // Use specified authentication type (either MSI or CLI)
+                // use specified authentication type (either MSI or CLI)
                 const creds: any = this.authType === "MSI" ?
                     new azureIdentity.ManagedIdentityCredential() :
                     await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 
                 this.client = new SecretClient(this.url, creds);
 
-                // Test getSecret to validate successful Key Vault connection
+                // test getSecret to validate successful Key Vault connection
                 await this.getSecret(cosmosUrl);
                 return;
             } catch (e) {
                 if (Date.now() <= timeout && this.authType === "MSI") {
                     this.logger.trace("KeyVault: Retry");
-                    // Wait 1 second and retry (continue while loop) 
+                    
+                    // wait 1 second and retry (continue while loop) 
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
                     throw new Error(e);

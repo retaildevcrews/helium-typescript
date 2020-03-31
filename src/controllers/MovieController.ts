@@ -17,7 +17,7 @@ export class MovieController implements interfaces.Controller {
 
     @Get("/")
     public async getAllMovies(req, res) {
-        // Validate query parameters
+        // validate query parameters
         const { validated: validated, message: message } = ValidationUtilities.validateMovies(req.query);
         
         if (!validated) {
@@ -29,7 +29,7 @@ export class MovieController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let results: Movie[];
 
-        // Execute query
+        // execute query
         try {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
@@ -50,7 +50,7 @@ export class MovieController implements interfaces.Controller {
 
     @Get("/:id")
     public async getMovieById(req, res) {
-        // Validate Movie Id parameter
+        // validate Movie Id parameter
         const movieId: string = req.params.id;
         const { validated: validated, message: message } = ValidationUtilities.validateMovieId(movieId);
 

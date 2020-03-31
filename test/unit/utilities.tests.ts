@@ -354,7 +354,6 @@ describe("CommandLineUtilities", () => {
       assert.throw(() => CommandLineUtilities.parseArguments(), /Invalid authentication type/);
     });
     
-    // TODO: fix keyvaultname name
     it("should expand the keyvault URL if only the name was provided", () => {
       process.argv = process.argv.concat(["--keyvault-name", "abc"]);
       const args = CommandLineUtilities.parseArguments();
