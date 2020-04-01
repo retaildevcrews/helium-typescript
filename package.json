@@ -16,8 +16,8 @@
     "build:watch": "tsc -w",
     "docker-build": "docker build -t helium:canary .",
     "docker-run": "docker run -it -p 8080:8080 helium:canary",
-    "lint": "eslint src/**/*.ts --max-warnings=0",
-    "fix": "eslint src/**/*.ts --fix"
+    "lint": "eslint --max-warnings=0 src/**/*.ts test/**/*.ts",
+    "fix": "eslint --fix src/**/*.ts test/**/*.ts"
   },
   "repository": {
     "type": "git",
