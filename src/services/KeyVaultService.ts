@@ -10,16 +10,10 @@ import { cosmosUrl } from "../config/constants";
 export class KeyVaultService {
     private client: SecretClient;
 
-    /**
-     * Creates a new instance of the KeyVaultService class.
-     * @param url The KeyVault testing action URL
-     */
+    // creates a new instance of the KeyVaultService class
     constructor(private url: string, private authType: string, @inject("LogService") private logger: LogService) {}
 
-    /**
-     * Returns the latest version of the name's secret.
-     * @param name The name of the secret.
-     */
+    // returns the latest version of the name's secret.
     public async getSecret(name: string): Promise<string> {
 
         try {
@@ -35,25 +29,31 @@ export class KeyVaultService {
         }
     }
 
+    // connect to the Key Vault client
+    // AKS can take longer to spin up pod identity for the first pod, so
+    //      we retry for up to 90 seconds
     public async connect() {
-        const timeout = Date.now() + 90000;
+        // retry managed identity for 90 seconds
+        const MAX_RETRIES = 90;
 
-        while (true){
+        let retries = 0;
+        while (retries < MAX_RETRIES){
             try {
-                // Use specified authentication type (either MSI or CLI)
+                // use specified authentication type (either MSI or CLI)
                 const creds: any = this.authType === "MSI" ?
                     new azureIdentity.ManagedIdentityCredential() :
                     await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 
                 this.client = new SecretClient(this.url, creds);
 
-                // Test getSecret to validate successful Key Vault connection
+                // test getSecret to validate successful Key Vault connection
                 await this.getSecret(cosmosUrl);
                 return;
             } catch (e) {
-                if (Date.now() <= timeout && this.authType === "MSI") {
+                if (this.authType === "MSI") {
                     this.logger.trace("KeyVault: Retry");
-                    // Wait 1 second and retry (continue while loop) 
+                    // wait 1 second and retry (continue while loop)
+                    retries++;
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
                     throw new Error(e);
