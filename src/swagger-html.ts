@@ -40,7 +40,7 @@ export const html = `<!DOCTYPE html>
                     <script src="/node_modules/swagger-ui-dist/swagger-ui-standalone-preset.js"> </script>
                     <script>
                     window.onload = function() {
-                        // Begin Swagger UI call region
+                        // begin Swagger UI call region
                         const ui = SwaggerUIBundle({
                             url: '/swagger/swagger.json',
                             dom_id: '#swagger-ui',
@@ -54,7 +54,7 @@ export const html = `<!DOCTYPE html>
                             ],
                             layout: "StandaloneLayout"
                         })
-                        // End Swagger UI call region
+                        // end Swagger UI call region
 
                         window.ui = ui
                     }

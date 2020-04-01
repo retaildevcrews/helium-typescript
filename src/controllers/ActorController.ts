@@ -6,6 +6,8 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Actor } from "../models/Actor";
 import { ValidationUtilities } from "../utilities/validationUtilities";
+import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
+
 
 // controller implementation for our actors endpoint
 @Controller("/api/actors")
@@ -38,14 +40,8 @@ export class ActorController implements interfaces.Controller {
         try {
             results = await this.dataService.queryActors(req.query);
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
-
+            resCode = getHttpStatusCode(err);
             this.logger.error(Error(err), "ActorControllerException: " + err.toString());
             return res.send(resCode, "ActorControllerException");
         }
@@ -70,22 +66,16 @@ export class ActorController implements interfaces.Controller {
         try {
             result = new Actor(await this.dataService.getDocument(actorId));
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
+            resCode = getHttpStatusCode(err);
 
-            if (resCode == HttpStatus.NOT_FOUND || err.toString().includes("404")){
-                resCode = HttpStatus.NOT_FOUND;
+            if (resCode === HttpStatus.NOT_FOUND) {
                 this.logger.trace("Actor Not Found: " + actorId);
                 return res.send(resCode, "Actor Not Found");
-            } else {
-                this.logger.error(Error(err), "ActorControllerException: " + err.toString());
-                return res.send(resCode, "ActorControllerException");
             }
+
+            this.logger.error(Error(err), "ActorControllerException: " + err.toString());
+            return res.send(resCode, "ActorControllerException");
         }
 
         return res.send(resCode, result);

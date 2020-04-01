@@ -44,9 +44,7 @@ export class HealthzController implements interfaces.Controller {
         res.write(JSON.stringify(healthCheckResult));
     }
 
-    /**
-     * Executes all health checks and builds the final ietf result
-     */
+    // executes all health checks and builds the final ietf result
     private async runHealthChecks() {
         const ietfResult: {[k: string]: any} = {};
         ietfResult.status = IetfStatus.pass;
@@ -55,7 +53,7 @@ export class HealthzController implements interfaces.Controller {
         ietfResult.instance = process.env[webInstanceRole] ?? "unknown";
         ietfResult.version = version;
 
-        // Declare health checks
+        // declare health checks
         const healthChecks: {[k: string]: any} = {};
         const getGenres: {[k: string]: any} = {};
         const getActorById: {[k: string]: any} = {};
@@ -104,13 +102,7 @@ export class HealthzController implements interfaces.Controller {
         }
     }
 
-    /**
-     * Executes a health check and builds the result
-     * @param componentId The component Id.
-     * @param endpoint The affected endpoint for the health check to run.
-     * @param target The target duration for the health check endpoint call.
-     * @param healthCheckResult The health check entry to update.
-     */
+    // executes a health check and builds the result
     private async runHealthCheck(componentId: string, endpoint: string, target: number, healthCheckResult: any) {
         // start tracking time
         const startDate = new Date();

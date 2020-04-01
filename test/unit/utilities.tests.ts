@@ -1,5 +1,6 @@
 import { assert } from "chai";
-import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, CommandLineUtilities } from "../../src/utilities";
+import * as HttpStatus from "http-status-codes";
+import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, CommandLineUtilities, getHttpStatusCode } from "../../src/utilities";
 import {
   invalidActorIDMessage,
   invalidGenreMessage,
@@ -354,7 +355,6 @@ describe("CommandLineUtilities", () => {
       assert.throw(() => CommandLineUtilities.parseArguments(), /Invalid authentication type/);
     });
     
-    // TODO: fix keyvaultname name
     it("should expand the keyvault URL if only the name was provided", () => {
       process.argv = process.argv.concat(["--keyvault-name", "abc"]);
       const args = CommandLineUtilities.parseArguments();
@@ -371,3 +371,26 @@ describe("CommandLineUtilities", () => {
     });
   });
 });
+
+describe("httpStatusUtilities", () => {
+  describe("getHttpStatusCode", () => {
+    it("should return the error code given", () => {
+      let error = {code: HttpStatus.BAD_GATEWAY}
+      let status = getHttpStatusCode(error)
+      assert(status == HttpStatus.BAD_GATEWAY);
+    });
+    
+    it("should return a 500 Internal Server error when it not a 404 or error is a string", () => {
+      let error = "Houston we have a problem"
+      let status = getHttpStatusCode(error)
+      assert(status == HttpStatus.INTERNAL_SERVER_ERROR);
+    });
+
+    it("should return a 404 error", () => {
+      let error = "This is a 404 error code"
+      let status = getHttpStatusCode(error)
+      assert(status == HttpStatus.NOT_FOUND);
+    })
+  });
+});
+

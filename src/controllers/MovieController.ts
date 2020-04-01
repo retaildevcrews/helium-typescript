@@ -5,6 +5,7 @@ import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { Movie } from "../models/Movie";
 import { ValidationUtilities } from "../utilities/validationUtilities";
+import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 // controller implementation for our movies endpoint
 @Controller("/api/movies")
@@ -17,7 +18,7 @@ export class MovieController implements interfaces.Controller {
 
     @Get("/")
     public async getAllMovies(req, res) {
-        // Validate query parameters
+        // validate query parameters
         const { validated: validated, message: message } = ValidationUtilities.validateMovies(req.query);
         
         if (!validated) {
@@ -29,18 +30,12 @@ export class MovieController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let results: Movie[];
 
-        // Execute query
+        // execute query
         try {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
-
+            resCode = getHttpStatusCode(err);
             this.logger.error(Error(err), "MovieControllerException: " + err.toString());
             return res.send(resCode, "MovieControllerException");
         }
@@ -50,7 +45,7 @@ export class MovieController implements interfaces.Controller {
 
     @Get("/:id")
     public async getMovieById(req, res) {
-        // Validate Movie Id parameter
+        // validate Movie Id parameter
         const movieId: string = req.params.id;
         const { validated: validated, message: message } = ValidationUtilities.validateMovieId(movieId);
 
@@ -65,22 +60,16 @@ export class MovieController implements interfaces.Controller {
         try {
             result = new Movie(await this.cosmosDb.getDocument(movieId));
         } catch (err) {
-            // TODO: Refactor error handling/response/logging to reduce duplication
             res.setHeader("Content-Type", "text/plain");
-            if (err.code == undefined){
-                resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-            } else {
-                resCode = err.code;
-            }
+            resCode = getHttpStatusCode(err);
 
-            if (resCode == HttpStatus.NOT_FOUND || err.toString().includes("404")){
-                resCode = HttpStatus.NOT_FOUND;
+            if (resCode === HttpStatus.NOT_FOUND) {
                 this.logger.trace("Movie Not Found: " + movieId);
                 return res.send(resCode, "Movie Not Found");
-            } else {
-                this.logger.error(Error(err), "MovieControllerException: " + err.toString());
-                return res.send(resCode, "MovieControllerException");
             }
+
+            this.logger.error(Error(err), "MovieControllerException: " + err.toString());
+            return res.send(resCode, "MovieControllerException");
         }
 
         return res.send(resCode, result);

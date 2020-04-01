@@ -1,32 +1,16 @@
 export interface DataService {
     ready: Promise<void>;
-    /**
-     * Initialize the Cosmos DB Container.
-     * This is handled in a separate method to avoid calling async operations in the constructor.
-     */
     initialize();
 
-    /**
-     * Runs the given query against CosmosDB.
-     * @param query The query to select the documents.
-     */
+    // runs the given query against the data service
     queryDocuments(query: string): Promise<any[]>;
 
-    /**
-     * Retrieves a specific document by Id.
-     * @param documentId The id of the document to query.
-     */
+    // retrieves a document by id
     getDocument(documentId: string): Promise<any>;
 
-    /**
-     * Runs the given query for actors against the database.
-     * @param queryParams The query params used to select the actor documents.
-     */
+    // runs the given query for actors against the database
     queryActors(queryParams: any): Promise<any[]>;
 
-    /**
-     * Runs the given query for movies against the database.
-     * @param queryParams The query params used to select the movie documents.
-     */
+    // runs the given query for movies against the database
     queryMovies(queryParams: any): Promise<any[]>;
 }

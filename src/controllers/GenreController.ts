@@ -5,6 +5,7 @@ import * as HttpStatus from "http-status-codes";
 import { DataService } from "../services/DataService";
 import { LogService } from "../services/LogService";
 import { sqlGenres } from "../config/constants";
+import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 // controller implementation for our genres endpoint
 @Controller("/api/genres")
@@ -23,14 +24,8 @@ export class GenreController implements interfaces.Controller {
     try {
       results = await this.cosmosDb.queryDocuments(sqlGenres);
     } catch (err) {
-      // TODO: Refactor error handling/response/logging to reduce duplication
       res.setHeader("Content-Type", "text/plain");
-      if (err.code == undefined){
-        resCode = HttpStatus.INTERNAL_SERVER_ERROR;
-      } else {
-        resCode = err.code;
-      }
-
+      resCode = getHttpStatusCode(err);
       this.logger.error(Error(err), "GenreControllerException: " + err.toString());
       return res.send(resCode, "GenreControllerException");
     }
