@@ -40,6 +40,17 @@ import { CommandLineUtilities } from "./utilities";
         container.get<TelemetryService>("TelemetryService");
     }
 
+    // connect to cosmos db
+    let cosmosDbService: DataService; 
+    try {
+        cosmosDbService = container.get<DataService>("DataService"); 
+        await cosmosDbService.connect();
+    }
+    catch (err) {
+        const errorText = "Failed to connect to Cosmos DB";
+        this.logger.error(err, errorText);
+    }
+
     // instantiate the server
     const heliumServer = new HeliumServer(container);
 

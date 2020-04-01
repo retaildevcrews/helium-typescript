@@ -80,7 +80,7 @@ export class HealthzController implements interfaces.Controller {
             // if any health check has a warn or down status
             // set overall status to the worst status
             for (const check in healthChecks) {
-                if (healthChecks.hasOwnProperty(check)) {
+                if (healthChecks[check]) {
                     if (!(healthChecks[check].status === IetfStatus.pass)) {
                         ietfResult.status = healthChecks[check].status;
                     }

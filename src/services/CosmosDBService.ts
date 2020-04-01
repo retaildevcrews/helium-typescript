@@ -15,23 +15,15 @@ export class CosmosDBService implements DataService {
     private cosmosContainer: Container;
     private feedOptions: FeedOptions = { maxItemCount: 2000 };
 
-    public ready: Promise<void>;
-
     // creates a new instance of the CosmosDB class.
     constructor(@inject("ConfigValues") private config: ConfigValues, @inject("LogService") private logger: LogService) {
         this.cosmosClient = new CosmosClient({ endpoint: config.cosmosDbUrl, key: config.cosmosDbKey });
-        this.ready = this.initialize();
     }
 
-    // initialize the Cosmos DB Container.
-    public async initialize(): Promise<void> {
-        this.logger.trace("Initializing CosmosDB Container");
-        try {
-            this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
-        } catch (err) {
-            this.logger.error(Error(err), err);
-        }
-        return;
+    // connect to the Cosmos DB Container.
+    public async connect() {
+        this.logger.trace("Connecting to CosmosDB Container");
+        this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
     }
 
     // runs the given query against CosmosDB.
