@@ -45,9 +45,10 @@ export class CommandLineUtilities {
         return values;
     }
 
-    // Output CLI argument usage instructions to console
-    // Optional parameter to display error/context message
+    // output CLI argument usage instructions to console
     public static showHelp(message?: string) {
+        
+        // optionally display error/context message
         if (message) console.log(message);
 
         console.log(`\n

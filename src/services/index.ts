@@ -9,7 +9,6 @@ export { KeyVaultService } from "./KeyVaultService";
 // data
 export { DataService } from "./DataService";
 export { CosmosDBService } from "./CosmosDBService";
-export { JsonDataService } from "./JsonDataService";
 
 // telemetry
 export { TelemetryService } from "./TelemetryService";
