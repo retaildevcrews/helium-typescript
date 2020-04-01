@@ -9,9 +9,7 @@ export class BunyanLogService implements LogService {
   private uniqueServerId: string;
   private customId: string;
 
-  /**
-   * Creates a new instance of the Bunyan Logger.
-   */
+  // creates a new instance of the Bunyan Logger.
 
   /**
    * Log levels:

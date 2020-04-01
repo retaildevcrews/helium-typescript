@@ -8,12 +8,10 @@ export class AppInsightsService {
 
     private telemetryClient: ApplicationInsights.TelemetryClient;
 
-    /**
-     * Creates a new instance of the App Insights client.
-     */
+    // creates a new instance of the App Insights client.
     constructor(@inject("ConfigValues") configValues: ConfigValues) {
         if (configValues.insightsKey) {
-            // Setup Application insights with the automatic collection and dependency tracking enabled
+            // setup Application insights with the automatic collection and dependency tracking enabled
             ApplicationInsights.setup(configValues.insightsKey)
                 .setAutoDependencyCorrelation(true)
                 .setAutoCollectRequests(true)
@@ -24,16 +22,13 @@ export class AppInsightsService {
                 .setUseDiskRetryCaching(true)
                 .start();
     
-            // Create the Application insights telemetry client to write custom events to
+            // create the Application insights telemetry client to write custom events to
             this.telemetryClient = ApplicationInsights.defaultClient;
         }
     }
 
-    /**
-     * Sends an event with the given name to App Insights
-     * Note: Currently unused, but will be used with Key Rotation
-     * @param eventName Name of event to track
-     */
+    // sends an event with the given name to App Insights
+    // currently unused, but will be used with Key Rotation
     public trackEvent(eventName: string) {
         if (this.telemetryClient)
             this.telemetryClient.trackEvent({ name: eventName });
