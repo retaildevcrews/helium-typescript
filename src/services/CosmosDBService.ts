@@ -20,28 +20,19 @@ export class CosmosDBService implements DataService {
         this.cosmosClient = new CosmosClient({ endpoint: config.cosmosDbUrl, key: config.cosmosDbKey });
     }
 
-    /**
-     * Connect to the Cosmos DB Container.
-     * This is handled in a separate method to avoid calling async operations in the constructor.
-     */
+    // connect to the Cosmos DB Container.
     public async connect() {
         this.logger.trace("Connecting to CosmosDB Container");
         this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
     }
 
-    /**
-     * Runs the given query against CosmosDB.
-     * @param query The query to select the documents.
-     */
+    // runs the given query against CosmosDB.
     public async queryDocuments(query: string): Promise<any> {
         const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
         return queryResults;
     }
 
-    /**
-     * Retrieves a specific document by Id.
-     * @param documentId The id of the document to query.
-     */
+    // retrieves a specific document by Id.
     public async getDocument(documentId: string): Promise<any> {
         const { resource: result, statusCode: status }
             = await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
@@ -53,10 +44,7 @@ export class CosmosDBService implements DataService {
         throw Error("Cosmos Error: " + status);
     }
 
-    /**
-     * Runs the given query for actors against the database.
-     * @param queryParams The query params used to select the actor documents.
-     */
+    // runs the given query for actors against the database.
     public async queryActors(queryParams: any): Promise<Actor[]> {
         const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
         const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
@@ -100,10 +88,7 @@ export class CosmosDBService implements DataService {
         return await this.queryDocuments(sql);
     }
 
-    /**
-     * Runs the given query for movies against the database.
-     * @param queryParams The query params used to select the movie documents.
-     */
+    // runs the given query for movies against the database.
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
         const MOVIE_ORDER_BY = " order by m.textSearch, m.movieId";

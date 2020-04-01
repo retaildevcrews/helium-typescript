@@ -19,7 +19,7 @@ export class HeliumServer {
     constructor(private container: Container) {
         this.inversifyServer = new InversifyRestifyServer(this.container);
         this.logService = this.container.get<LogService>("LogService");
-        this.configValues = this.container.get<ConfigValues>("ConfigValues");        
+        this.configValues = this.container.get<ConfigValues>("ConfigValues");
         this.server = this.createRestifyServer();
 
         this.logService.trace(`Version: ${version}`);
