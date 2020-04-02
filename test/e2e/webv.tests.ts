@@ -5,11 +5,11 @@ import { promisify } from "util";
 import childProcess = require("child_process");
 import { ActorController, MovieController, FeaturedController, GenreController, HealthzController } from "../../src/controllers";
 import { HeliumServer } from "../../src/HeliumServer";
-import { getConfigValues, ConfigValues } from "../../src/config/config";
+import { ConsoleController } from "../../src/config/ConsoleController";
+import { ConfigValues } from "../../src/config/ConfigValues";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { DataService, CosmosDBService, LogService, ConsoleLogService } from "../../src/services";
 import { Container } from "inversify";
-import { parseArguments } from "../../src/utilities/commandLineUtilities";
 
 let heliumServer: HeliumServer;
 let exec;
@@ -29,8 +29,9 @@ before(async function() {
     process.argv.splice(specIndex, 1);
     
     // retrieve configuration
-    const args = parseArguments();
-    const config: ConfigValues = await getConfigValues(args["keyvault-name"], args["auth_type"], logService);
+    const consoleController = new ConsoleController(logService);
+    const config = await consoleController.run();
+    // const config: ConfigValues = await getConfigValues(args["keyvault-name"], args["auth_type"], logService);
 
     // setup an ioc container for test
     // these could be replaced with mocks if necessary

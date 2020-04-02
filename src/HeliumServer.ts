@@ -3,7 +3,7 @@ import EndpointLogger from "./middleware/EndpointLogger";
 import { LogService } from "./services";
 import { Container } from "inversify";
 import { InversifyRestifyServer } from "inversify-restify-utils";
-import { ConfigValues } from "./config/config";
+import { ConfigValues } from "./config/ConfigValues";
 import { html } from "./swagger-html";
 import { robotsHandler } from "./middleware/robotsText";
 import { version } from "./config/constants";

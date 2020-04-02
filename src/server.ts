@@ -2,10 +2,10 @@ import "reflect-metadata";
 import { ActorController, MovieController, FeaturedController, GenreController, HealthzController } from "./controllers";
 import { AppInsightsService, BunyanLogService, CosmosDBService, DataService, TelemetryService, LogService } from "./services";
 import { Container } from "inversify";
-import { getConfigValues, ConfigValues } from "./config/config";
+import { ConsoleController } from "./config/ConsoleController";
+import { ConfigValues } from "./config/ConfigValues";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { HeliumServer } from "./HeliumServer";
-import { parseArguments } from "./utilities/commandLineUtilities";
 
 // main
 (async function main() {
@@ -16,11 +16,8 @@ import { parseArguments } from "./utilities/commandLineUtilities";
     const logService = container.get<LogService>("LogService");
     
     // parse command line arguments to get the key vault url and auth type
-    const {"keyvault-name": keyVaultName, "auth-type": authType} = parseArguments();
-    
-    // retrieve configuration
-    const config = await getConfigValues(keyVaultName, authType, logService);
-    if (!config) process.exit(-1);
+    const consoleController = new ConsoleController(logService);
+    const config = await consoleController.run();
 
     // setup ioc container
     container.bind<ConfigValues>("ConfigValues").toConstantValue(config);

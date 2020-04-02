@@ -5,7 +5,7 @@ import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
 import { defaultPageSize, maxPageSize } from "../config/constants";
 import { DataService } from "./DataService";
-import { ConfigValues } from "../config/config";
+import { ConfigValues } from "../config/ConfigValues";
 
 // handles executing queries against CosmosDB
 @injectable()

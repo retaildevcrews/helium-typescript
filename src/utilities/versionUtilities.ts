@@ -1,4 +1,6 @@
-// utilities for determining build version.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pkg = require("../../package.json");
+
 import fs = require("fs");
 
 export class VersionUtilities {
@@ -6,12 +8,11 @@ export class VersionUtilities {
     // build and return the version string based on last build date time
     // build time based on dist/server.js file
     public static getBuildVersion(): string {
-        const lastBuildTime = fs.statSync("./dist/server.js").mtime.toISOString();
+        
+        // get the build time (i.e. 2020-04-02T05:11:04.483Z) and pull out the interesting parts
+        const buildTime = fs.statSync("./dist/server.js").mtime.toISOString();
+        const [, month, day, hour, minute] = /\d*-(\d*)-(\d*)T(\d*):(\d*):.*Z/.exec(buildTime);
 
-        // add "+MMdd.HHmm"
-        const version = process.env.npm_package_version + "+" + lastBuildTime.substring(5, 7) + lastBuildTime.substring(8, 10)
-            + "." + lastBuildTime.substring(11, 13) + lastBuildTime.substring(14, 16);
-
-        return version;
+        return `${pkg.version}+${month}${day}.${hour}${minute}`;
     }
 }
