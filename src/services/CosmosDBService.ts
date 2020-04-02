@@ -13,7 +13,7 @@ export class CosmosDBService implements DataService {
 
     private cosmosClient: CosmosClient;
     private cosmosContainer: Container;
-    private feedOptions: FeedOptions = { maxItemCount: 2000 };
+    private feedOptions: FeedOptions = { maxItemCount: 1000, forceQueryPlan: true };
 
     // creates a new instance of the CosmosDB class.
     constructor(@inject("ConfigValues") private config: ConfigValues, @inject("LogService") private logger: LogService) {
