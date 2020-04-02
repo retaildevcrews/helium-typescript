@@ -100,7 +100,7 @@ export class ConsoleController {
         let keyvault: KeyVaultService;
         try {
             keyvault = new KeyVaultService(keyVaultUrl, authType, this.logService);
-            await keyvault.ready;
+            await keyvault.connect();            
         } catch (err) {
             this.logService.error(Error(), "Key Vault Exception: " + err);
             return;
