@@ -93,8 +93,8 @@ npm run build
 npm start -- --keyvault-name {name of your keyvault} --auth-type CLI
 
 # alternatively you can set the following environment variables and run without command line args
-export keyvault-name={name of your keyvault}
-export auth-type=CLI
+export KEYVAULT_NAME={name of your keyvault}
+export AUTH_TYPE=CLI
 
 npm start
 
