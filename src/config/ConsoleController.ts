@@ -78,10 +78,10 @@ export class ConsoleController {
             Keyvault                      ${values["keyvault-name"]}
             Auth Type                     ${values["auth-type"]}
             Cosmos Server                 ${config.cosmosDbUrl}
-            Cosmos Key                    ...${config.cosmosDbKey.slice(-4)}
+            Cosmos Key                    Length(${config.cosmosDbKey.length})
             Cosmos Database               ${config.database}
             Cosmos Collection             ${config.collection}
-            App Insights Key              ${config.insightsKey ? config.insightsKey : "(not set)"}
+            App Insights Key              ${config.insightsKey ? `Length(${config.insightsKey.length})` : "(not set)"}
         `);
     }
 
