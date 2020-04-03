@@ -31,7 +31,6 @@ before(async function() {
     // retrieve configuration
     const consoleController = new ConsoleController(logService);
     const config = await consoleController.run();
-    // const config: ConfigValues = await getConfigValues(args["keyvault-name"], args["auth_type"], logService);
 
     // setup an ioc container for test
     // these could be replaced with mocks if necessary
