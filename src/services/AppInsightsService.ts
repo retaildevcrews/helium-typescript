@@ -1,6 +1,6 @@
 import * as ApplicationInsights from "applicationinsights";
 import { inject, injectable } from "inversify";
-import { ConfigValues } from "../config/config";
+import { ConfigValues } from "../config/ConfigValues";
 
 // handles sending telemetry data via AppInsights
 @injectable()
