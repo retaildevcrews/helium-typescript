@@ -81,7 +81,7 @@ export class ConsoleController {
             Cosmos Key                    ...${config.cosmosDbKey.slice(-4)}
             Cosmos Database               ${config.database}
             Cosmos Collection             ${config.collection}
-            App Insights Key              ${config.insightsKey}
+            App Insights Key              ${config.insightsKey ? config.insightsKey : "(not set)"}
         `);
     }
 
