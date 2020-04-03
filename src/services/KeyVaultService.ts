@@ -20,12 +20,7 @@ export class KeyVaultService {
             const { value: secret } = await this.client.getSecret(name);
             return secret as string;
         } catch (e) {
-            if (name === "AppInsightsKey") {
-                this.logger.trace("App Insights Key not set");
-                return " ";
-            } else {
-                throw new Error(`Unable to find secret ${name}`);
-            }
+            throw new Error(`Unable to find secret ${name}`);
         }
     }
 
@@ -50,13 +45,13 @@ export class KeyVaultService {
                 await this.getSecret(cosmosUrl);
                 return;
             } catch (e) {
-                if (this.authType === "MSI") {
+                retries++;
+                if (this.authType === "MSI" && retries < MAX_RETRIES) {
                     this.logger.trace("KeyVault: Retry");
                     // wait 1 second and retry (continue while loop)
-                    retries++;
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
-                    throw new Error(e);
+                    throw new Error("Failed to connect to Key Vault with MSI");
                 }
             }
         }

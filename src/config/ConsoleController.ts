@@ -25,7 +25,13 @@ export class ConsoleController {
         }
 
         // get config values
-        const config = await this.getConfigValues(values["keyvault-name"], values["auth-type"]);
+        let config: ConfigValues;
+        try {
+            config = await this.getConfigValues(values["keyvault-name"], values["auth-type"]);
+        } catch (err) {
+            this.logService.error(err, `Key Vault Config Exception: ${err}`);
+            process.exit(-1);
+        }
 
         // dry run or return
         if (values["dry-run"]) {
@@ -90,38 +96,22 @@ export class ConsoleController {
         // use default port from constants
         const port = portConstant;
 
-        // cosmos db secrets come from KeyVault
-        let cosmosDbKey: string;
-        let cosmosDbUrl: string;
-        let database: string;
-        let collection: string;
-        let insightsKey: string;
+        const keyvault = new KeyVaultService(keyVaultUrl, authType, this.logService);
+        await keyvault.connect();
 
-        let keyvault: KeyVaultService;
-        try {
-            keyvault = new KeyVaultService(keyVaultUrl, authType, this.logService);
-            await keyvault.connect();            
-        } catch (err) {
-            this.logService.error(Error(), "Key Vault Exception: " + err);
-            return;
-        }
-
-        // get Cosmos DB related secrets
-        try {
-            cosmosDbKey = await keyvault.getSecret(cosmosKey);
-            cosmosDbUrl = await keyvault.getSecret(cosmosUrl);
-            database = await keyvault.getSecret(cosmosDatabase);
-            collection = await keyvault.getSecret(cosmosCollection);
-        } catch {
-            this.logService.error(Error(), "Failed to get required Cosmos DB secrets from KeyVault");
-            return;
-        }
+        // get Cosmos DB secrets from Key Vault
+        const cosmosDbKey = await keyvault.getSecret(cosmosKey);
+        const cosmosDbUrl = await keyvault.getSecret(cosmosUrl);
+        const database = await keyvault.getSecret(cosmosDatabase);
+        const collection = await keyvault.getSecret(cosmosCollection);
 
         // get optional App Insights Key
+        let insightsKey: string;
         try {
             insightsKey = await keyvault.getSecret(appInsightsKey);
         } catch {
             this.logService.trace("Application Insights key not set.");
+            insightsKey = "";
         }
 
         return {
