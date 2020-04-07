@@ -79,6 +79,7 @@ export class BunyanLogService implements LogService {
     }
   }
 
+
   public error(error: Error, errorMessage: string) {
     this.logger.error({ err: error, correlationID: this.uniqueServerId, customID: this.customId }, errorMessage);
   }
