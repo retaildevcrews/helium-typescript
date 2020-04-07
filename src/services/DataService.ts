@@ -1,6 +1,6 @@
 export interface DataService {
-    ready: Promise<void>;
-    initialize();
+    // connect to the data service
+    connect();
 
     // runs the given query against the data service
     queryDocuments(query: string): Promise<any[]>;

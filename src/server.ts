@@ -2,10 +2,10 @@ import "reflect-metadata";
 import { ActorController, MovieController, FeaturedController, GenreController, HealthzController } from "./controllers";
 import { AppInsightsService, BunyanLogService, CosmosDBService, DataService, TelemetryService, LogService } from "./services";
 import { Container } from "inversify";
-import { getConfigValues, ConfigValues } from "./config/config";
+import { ConsoleController } from "./config/ConsoleController";
+import { ConfigValues } from "./config/ConfigValues";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { HeliumServer } from "./HeliumServer";
-import { CommandLineUtilities } from "./utilities";
 
 // main
 (async function main() {
@@ -16,11 +16,8 @@ import { CommandLineUtilities } from "./utilities";
     const logService = container.get<LogService>("LogService");
     
     // parse command line arguments to get the key vault url and auth type
-    const args = CommandLineUtilities.parseArguments();
-    
-    // retrieve configuration
-    const config = await getConfigValues(args["keyvault-name"], args["auth-type"], logService);
-    if (!config) process.exit(-1);
+    const consoleController = new ConsoleController(logService);
+    const config = await consoleController.run();
 
     // setup ioc container
     container.bind<ConfigValues>("ConfigValues").toConstantValue(config);
@@ -38,6 +35,17 @@ import { CommandLineUtilities } from "./utilities";
     // telemetry service is optional
     if (config.insightsKey) {
         container.get<TelemetryService>("TelemetryService");
+    }
+
+    // connect to cosmos db
+    let cosmosDbService: DataService; 
+    try {
+        cosmosDbService = container.get<DataService>("DataService"); 
+        await cosmosDbService.connect();
+    }
+    catch (err) {
+        const errorText = "Failed to connect to Cosmos DB";
+        this.logger.error(err, errorText);
     }
 
     // instantiate the server

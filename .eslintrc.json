@@ -1,6 +1,7 @@
 {
-   "parser": "@typescript-eslint/parser",
+  "parser": "@typescript-eslint/parser",
   "extends": [
+    "eslint:recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "parserOptions": {
@@ -10,20 +11,23 @@
   "plugins": [
     "@typescript-eslint"
   ],
+  "ignorePatterns": ["node_modules/"],
   "rules": {
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-use-before-define": "off",
     "eol-last": "error",
     "spaced-comment": "error",
-    "@typescript-eslint/no-explicit-any": "off",
-    "no-multiple-empty-lines": 2,
+    "no-multiple-empty-lines": "error",
     "quotes": ["error", "double"],
     "arrow-spacing": ["error", { "before": true, "after": true }],
     "prefer-arrow-callback": "error",
     "max-classes-per-file": ["error", 1],
     "prefer-const": "error",
     "camelcase": "error",
-    "key-spacing": ["error", { "beforeColon": false, "afterColon": true, "mode": "strict" }]
+    "key-spacing": ["error", { "beforeColon": false, "afterColon": true, "mode": "strict" }],
+    "no-undef": "off"
   }
 }

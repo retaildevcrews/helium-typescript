@@ -5,7 +5,7 @@ import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
 import { defaultPageSize, maxPageSize } from "../config/constants";
 import { DataService } from "./DataService";
-import { ConfigValues } from "../config/config";
+import { ConfigValues } from "../config/ConfigValues";
 
 // handles executing queries against CosmosDB
 @injectable()
@@ -13,25 +13,17 @@ export class CosmosDBService implements DataService {
 
     private cosmosClient: CosmosClient;
     private cosmosContainer: Container;
-    private feedOptions: FeedOptions = { maxItemCount: 2000 };
-
-    public ready: Promise<void>;
+    private feedOptions: FeedOptions = { maxItemCount: 1000, forceQueryPlan: true };
 
     // creates a new instance of the CosmosDB class.
     constructor(@inject("ConfigValues") private config: ConfigValues, @inject("LogService") private logger: LogService) {
         this.cosmosClient = new CosmosClient({ endpoint: config.cosmosDbUrl, key: config.cosmosDbKey });
-        this.ready = this.initialize();
     }
 
-    // initialize the Cosmos DB Container.
-    public async initialize(): Promise<void> {
-        this.logger.trace("Initializing CosmosDB Container");
-        try {
-            this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
-        } catch (err) {
-            this.logger.error(Error(err), err);
-        }
-        return;
+    // connect to the Cosmos DB Container.
+    public async connect() {
+        this.logger.trace("Connecting to CosmosDB Container");
+        this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
     }
 
     // runs the given query against CosmosDB.
