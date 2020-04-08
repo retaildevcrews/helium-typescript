@@ -13,21 +13,28 @@ describe("BunyanLogService", () => {
   const log = new BunyanLogService;
 
   describe("trace", () => {
-    it("Bunyan is initiated", () => {
+    it("should initiate Buyan for trace", () => {
       log.trace("Can you hear me now?");
       spy.should.have.been.calledOnce;
     });
   });
 
+  describe("info", () => {
+    it("should initiate Buyan for info", () => {
+      log.info("Can you hear me now?");
+      spy.should.have.been.calledOnce;
+    });
+  });
+
   describe("warn", () => {
-    it("Bunyan is initiated", () => {
+    it("should initiate Buyan for warn", () => {
       log.warn("Can you hear me now?");
       spy.should.have.been.calledOnce;
     });
   });
 
   describe("error", () => {
-    it("Bunyan is initiated", () => {
+    it("should initiate Buyan for error", () => {
       log.error(Error("new error"), "new Error");
       spy.should.have.been.calledOnce;
     });
