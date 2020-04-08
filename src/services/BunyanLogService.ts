@@ -41,6 +41,10 @@ export class BunyanLogService implements LogService {
           stream: process.stdout
         },
         {
+          level: bunyan.INFO,  // logs "trace" level and everything above
+          stream: process.stdout
+        },
+        {
           level: bunyan.WARN,  // logs "warn", "error" and "fatal" levels
           stream: process.stdout
         },
@@ -66,6 +70,19 @@ export class BunyanLogService implements LogService {
     }
   }
 
+  public info(message: string, id?: string) {
+    if (id == null) {
+      if (this.customId == null) {
+        this.logger.info({ correlationID: this.uniqueServerId }, message);
+      } else {
+        this.logger.info({ correlationID: this.uniqueServerId, customID: this.customId }, message);
+      }
+    } else {
+      this.customId = id;
+      this.logger.info({ correlationID: this.uniqueServerId, customID: this.customId }, message);
+    }
+  }
+
   public warn(message: string, id?: string) {
     if (id == null) {
       if (this.customId == null) {
@@ -78,7 +95,6 @@ export class BunyanLogService implements LogService {
       this.logger.warn({ correlationID: this.uniqueServerId, customID: this.customId }, message);
     }
   }
-
 
   public error(error: Error, errorMessage: string) {
     this.logger.error({ err: error, correlationID: this.uniqueServerId, customID: this.customId }, errorMessage);

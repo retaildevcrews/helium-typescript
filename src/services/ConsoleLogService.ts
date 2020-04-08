@@ -7,6 +7,10 @@ export class ConsoleLogService implements LogService {
         id;
         console.log(`LOG TRACE: ${message}`);
     }
+    info(message: string, id?: string): void {
+        id;
+        console.log(`LOG INFO: ${message}`);
+    }
     warn(message: string, id?: string): void {
         id;
         console.log(`LOG WARN: ${message}`);
