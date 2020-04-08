@@ -22,7 +22,7 @@ export class CosmosDBService implements DataService {
 
     // connect to the Cosmos DB Container.
     public async connect() {
-        this.logger.trace("Connecting to CosmosDB Container");
+        this.logger.info("Connecting to CosmosDB Container");
         this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
     }
 

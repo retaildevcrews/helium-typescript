@@ -110,7 +110,7 @@ export class ConsoleController {
         try {
             insightsKey = await keyvault.getSecret(appInsightsKey);
         } catch {
-            this.logService.trace("Application Insights key not set.");
+            this.logService.warn("Application Insights key not set.");
             insightsKey = "";
         }
 
