@@ -51,7 +51,7 @@ export class MovieController implements interfaces.Controller {
 
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.info("getMovieById|" + movieId + "|" + message);
+            this.logger.warn("getMovieById|" + movieId + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 

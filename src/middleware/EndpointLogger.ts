@@ -15,7 +15,7 @@ export default function responseDuration(container: Container) {
             if (res.statusCode > 399) {
                 // create string unique to this action at this endpoint
                 const apiName = `${req.method} ${req.url}`;
-                log.info(apiName + "  Result: " + res.statusCode, req.getId());
+                log.warn(apiName + "  Result: " + res.statusCode, req.getId());
             }
         }));
 
