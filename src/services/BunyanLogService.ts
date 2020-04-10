@@ -35,24 +35,8 @@ export class BunyanLogService implements LogService {
         req: bunyan.stdSerializers.req,
         res: bunyan.stdSerializers.res,
       },
-      streams: [
-        {
-          level: bunyan.TRACE,  // logs "trace" level and everything above
-          stream: process.stdout
-        },
-        {
-          level: bunyan.INFO,  // logs "trace" level and everything above
-          stream: process.stdout
-        },
-        {
-          level: bunyan.WARN,  // logs "warn", "error" and "fatal" levels
-          stream: process.stdout
-        },
-        {
-          level: bunyan.ERROR,  // logs "error" and "fatal" levels
-          stream: process.stderr
-        },
-      ],
+      stream: process.stdout,
+      level: 'info'
     });
     this.uniqueServerId = v4();
   }
@@ -94,6 +78,10 @@ export class BunyanLogService implements LogService {
       this.customId = id;
       this.logger.warn({ correlationID: this.uniqueServerId, customID: this.customId }, message);
     }
+  }
+
+  public setLoglevel(level) {
+    this.logger.level(level) 
   }
 
   public error(error: Error, errorMessage: string) {

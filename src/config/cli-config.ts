@@ -28,6 +28,14 @@ export const sections = [
                 "defaultValue": false
             },
             {
+                "name": "log",
+                "alias": "l",
+                "type": String,
+                "description": "Sets the debug verboseness level, from highest to lowest, TRACE, DEBUG, INFO, WARN, ERROR, FATAL. Defaults to 'INFO'",
+                "defaultValue": "info",
+                "validationPattern": /^(trace|debug|info|warn|error|fatal)$/gi,
+            },
+            {
                 "name": "help",
                 "alias": "h",
                 "type": Boolean,

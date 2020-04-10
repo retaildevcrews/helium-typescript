@@ -13,6 +13,7 @@ export class ConsoleController {
     // capture cli arguments and fetch application configuration
     async run() {
         const { validationMessages, values } = this.parseArguments();
+        this.logService.setLoglevel(values.log);
 
         // handle --help
         if (values.help) this.showHelp();
