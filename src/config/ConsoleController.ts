@@ -16,7 +16,11 @@ export class ConsoleController {
         this.logService.setLoglevel(values.log);
 
         // handle --help
-        if (values.help) this.showHelp();
+        if (values.help) {
+            this.showHelp();
+            process.exit();
+        }
+
 
         // handle invalid values
         else if (validationMessages.length > 0) {
