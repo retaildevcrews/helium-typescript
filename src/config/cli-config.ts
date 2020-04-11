@@ -31,7 +31,7 @@ export const sections = [
                 "name": "log",
                 "alias": "l",
                 "type": String,
-                "description": "Sets the debug verboseness level, from highest to lowest, TRACE, DEBUG, INFO, WARN, ERROR, FATAL. Defaults to 'INFO'",
+                "description": "Sets the debug verboseness level, from highest to lowest, 'trace', 'info', 'warn', 'error', 'fatal'. Defaults to 'info'",
                 "defaultValue": "info",
                 "validationPattern": /^(trace|debug|info|warn|error|fatal)$/gi,
             },

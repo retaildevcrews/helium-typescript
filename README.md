@@ -92,6 +92,10 @@ npm run build
 # for local run, you need to specify CLI authentication type
 npm start -- --keyvault-name {name of your keyvault} --auth-type CLI
 
+# optionally, set the logging level verboseness with --log (or -l)
+# please type --help for all options
+npm start -- --keyvault-name {name of your keyvault} --auth-type CLI --log warn
+
 # alternatively you can set the following environment variables and run without command line args
 export KEYVAULT_NAME={name of your keyvault}
 export AUTH_TYPE=CLI
