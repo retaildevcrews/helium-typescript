@@ -52,7 +52,7 @@ export class BunyanLogService implements LogService {
   }
 
   public setLoglevel(logLevel) {
-    logLevel = (!logLevel) ? 'info' : logLevel;
+    logLevel = (!logLevel) ? "info" : logLevel;
     this.logger.level(logLevel) 
   }
 

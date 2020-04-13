@@ -1,6 +1,6 @@
 import { LogService } from "./LogService";
 import { injectable } from "inversify";
-
+    
 @injectable()
 export class ConsoleLogService implements LogService {
     trace(message: string, id?: string): void {
@@ -16,6 +16,7 @@ export class ConsoleLogService implements LogService {
         console.log(`LOG WARN: ${message}`);
     }
     error(error: Error, errorMessage: string, id?: string): void {
+        id;
         console.error(`LOG ERROR: ${errorMessage}`);
     }
 }

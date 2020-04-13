@@ -14,8 +14,6 @@ export class ConsoleController {
     async run() {
         const { validationMessages, values } = this.parseArguments();
 
-        this.logService.setLoglevel(values.log);
-
         // handle --help
         if (values.help) {
             this.showHelp();
@@ -28,6 +26,8 @@ export class ConsoleController {
             this.showHelp();
             process.exit();
         }
+
+        this.logService.setLoglevel(values["log-level"]);
 
         // get config values
         let config: ConfigValues;
