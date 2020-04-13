@@ -13,6 +13,7 @@ export class ConsoleController {
     // capture cli arguments and fetch application configuration
     async run() {
         const { validationMessages, values } = this.parseArguments();
+
         this.logService.setLoglevel(values.log);
 
         // handle --help
@@ -20,7 +21,6 @@ export class ConsoleController {
             this.showHelp();
             process.exit();
         }
-
 
         // handle invalid values
         else if (validationMessages.length > 0) {
@@ -52,7 +52,8 @@ export class ConsoleController {
         // environment variables
         const env = {
             "keyvault-name": process.env.KEYVAULT_NAME,
-            "auth-type": process.env.AUTH_TYPE
+            "auth-type": process.env.AUTH_TYPE,
+            "log-level": process.env.LOG_LEVEL,
         }
 
         // command line arguments
@@ -93,6 +94,7 @@ export class ConsoleController {
             Cosmos Database               ${config.database}
             Cosmos Collection             ${config.collection}
             App Insights Key              ${config.insightsKey ? `Length(${config.insightsKey.length})` : "(not set)"}
+            Logging Level                 ${values["log-level"]}
         `);
     }
 

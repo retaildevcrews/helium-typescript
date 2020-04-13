@@ -15,7 +15,7 @@ export class ConsoleLogService implements LogService {
         id;
         console.log(`LOG WARN: ${message}`);
     }
-    error(error: Error, errorMessage: string): void {
+    error(error: Error, errorMessage: string, id?: string): void {
         console.error(`LOG ERROR: ${errorMessage}`);
     }
 }
