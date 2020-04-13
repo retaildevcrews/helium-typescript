@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { BunyanLogService } from "../../src/services";
-import { LogService } from "../../src/services";
 import * as bunyan from "bunyan";
 import * as chai from  "chai";
 import * as sinon from "sinon";
@@ -14,10 +13,10 @@ describe("BunyanLogService", () => {
   const log = new BunyanLogService;
   
   before(() => {
-    sinon.stub(log, 'trace')  // disable console.log
-    sinon.stub(log, 'info')  // disable console.info
-    sinon.stub(log, 'warn')  // disable console.warn
-    sinon.stub(log, 'error')  // disable console.error
+    sinon.stub(log, "trace")  // disable console.log
+    sinon.stub(log, "info")  // disable console.info
+    sinon.stub(log, "warn")  // disable console.warn
+    sinon.stub(log, "error")  // disable console.error
   })
 
   describe("trace", () => {
