@@ -27,7 +27,7 @@ export class ConsoleController {
             process.exit();
         }
 
-        this.logService.setLoglevel(values["log-level"]);
+        this.logService.setLogLevel(values["log-level"]);
 
         // get config values
         let config: ConfigValues;
@@ -63,8 +63,8 @@ export class ConsoleController {
         const values = { ...env, ...args };
 
         // set default values if no cli args or env vars provided
-        if (!values["auth-type"]) values["auth-type"] = "MSI";
-        if (!values["log-level"]) values["log-level"] = "info";
+        if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MSI";
+        if (!("log-level" in args) && !values["log-level"]) values["log-level"] = "info";
 
         const validationMessages = [];
 
@@ -74,7 +74,7 @@ export class ConsoleController {
 
         // check validation patterns
         options.filter(o => o.validationPattern && !o.validationPattern.test(values[o.name]))
-            .forEach(o => validationMessages.push(`Value for ${o.name} argument is not valid`));
+            .forEach(o => validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid`));
 
         // expand keyvault URL
         if (values["keyvault-name"] && !values["keyvault-name"].startsWith("https://"))
