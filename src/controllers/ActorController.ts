@@ -29,7 +29,7 @@ export class ActorController implements interfaces.Controller {
         
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.trace("InvalidParameter|" + "getAllActors" + "|" + message);
+            this.logger.warn("InvalidParameter|" + "getAllActors" + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -57,7 +57,7 @@ export class ActorController implements interfaces.Controller {
         
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.trace("getActorById|" + actorId + "|" + message);
+            this.logger.warn("getActorById|" + actorId + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -70,7 +70,7 @@ export class ActorController implements interfaces.Controller {
             resCode = getHttpStatusCode(err);
 
             if (resCode === HttpStatus.NOT_FOUND) {
-                this.logger.trace("Actor Not Found: " + actorId);
+                this.logger.warn("Actor Not Found: " + actorId);
                 return res.send(resCode, "Actor Not Found");
             }
 

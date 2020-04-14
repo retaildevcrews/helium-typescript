@@ -22,7 +22,7 @@ export class HeliumServer {
         this.configValues = this.container.get<ConfigValues>("ConfigValues");
         this.server = this.createRestifyServer();
 
-        this.logService.trace(`Version: ${version}`);
+        this.logService.info(`Version: ${version}`);
     }
 
     createRestifyServer() {
@@ -64,7 +64,7 @@ export class HeliumServer {
 
     public start() {
         this.server.listen(this.configValues.port, () => {
-            this.logService.trace(`Server is listening on port ${this.configValues.port}`);
+            this.logService.info(`Server is listening on port ${this.configValues.port}`);
         });
     }
 
