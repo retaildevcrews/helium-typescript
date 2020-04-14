@@ -27,7 +27,7 @@ export class CosmosDBService implements DataService {
     }
 
     // runs the given query against CosmosDB.
-    public async queryDocuments(query: string): Promise<any> {
+    public async queryDocuments(query): Promise<any> {
         const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
         return queryResults;
     }
@@ -46,7 +46,7 @@ export class CosmosDBService implements DataService {
 
     // runs the given query for actors against the database.
     public async queryActors(queryParams: any): Promise<Actor[]> {
-        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
+        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = @actor ";
         const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
 
         let sql = ACTOR_SELECT;
@@ -74,18 +74,27 @@ export class CosmosDBService implements DataService {
 
         const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
+        let testsql = {
+            query: sql,
+            parameters: []
+        }
+
         // apply search term if provided in query
         if (actorName) {
             actorName = actorName.trim().toLowerCase().replace("'", "''");
 
             if (actorName) {
-                sql += " and contains(m.textSearch, '" + actorName + "')";
+                testsql.parameters.push({name: "@actor", value: "Actor"},{name: "@actorName", value: actorName})
+                sql += " and contains(m.textSearch, @actorName)";
+                console.log(testsql)
             }
         }
 
         sql += ACTOR_ORDER_BY + offsetLimit;
 
-        return await this.queryDocuments(sql);
+        testsql.query = sql
+
+        return await this.queryDocuments(testsql);
     }
 
     // runs the given query for movies against the database.
