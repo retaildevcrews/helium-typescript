@@ -19,9 +19,13 @@ before(async function() {
 
     exec = promisify(childProcess.exec);
 
+    process.env.KEYVAULT_NAME = "froyo-kv";
+    process.env.AUTH_TYPE = "CLI";
+    process.env.LOG_LEVEL = "info";
+
     console.log("Setting up server for test...");
     const container: Container = new Container();
-    container.bind<LogService>("LogService").to(ConsoleLogService);
+    container.bind<LogService>("LogService").to(ConsoleLogService).inSingletonScope();
     const logService = container.get<LogService>("LogService");
 
     // HACK: strip the spec 
@@ -42,6 +46,16 @@ before(async function() {
     container.bind<interfaces.Controller>(TYPE.Controller).to(HealthzController).whenTargetNamed("HealthzController");
     container.bind<DataService>("DataService").to(CosmosDBService).inSingletonScope();
 
+    // connect to cosmos db
+    let cosmosDbService: DataService;
+    try {
+        cosmosDbService = container.get<DataService>("DataService"); 
+        await cosmosDbService.connect();
+    }
+    catch (err) {
+        console.log(`Failed to connect to Cosmos DB ${err}`);
+    }
+
     // instantiate and start the server
     heliumServer = new HeliumServer(container);
     heliumServer.start();
@@ -56,7 +70,7 @@ it("Run webv against the running server", async function () {
     const FILES = "node.json baseline.json bad.json";
 
     console.log(`Running webv against ${URL} using files: ${FILES}.`);
-    const command = `./webvalidate --host ${URL} --files ${FILES}`;
+    const command = `./webvalidate --server ${URL} --files ${FILES}`;
     
     let exitCode;
     try {
@@ -66,7 +80,7 @@ it("Run webv against the running server", async function () {
     catch (exc) {
         exitCode = exc.code;
     }
-    if(exitCode) assert.equal(exitCode, 255);
+    if(exitCode) assert.equal(exitCode, 0);
 
 });
 
