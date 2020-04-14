@@ -17,7 +17,6 @@ export const sections = [
                 "alias": "a",
                 "type": String,
                 "description": "Authentication type - MSI or CLI. Defaults to 'CLI'.",
-                "defaultValue": "MSI",
                 "validationPattern": /^(MSI|CLI)$/gi,
             },
             {
@@ -32,7 +31,6 @@ export const sections = [
                 "alias": "l",
                 "type": String,
                 "description": "Sets the debug verboseness level, from highest to lowest: 'trace', 'info', 'warn', 'error', 'fatal'. Defaults to 'info'",
-                "defaultValue": "info",
                 "validationPattern": /^(trace|debug|info|warn|error|fatal)$/gi,
             },
             {

@@ -62,6 +62,10 @@ export class ConsoleController {
         // compose the two
         const values = { ...env, ...args };
 
+        // set default values if no cli args or env vars provided
+        if (!values["auth-type"]) values["auth-type"] = "MSI";
+        if (!values["log-level"]) values["log-level"] = "info";
+
         const validationMessages = [];
 
         // check required arguments
