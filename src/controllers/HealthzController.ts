@@ -1,8 +1,7 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { DataService } from "../services/DataService";
-import { LogService } from "../services/LogService";
+import { DataService, LogService } from "../services";
 import { sqlGenres, webInstanceRole, version } from "../config/constants";
 import { DateUtilities } from "../utilities/dateUtilities";
 

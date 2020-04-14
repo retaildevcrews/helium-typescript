@@ -1,6 +1,5 @@
 import "reflect-metadata";
-import { LogService } from "../services/LogService";
-import { KeyVaultService } from "../services/KeyVaultService";
+import { KeyVaultService, LogService } from "../services";
 import commandLineArgs = require("command-line-args");
 import commandLineUsage = require("command-line-usage");
 import { sections } from "./cli-config";

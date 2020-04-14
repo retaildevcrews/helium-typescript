@@ -1,11 +1,9 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { DataService } from "../services/DataService";
-import { LogService } from "../services/LogService";
+import { DataService, LogService } from "../services";
 import { Movie } from "../models/Movie";
-import { ValidationUtilities } from "../utilities/validationUtilities";
-import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
+import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 
 // controller implementation for our movies endpoint
 @Controller("/api/movies")
