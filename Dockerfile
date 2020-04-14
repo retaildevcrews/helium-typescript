@@ -12,7 +12,6 @@ FROM node:lts AS base
 WORKDIR /app
 COPY . .
 
-### TODO - can any of these be combined to reduce layers? 
 RUN npm set progress=false && npm config set depth 0
 RUN npm install --production
 RUN cp -R node_modules prod_node_modules
