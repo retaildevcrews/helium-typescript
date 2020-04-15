@@ -46,7 +46,7 @@ export class CosmosDBService implements DataService {
 
     // runs the given query for actors against the database.
     public async queryActors(queryParams: any): Promise<Actor[]> {
-        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = @actor ";
+        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
         const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
 
         const parameters = [];
@@ -55,8 +55,6 @@ export class CosmosDBService implements DataService {
         let pageSize = 100;
         let pageNumber = 1;
         let actorName: string = queryParams.q;
-
-        parameters.push({ name: "@actor", value: "Actor" });
 
         // handle paging parameters
         // fall back to default values if none provided in query
@@ -94,7 +92,7 @@ export class CosmosDBService implements DataService {
 
     // runs the given query for movies against the database.
     public async queryMovies(queryParams: any): Promise<Movie[]> {
-        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = @movie ";
+        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
         const MOVIE_ORDER_BY = " order by m.textSearch, m.movieId";
 
         const parameters = [];
@@ -105,8 +103,6 @@ export class CosmosDBService implements DataService {
         let queryParam: string;
         let actorId: string;
         let genre: string;
-
-        parameters.push({ name: "@movie" as string, value: "Movie" as string|number });
 
         // handle paging parameters
         // fall back to default values if none provided in query
@@ -132,7 +128,7 @@ export class CosmosDBService implements DataService {
             queryParam = queryParams.q.trim().toLowerCase().replace("'", "''");
             if (queryParam) {
                 sql += " and contains(m.textSearch, @queryParam) ";
-                parameters.push({ name: "@queryParam", value: queryParam });
+                parameters.push({ name: "@queryParam"  as string, value: queryParam as string|number });
             }
         }
 

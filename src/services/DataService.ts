@@ -3,7 +3,7 @@ export interface DataService {
     connect();
 
     // runs the given query against the data service
-    queryDocuments(query: string): Promise<any[]>;
+    queryDocuments(query: any): Promise<any[]>;
 
     // retrieves a document by id
     getDocument(documentId: string): Promise<any>;
