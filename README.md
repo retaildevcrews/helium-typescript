@@ -50,7 +50,7 @@ There is a known warning for a peer dependency on canvas.  However, the reported
 Build the container using Docker
 
 - The unit tests run as part of the Docker build process. You can also run the unit tests manually using `npm test`, with watch using `npm run test:watch`, and with test coverage using `npm run test:coverage`.
-```
+
 
 - For instructions on building the container with ACR, please see the Helium [readme](https://github.com/retaildevcrews/helium)
 
@@ -92,9 +92,15 @@ npm run build
 # for local run, you need to specify CLI authentication type
 npm start -- --keyvault-name {name of your keyvault} --auth-type CLI
 
+# optionally, set the logging level verboseness with --log-level (or -l)
+# 'info' is the default
+# please type --help for all options
+npm start -- --keyvault-name {name of your keyvault} --auth-type CLI --log-level info
+
 # alternatively you can set the following environment variables and run without command line args
 export KEYVAULT_NAME={name of your keyvault}
 export AUTH_TYPE=CLI
+export LOG_LEVEL={logging level} # (optional)
 
 npm start
 

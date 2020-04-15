@@ -15,7 +15,10 @@ export class ConsoleController {
         const { validationMessages, values } = this.parseArguments();
 
         // handle --help
-        if (values.help) this.showHelp();
+        if (values.help) {
+            this.showHelp();
+            process.exit();
+        }
 
         // handle invalid values
         else if (validationMessages.length > 0) {
@@ -23,6 +26,8 @@ export class ConsoleController {
             this.showHelp();
             process.exit();
         }
+
+        this.logService.setLoglevel(values["log-level"]);
 
         // get config values
         let config: ConfigValues;
@@ -47,7 +52,8 @@ export class ConsoleController {
         // environment variables
         const env = {
             "keyvault-name": process.env.KEYVAULT_NAME,
-            "auth-type": process.env.AUTH_TYPE
+            "auth-type": process.env.AUTH_TYPE,
+            "log-level": process.env.LOG_LEVEL,
         }
 
         // command line arguments
@@ -88,6 +94,7 @@ export class ConsoleController {
             Cosmos Database               ${config.database}
             Cosmos Collection             ${config.collection}
             App Insights Key              ${config.insightsKey ? `Length(${config.insightsKey.length})` : "(not set)"}
+            Logging Level                 ${values["log-level"]}
         `);
     }
 
@@ -110,7 +117,7 @@ export class ConsoleController {
         try {
             insightsKey = await keyvault.getSecret(appInsightsKey);
         } catch {
-            this.logService.trace("Application Insights key not set.");
+            this.logService.warn("Application Insights key not set.");
             insightsKey = "";
         }
 

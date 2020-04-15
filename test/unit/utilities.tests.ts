@@ -357,8 +357,11 @@ describe("Utilities tests", () => {
       const specIndex = argvSave.findIndex(a => a.includes("test/unit/**/*.ts"));
       if (specIndex >= 0) argvSave.splice(specIndex, 1);
 
-      it("(positive test case)", () => {
-        // TODO: implement a positive use case
+      it("should pass with no validation errors", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.argv = process.argv.concat(["--auth-type", "MSI"]);
+        process.argv = process.argv.concat(["--log-level", "info"]);
+        assert(consoleController.parseArguments().validationMessages.length == 0);
       });
 
       it("should invalidate if keyvault-name is missing", () => {
@@ -375,6 +378,13 @@ describe("Utilities tests", () => {
       it("should invalidate if the value of auth-type is not valid", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         process.argv = process.argv.concat(["--auth-type", "def"]);
+        assert(consoleController.parseArguments().validationMessages.length > 0);
+      });
+
+      it("should invalidate if the value of log-level is not valid", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.argv = process.argv.concat(["--auth-type", "MSI"]);
+        process.argv = process.argv.concat(["--log-level", "boffo"]);
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });
 

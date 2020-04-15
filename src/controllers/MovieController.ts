@@ -23,7 +23,7 @@ export class MovieController implements interfaces.Controller {
         
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.trace("InvalidParameter|" + "getAllMovies" + "|" + message);
+            this.logger.warn("InvalidParameter|" + "getAllMovies" + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -51,7 +51,7 @@ export class MovieController implements interfaces.Controller {
 
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.trace("getMovieById|" + movieId + "|" + message);
+            this.logger.warn("getMovieById|" + movieId + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -64,7 +64,7 @@ export class MovieController implements interfaces.Controller {
             resCode = getHttpStatusCode(err);
 
             if (resCode === HttpStatus.NOT_FOUND) {
-                this.logger.trace("Movie Not Found: " + movieId);
+                this.logger.warn("Movie Not Found: " + movieId);
                 return res.send(resCode, "Movie Not Found");
             }
 
