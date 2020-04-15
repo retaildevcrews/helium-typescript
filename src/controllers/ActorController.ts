@@ -2,12 +2,9 @@ import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
-import { DataService } from "../services/DataService";
-import { LogService } from "../services/LogService";
+import { DataService, LogService } from "../services";
 import { Actor } from "../models/Actor";
-import { ValidationUtilities } from "../utilities/validationUtilities";
-import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
-
+import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 
 // controller implementation for our actors endpoint
 @Controller("/api/actors")

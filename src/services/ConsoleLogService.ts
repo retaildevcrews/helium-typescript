@@ -19,4 +19,7 @@ export class ConsoleLogService implements LogService {
         id;
         console.error(`LOG ERROR: ${errorMessage}`);
     }
+    setLogLevel(level: string){
+        console.log(`Setting log level to: ${level}`);
+    }
 }

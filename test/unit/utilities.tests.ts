@@ -375,10 +375,36 @@ describe("Utilities tests", () => {
         assert(values["auth-type"] && values["auth-type"].toUpperCase() == "MSI");
       });
 
+      it("should set --auth-type to CLI", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.env.AUTH_TYPE = "CLI";
+        const { values } = consoleController.parseArguments();
+        assert(values["auth-type"] && values["auth-type"].toUpperCase() == "CLI");
+      });
+
       it("should invalidate if the value of auth-type is not valid", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         process.argv = process.argv.concat(["--auth-type", "def"]);
         assert(consoleController.parseArguments().validationMessages.length > 0);
+      });
+
+      it("should invalidate if the value of auth-type is not valid from env var", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.env.AUTH_TYPE = "def";
+        assert(consoleController.parseArguments().validationMessages.length > 0);
+      });
+
+      it("should default --log-level to info", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        const { values } = consoleController.parseArguments();
+        assert(values["log-level"] && values["log-level"] == "info");
+      });
+
+      it("should set log-level to warn", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.env.LOG_LEVEL = "warn";
+        const { values } = consoleController.parseArguments();
+        assert(values["log-level"] && values["log-level"] == "warn");
       });
 
       it("should invalidate if the value of log-level is not valid", () => {
@@ -388,20 +414,31 @@ describe("Utilities tests", () => {
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });
 
+      it("should invalidate if the value of log-level is not valid from env var", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.argv = process.argv.concat(["--auth-type", "MSI"]);
+        process.env.LOG_LEVEL = "boffo";
+        assert(consoleController.parseArguments().validationMessages.length > 0);
+      });
+
       it("should expand the keyvault URL if only the name was provided", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         const { values } = consoleController.parseArguments();
         assert(values["keyvault-name"] == "https://abc.vault.azure.net");
-      })
+      });
 
       it("should show help when --help is provided", () => {
         process.argv = process.argv.concat(["--help"]);
         const { values } = consoleController.parseArguments();
         assert.exists(values["help"]);
-      })
+      });
 
       afterEach(() => {
         process.argv = argvSave.slice();
+        // Clear environment variables
+        process.env.KEYVAULT_NAME = "";
+        process.env.AUTH_TYPE = "";
+        process.env.LOG_LEVEL = "";
       });
     });
   });
