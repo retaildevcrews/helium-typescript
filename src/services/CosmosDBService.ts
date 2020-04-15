@@ -49,6 +49,12 @@ export class CosmosDBService implements DataService {
         const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = @actor ";
         const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
 
+        let querySpec = {
+            parameters: [
+                {name: "@actor", value: "Actor"}
+            ]
+        }
+
         let sql = ACTOR_SELECT;
 
         let pageSize = 100;
@@ -74,33 +80,33 @@ export class CosmosDBService implements DataService {
 
         const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
-        let testsql = {
-            query: sql,
-            parameters: []
-        }
-
         // apply search term if provided in query
         if (actorName) {
             actorName = actorName.trim().toLowerCase().replace("'", "''");
 
             if (actorName) {
-                testsql.parameters.push({name: "@actor", value: "Actor"},{name: "@actorName", value: actorName})
                 sql += " and contains(m.textSearch, @actorName)";
-                console.log(testsql)
+                querySpec.parameters.push({name: "@actorName", value: actorName});
             }
         }
 
         sql += ACTOR_ORDER_BY + offsetLimit;
 
-        testsql.query = sql
+        querySpec["query"] = sql;
 
-        return await this.queryDocuments(testsql);
+        return await this.queryDocuments(querySpec);
     }
 
     // runs the given query for movies against the database.
     public async queryMovies(queryParams: any): Promise<Movie[]> {
-        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
+        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = @movie ";
         const MOVIE_ORDER_BY = " order by m.textSearch, m.movieId";
+
+        let querySpec = {
+            parameters: [
+                {name: "@movie", value: "Movie"}
+            ]
+        }
 
         let sql: string = MOVIE_SELECT;
 
@@ -133,25 +139,29 @@ export class CosmosDBService implements DataService {
         if (queryParams.q) {
             queryParam = queryParams.q.trim().toLowerCase().replace("'", "''");
             if (queryParam) {
-                sql += " and contains(m.textSearch, '" + queryParam + "') ";
+                sql += " and contains(m.textSearch, @queryParam) ";
+                querySpec.parameters.push({name: "@queryParam", value: queryParam});
             }
         }
 
         if (queryParams.year > 0) {
-            sql += " and m.year = " + queryParams.year + " ";
+            sql += " and m.year = @year ";
+            querySpec.parameters.push({name: "@year", value: queryParams.year});
         }
 
         if (queryParams.rating > 0) {
-            sql += " and m.rating >= " + queryParams.rating + " ";
+            sql += " and m.rating >= @rating ";
+            querySpec.parameters.push({name: "@rating", value: queryParams.rating});
         }
 
         if (queryParams.actorId) {
             actorId = queryParams.actorId.trim().toLowerCase().replace("'", "''");
 
             if (actorId) {
-                sql += " and array_contains(m.roles, { actorId: '";
-                sql += actorId;
-                sql += "' }, true) ";
+                sql += " and array_contains(m.roles, { actorId: ";
+                sql += "@actorId";
+                sql += " }, true) ";
+                querySpec.parameters.push({name: "@actorId", value: actorId});
             }
         }
 
@@ -168,11 +178,14 @@ export class CosmosDBService implements DataService {
                 }
             }
 
-            sql += " and array_contains(m.genres, '" + genre + "')";
+            sql += " and array_contains(m.genres, @genre)";
+            querySpec.parameters.push({name: "@genre", value: genre});
         }
 
         sql += MOVIE_ORDER_BY + offsetLimit;
 
-        return await this.queryDocuments(sql);
+        querySpec["query"] = sql;
+
+        return await this.queryDocuments(querySpec);
     }
 }
