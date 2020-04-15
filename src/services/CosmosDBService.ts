@@ -27,7 +27,7 @@ export class CosmosDBService implements DataService {
     }
 
     // runs the given query against CosmosDB.
-    public async queryDocuments(query: string): Promise<any> {
+    public async queryDocuments(query): Promise<any> {
         const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
         return queryResults;
     }
@@ -49,8 +49,9 @@ export class CosmosDBService implements DataService {
         const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
         const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
 
-        let sql = ACTOR_SELECT;
+        const parameters = [];
 
+        let sql = ACTOR_SELECT;
         let pageSize = 100;
         let pageNumber = 1;
         let actorName: string = queryParams.q;
@@ -79,13 +80,14 @@ export class CosmosDBService implements DataService {
             actorName = actorName.trim().toLowerCase().replace("'", "''");
 
             if (actorName) {
-                sql += " and contains(m.textSearch, '" + actorName + "')";
+                sql += " and contains(m.textSearch, @actorName)";
+                parameters.push({name: "@actorName", value: actorName});
             }
         }
 
         sql += ACTOR_ORDER_BY + offsetLimit;
 
-        return await this.queryDocuments(sql);
+        return await this.queryDocuments({ query: sql, parameters: parameters });
     }
 
     // runs the given query for movies against the database.
@@ -93,8 +95,9 @@ export class CosmosDBService implements DataService {
         const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
         const MOVIE_ORDER_BY = " order by m.textSearch, m.movieId";
 
-        let sql: string = MOVIE_SELECT;
+        const parameters = [];
 
+        let sql: string = MOVIE_SELECT;
         let pageSize = 100;
         let pageNumber = 1;
         let queryParam: string;
@@ -124,25 +127,29 @@ export class CosmosDBService implements DataService {
         if (queryParams.q) {
             queryParam = queryParams.q.trim().toLowerCase().replace("'", "''");
             if (queryParam) {
-                sql += " and contains(m.textSearch, '" + queryParam + "') ";
+                sql += " and contains(m.textSearch, @queryParam) ";
+                parameters.push({ name: "@queryParam"  as string, value: queryParam as string|number });
             }
         }
 
         if (queryParams.year > 0) {
-            sql += " and m.year = " + queryParams.year + " ";
+            sql += " and m.year = @year ";
+            parameters.push({ name: "@year", value: Number(queryParams.year) });
         }
 
         if (queryParams.rating > 0) {
-            sql += " and m.rating >= " + queryParams.rating + " ";
+            sql += " and m.rating >= @rating ";
+            parameters.push({ name: "@rating", value: Number(queryParams.rating) });
         }
 
         if (queryParams.actorId) {
             actorId = queryParams.actorId.trim().toLowerCase().replace("'", "''");
 
             if (actorId) {
-                sql += " and array_contains(m.roles, { actorId: '";
-                sql += actorId;
-                sql += "' }, true) ";
+                sql += " and array_contains(m.roles, { actorId: ";
+                sql += "@actorId";
+                sql += " }, true) ";
+                parameters.push({ name: "@actorId", value: actorId });
             }
         }
 
@@ -159,11 +166,12 @@ export class CosmosDBService implements DataService {
                 }
             }
 
-            sql += " and array_contains(m.genres, '" + genre + "')";
+            sql += " and array_contains(m.genres, @genre)";
+            parameters.push({name: "@genre", value: genre});
         }
 
         sql += MOVIE_ORDER_BY + offsetLimit;
 
-        return await this.queryDocuments(sql);
+        return await this.queryDocuments({ query: sql, parameters: parameters });
     }
 }
