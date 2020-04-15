@@ -49,17 +49,14 @@ export class CosmosDBService implements DataService {
         const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = @actor ";
         const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
 
-        let querySpec = {
-            parameters: [
-                {name: "@actor", value: "Actor"}
-            ]
-        }
+        const parameters = [];
 
         let sql = ACTOR_SELECT;
-
         let pageSize = 100;
         let pageNumber = 1;
         let actorName: string = queryParams.q;
+
+        parameters.push({ name: "@actor", value: "Actor" });
 
         // handle paging parameters
         // fall back to default values if none provided in query
@@ -86,15 +83,13 @@ export class CosmosDBService implements DataService {
 
             if (actorName) {
                 sql += " and contains(m.textSearch, @actorName)";
-                querySpec.parameters.push({name: "@actorName", value: actorName});
+                parameters.push({name: "@actorName", value: actorName});
             }
         }
 
         sql += ACTOR_ORDER_BY + offsetLimit;
 
-        querySpec["query"] = sql;
-
-        return await this.queryDocuments(querySpec);
+        return await this.queryDocuments({ query: sql, parameters: parameters });
     }
 
     // runs the given query for movies against the database.
@@ -102,19 +97,16 @@ export class CosmosDBService implements DataService {
         const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = @movie ";
         const MOVIE_ORDER_BY = " order by m.textSearch, m.movieId";
 
-        let querySpec = {
-            parameters: [
-                {name: "@movie", value: "Movie"}
-            ]
-        }
+        const parameters = [];
 
         let sql: string = MOVIE_SELECT;
-
         let pageSize = 100;
         let pageNumber = 1;
         let queryParam: string;
         let actorId: string;
         let genre: string;
+
+        parameters.push({ name: "@movie" as string, value: "Movie" as string|number });
 
         // handle paging parameters
         // fall back to default values if none provided in query
@@ -140,18 +132,18 @@ export class CosmosDBService implements DataService {
             queryParam = queryParams.q.trim().toLowerCase().replace("'", "''");
             if (queryParam) {
                 sql += " and contains(m.textSearch, @queryParam) ";
-                querySpec.parameters.push({name: "@queryParam", value: queryParam});
+                parameters.push({ name: "@queryParam", value: queryParam });
             }
         }
 
         if (queryParams.year > 0) {
             sql += " and m.year = @year ";
-            querySpec.parameters.push({name: "@year", value: queryParams.year});
+            parameters.push({ name: "@year", value: Number(queryParams.year) });
         }
 
         if (queryParams.rating > 0) {
             sql += " and m.rating >= @rating ";
-            querySpec.parameters.push({name: "@rating", value: queryParams.rating});
+            parameters.push({ name: "@rating", value: Number(queryParams.rating) });
         }
 
         if (queryParams.actorId) {
@@ -161,7 +153,7 @@ export class CosmosDBService implements DataService {
                 sql += " and array_contains(m.roles, { actorId: ";
                 sql += "@actorId";
                 sql += " }, true) ";
-                querySpec.parameters.push({name: "@actorId", value: actorId});
+                parameters.push({ name: "@actorId", value: actorId });
             }
         }
 
@@ -179,13 +171,11 @@ export class CosmosDBService implements DataService {
             }
 
             sql += " and array_contains(m.genres, @genre)";
-            querySpec.parameters.push({name: "@genre", value: genre});
+            parameters.push({name: "@genre", value: genre});
         }
 
         sql += MOVIE_ORDER_BY + offsetLimit;
 
-        querySpec["query"] = sql;
-
-        return await this.queryDocuments(querySpec);
+        return await this.queryDocuments({ query: sql, parameters: parameters });
     }
 }
