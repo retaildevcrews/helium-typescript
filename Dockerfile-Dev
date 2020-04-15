@@ -1,5 +1,5 @@
 # ---- Base Node ----
-FROM node:current-alpine AS helium-dev-base
+FROM node:lts AS base
 
 ### Optional: Set Proxy Variables
 # ENV http_proxy {value}
@@ -9,37 +9,31 @@ FROM node:current-alpine AS helium-dev-base
 # ENV no_proxy {value}
 # ENV NO_PROXY {value}
 
+WORKDIR /app
+COPY . .
+
+RUN npm set progress=false && npm config set depth 0
+RUN npm install --production
+RUN cp -R node_modules prod_node_modules
+RUN npm install
+RUN npm run lint && npm run build && npm test
+
+# ---- Release ----
+FROM node:lts-alpine AS release
+
 ### install azure cli
 RUN \
-  apk update && \
-  apk add bash py-pip && \
-  apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev make && \
-  pip --no-cache-dir install -U pip && \
-  pip --no-cache-dir install azure-cli
+  apk add --no-cache curl tar openssl sudo bash jq python3 && \
+  apk add --virtual=build gcc libffi-dev musl-dev openssl-dev make python3-dev && \
+  pip3 --no-cache-dir install --upgrade pip && \
+  pip3 --no-cache-dir install azure-cli
 
 RUN mkdir -p /root/.azure
 
-WORKDIR /app
-COPY scripts ./scripts
 EXPOSE 4120
-COPY package.json .
- 
-#
-# ---- Dependencies ----
-FROM helium-dev-base AS dependencies
-RUN npm set progress=false && npm config set depth 0
-RUN apk add --no-cache --virtual .gyp \
-        make \
-        python \
-        && npm install --production 
-RUN cp -R node_modules prod_node_modules
-RUN npm install
+WORKDIR /app
 
-FROM dependencies AS test
-COPY . .
-RUN npm run lint && npm run build && npm test
-
-FROM helium-dev-base AS release
-COPY --from=dependencies /app/prod_node_modules ./node_modules
-COPY --from=test /app/dist ./dist
-COPY --from=test /app/swagger/swagger.json ./swagger/swagger.json
+COPY --from=base /app/package.json .
+COPY --from=base /app/prod_node_modules ./node_modules
+COPY --from=base /app/dist ./dist
+COPY --from=base /app/swagger/swagger.json ./swagger/swagger.json
