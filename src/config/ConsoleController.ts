@@ -23,7 +23,7 @@ export class ConsoleController {
         else if (validationMessages.length > 0) {
             validationMessages.forEach(m => console.error(m));
             this.showHelp();
-            process.exit();
+            process.exit(-1);
         }
 
         this.logService.setLogLevel(values["log-level"]);
@@ -61,7 +61,7 @@ export class ConsoleController {
             args = commandLineArgs(options);
         } catch(e) {
             this.showHelp("Error: " + e.name);
-            process.exit();
+            process.exit(-1);
         }
         
         // compose the two
