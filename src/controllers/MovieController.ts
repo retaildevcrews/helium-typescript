@@ -1,11 +1,9 @@
 import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
-import { DataService } from "../services/DataService";
-import { LogService } from "../services/LogService";
+import { DataService, LogService } from "../services";
 import { Movie } from "../models/Movie";
-import { ValidationUtilities } from "../utilities/validationUtilities";
-import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
+import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 
 // controller implementation for our movies endpoint
 @Controller("/api/movies")
@@ -23,7 +21,7 @@ export class MovieController implements interfaces.Controller {
         
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.trace("InvalidParameter|" + "getAllMovies" + "|" + message);
+            this.logger.warn("InvalidParameter|" + "getAllMovies" + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -51,7 +49,7 @@ export class MovieController implements interfaces.Controller {
 
         if (!validated) {
             res.setHeader("Content-Type", "text/plain");
-            this.logger.trace("getMovieById|" + movieId + "|" + message);
+            this.logger.warn("getMovieById|" + movieId + "|" + message);
             return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
@@ -64,7 +62,7 @@ export class MovieController implements interfaces.Controller {
             resCode = getHttpStatusCode(err);
 
             if (resCode === HttpStatus.NOT_FOUND) {
-                this.logger.trace("Movie Not Found: " + movieId);
+                this.logger.warn("Movie Not Found: " + movieId);
                 return res.send(resCode, "Movie Not Found");
             }
 

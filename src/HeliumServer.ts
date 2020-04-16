@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import EndpointLogger from "./middleware/EndpointLogger";
-import { DataService, LogService } from "./services";
+import { LogService } from "./services";
 import { Container } from "inversify";
 import { InversifyRestifyServer } from "inversify-restify-utils";
-import { ConfigValues } from "./config/config";
+import { ConfigValues } from "./config/ConfigValues";
 import { html } from "./swagger-html";
 import { robotsHandler } from "./middleware/robotsText";
 import { version } from "./config/constants";
@@ -13,18 +13,16 @@ import restify = require("restify");
 export class HeliumServer {
     private server: restify.Server;
     private inversifyServer: InversifyRestifyServer;
-    private dataService: DataService;
     private logService: LogService;
     private configValues: ConfigValues;
 
     constructor(private container: Container) {
         this.inversifyServer = new InversifyRestifyServer(this.container);
-        this.dataService = this.container.get<DataService>("DataService");
         this.logService = this.container.get<LogService>("LogService");
         this.configValues = this.container.get<ConfigValues>("ConfigValues");
         this.server = this.createRestifyServer();
 
-        this.logService.trace(`Version: ${version}`);
+        this.logService.info(`Version: ${version}`);
     }
 
     createRestifyServer() {
@@ -66,7 +64,7 @@ export class HeliumServer {
 
     public start() {
         this.server.listen(this.configValues.port, () => {
-            this.logService.trace(`Server is listening on port ${this.configValues.port}`);
+            this.logService.info(`Server is listening on port ${this.configValues.port}`);
         });
     }
 

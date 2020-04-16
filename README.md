@@ -28,20 +28,6 @@ This is a Node.JS REST WebAPI reference application designed to "fork and code" 
 
 Currently, helium-typescript has a dependency on inversify-restify-utils which has a [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
 
-### Warnings
-
-There is a known dependency on deprecated @opentelemetry/types package. This is due to a dependency on a few Azure SDK packages, tracked by [this issue](https://github.com/Azure/azure-sdk-for-js/issues/7079).
-
-- npm WARN deprecated @opentelemetry/types@0.2.0: Package renamed to @opentelemetry/api, see [description](https://github.com/open-telemetry/opentelemetry-js)
-
-There is a known dependency on deprecated request@2.88.2. This is due to dependencies on jsdom and adal-node. This is tracked by [jsdom issue](https://github.com/jsdom/jsdom/issues/2792) and [adal issue](https://github.com/AzureAD/azure-activedirectory-library-for-nodejs/issues/229).  Adal-node should be updated to msal, tracking this with [ms-node-auth issue](https://github.com/Azure/ms-rest-nodeauth/issues/84).
-
-- npm WARN deprecated request@2.88.2: request has been deprecated, see [description](https://github.com/request/request/issues/3142)
-
-There is a known warning for a peer dependency on canvas.  However, the reported work-arounds online introduce a lot of different, additional errors.  Tracked by [issue/PR](https://github.com/node-gfx/node-canvas-prebuilt/pull/80). For now, this does not affect app behavior.
-
-- npm WARN jsdom@15.2.1 requires a peer of canvas@^2.5.0 but none is installed. You must install peer dependencies yourself.
-
 ## Setup
 
 - Fork this repo and clone to your local machine
@@ -50,7 +36,6 @@ There is a known warning for a peer dependency on canvas.  However, the reported
 Build the container using Docker
 
 - The unit tests run as part of the Docker build process. You can also run the unit tests manually using `npm test`, with watch using `npm run test:watch`, and with test coverage using `npm run test:coverage`.
-```
 
 - For instructions on building the container with ACR, please see the Helium [readme](https://github.com/retaildevcrews/helium)
 
@@ -61,6 +46,7 @@ Build the container using Docker
 docker build -t helium-typescript -f Dockerfile .
 
 # note: you may see output like the following, this is expected and safe to ignore
+# npm WARN gulp-debug@4.0.0 requires a peer of gulp@>=4 but none is installed. You must install peer dependencies yourself.
 # npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules/mocha/node_modules/fsevents):
 # npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 
@@ -81,6 +67,7 @@ az login
 
 # install modules in package.json file
 # note: you may see output like the following, this is expected and safe to ignore
+# npm WARN gulp-debug@4.0.0 requires a peer of gulp@>=4 but none is installed. You must install peer dependencies yourself.
 # npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules/mocha/node_modules/fsevents):
 # npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 npm install
@@ -92,9 +79,15 @@ npm run build
 # for local run, you need to specify CLI authentication type
 npm start -- --keyvault-name {name of your keyvault} --auth-type CLI
 
+# optionally, set the logging level verboseness with --log-level (or -l)
+# 'info' is the default
+# please type --help for all options
+npm start -- --keyvault-name {name of your keyvault} --auth-type CLI --log-level info
+
 # alternatively you can set the following environment variables and run without command line args
-export keyvault-name={name of your keyvault}
-export auth-type=CLI
+export KEYVAULT_NAME={name of your keyvault}
+export AUTH_TYPE=CLI
+export LOG_LEVEL={logging level} # (optional)
 
 npm start
 

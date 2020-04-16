@@ -35,34 +35,46 @@ export class BunyanLogService implements LogService {
         req: bunyan.stdSerializers.req,
         res: bunyan.stdSerializers.res,
       },
-      streams: [
-        {
-          level: bunyan.TRACE,  // logs "trace" level and everything above
-          stream: process.stdout,
-        },
-        {
-          level: bunyan.ERROR,
-          stream: process.stderr, // logs "error" and "fatal" levels
-        },
-      ],
+      stream: process.stdout,
+      level: "info"
     });
     this.uniqueServerId = v4();
   }
 
-  public trace(message: string, id?: string) {
-    if (id == null) {
-      if (this.customId == null) {
-        this.logger.trace({ correlationID: this.uniqueServerId }, message);
-      } else {
-        this.logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
-      }
-    } else {
-      this.customId = id;
-      this.logger.trace({ correlationID: this.uniqueServerId, customID: this.customId }, message);
+  private logMessage (logLevel: string, message: string, id?: string) {
+    const traceObj = { correlationID: this.uniqueServerId };
+
+    if (id) {
+        traceObj["customID"] = id;
     }
+   
+    this.logger[logLevel](traceObj, message);
   }
 
-  public error(error: Error, errorMessage: string) {
-    this.logger.error({ err: error, correlationID: this.uniqueServerId, customID: this.customId }, errorMessage);
+  public setLogLevel(logLevel) {
+    logLevel = (!logLevel) ? "info" : logLevel;
+    this.logger.level(logLevel);
+  }
+
+  public trace(message: string, id?: string) {
+    this.logMessage("trace", message, id );
+  }
+
+  public info(message: string, id?: string) {
+    this.logMessage("info", message, id );
+  }
+
+  public warn(message: string, id?: string) {
+    this.logMessage("warn", message, id );
+  }
+
+  public error(error: Error, errorMessage: string, id?: string) {
+    const traceObj = { err: error, correlationID: this.uniqueServerId };
+
+    if (id) {
+        traceObj["customID"] = id;
+    }
+
+    this.logger.error(traceObj, errorMessage);
   }
 }
