@@ -146,7 +146,7 @@ export class CosmosDBService implements DataService {
         size = Math.min(maxPageSize, size);
 
         // make sure number is at least 0
-        number = Math.max(number--, 0);
+        number = Math.max(--number, 0);
 
         return { size, number };
     }
