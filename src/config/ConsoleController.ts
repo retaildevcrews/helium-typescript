@@ -23,7 +23,7 @@ export class ConsoleController {
         else if (validationMessages.length > 0) {
             validationMessages.forEach(m => console.error(m));
             this.showHelp();
-            process.exit();
+            process.exit(-1);
         }
 
         this.logService.setLogLevel(values["log-level"]);
@@ -47,6 +47,7 @@ export class ConsoleController {
 
     public parseArguments() {
         const options: OptionDefinition[] = sections.find(s => s.header == "Options").optionList;
+        let args;
 
         // environment variables
         const env = {
@@ -56,8 +57,13 @@ export class ConsoleController {
         }
 
         // command line arguments
-        const args = commandLineArgs(options);
-
+        try {
+            args = commandLineArgs(options);
+        } catch(e) {
+            this.showHelp(`Error: ${e.name}`);
+            process.exit(-1);
+        }
+        
         // compose the two
         const values = { ...env, ...args };
 
