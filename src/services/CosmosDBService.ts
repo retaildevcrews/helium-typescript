@@ -26,13 +26,8 @@ export class CosmosDBService implements DataService {
         this.cosmosContainer = await this.cosmosClient.database(this.config.database).container(this.config.collection);
     }
 
-<<<<<<< HEAD
-    // runs the given query against CosmosDB
-    public async queryDocuments(query: string): Promise<any> {
-=======
     // runs the given query against CosmosDB.
     public async queryDocuments(query): Promise<any> {
->>>>>>> master
         const { resources: queryResults } = await this.cosmosContainer.items.query(query, this.feedOptions).fetchAll();
         return queryResults;
     }
@@ -51,17 +46,12 @@ export class CosmosDBService implements DataService {
 
     // runs the given query for actors against the database.
     public async queryActors(queryParams: any): Promise<Actor[]> {
-        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
-        const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
-
+        const SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
+        const ORDER_BY = " order by m.textSearch, m.actorId";
         const parameters = [];
 
-<<<<<<< HEAD
-=======
-        let sql = ACTOR_SELECT;
-        let pageSize = 100;
-        let pageNumber = 1;
->>>>>>> master
+        let sql = SELECT;
+
         let actorName: string = queryParams.q;
 
         const { size: pageSize, number: pageNumber } = this.conditionPages(queryParams.pageSize, queryParams.pageNumber);
@@ -71,18 +61,14 @@ export class CosmosDBService implements DataService {
         // apply search term if provided in query
         if (actorName) {
             actorName = actorName.trim().toLowerCase().replace("'", "''");
-<<<<<<< HEAD
-            if (actorName) sql += " and contains(m.textSearch, '" + actorName + "')";
-=======
 
             if (actorName) {
                 sql += " and contains(m.textSearch, @actorName)";
                 parameters.push({name: "@actorName", value: actorName});
             }
->>>>>>> master
         }
 
-        sql += ACTOR_ORDER_BY + offsetLimit;
+        sql += ORDER_BY + offsetLimit;
 
         return await this.queryDocuments({ query: sql, parameters: parameters });
     }
@@ -91,17 +77,10 @@ export class CosmosDBService implements DataService {
     public async queryMovies(queryParams: any): Promise<Movie[]> {
         const SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
         const ORDER_BY = " order by m.textSearch, m.movieId";
-
-<<<<<<< HEAD
-        let sql: string = SELECT;
-
-=======
         const parameters = [];
 
-        let sql: string = MOVIE_SELECT;
-        let pageSize = 100;
-        let pageNumber = 1;
->>>>>>> master
+        let sql: string = SELECT;
+
         let queryParam: string;
         let actorId: string;
         let genre: string;
@@ -112,17 +91,6 @@ export class CosmosDBService implements DataService {
         // handle query parameters and build sql query
         if (queryParams.q) {
             queryParam = queryParams.q.trim().toLowerCase().replace("'", "''");
-<<<<<<< HEAD
-            if (queryParam) sql += ` and contains(m.textSearch, '${queryParam}') `;
-        }
-
-        if (queryParams.year > 0) sql += ` and m.year = ${queryParams.year} `;
-        if (queryParams.rating > 0) sql += ` and m.rating >= ${queryParams.rating} `;
-
-        if (queryParams.actorId) {
-            actorId = queryParams.actorId.trim().toLowerCase().replace("'", "''");
-            if (actorId) sql += ` and array_contains(m.roles, { actorId: '${actorId}' }, true) `;
-=======
             if (queryParam) {
                 sql += " and contains(m.textSearch, @queryParam) ";
                 parameters.push({ name: "@queryParam"  as string, value: queryParam as string|number });
@@ -143,12 +111,9 @@ export class CosmosDBService implements DataService {
             actorId = queryParams.actorId.trim().toLowerCase().replace("'", "''");
 
             if (actorId) {
-                sql += " and array_contains(m.roles, { actorId: ";
-                sql += "@actorId";
-                sql += " }, true) ";
+                sql += " and array_contains(m.roles, { actorId: @actorId }, true) ";
                 parameters.push({ name: "@actorId", value: actorId });
             }
->>>>>>> master
         }
 
         if (queryParams.genre) {
@@ -162,12 +127,8 @@ export class CosmosDBService implements DataService {
                 if (err.toString().includes("404")) return [];
             }
 
-<<<<<<< HEAD
-            sql += ` and array_contains(m.genres, '${genre}')`;
-=======
             sql += " and array_contains(m.genres, @genre)";
             parameters.push({name: "@genre", value: genre});
->>>>>>> master
         }
 
         sql += ORDER_BY + offsetLimit;
