@@ -60,7 +60,7 @@ export class ConsoleController {
         try {
             args = commandLineArgs(options);
         } catch(e) {
-            this.showHelp("Error: " + e.name);
+            this.showHelp(`Error: ${e.name}`);
             process.exit(-1);
         }
         
