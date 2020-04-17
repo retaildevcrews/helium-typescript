@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { LogService } from "./LogService";
 import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
-import { defaultPageSize, maxPageSize } from "../config/constants";
+import { defaultPageSize } from "../config/constants";
 import { DataService } from "./DataService";
 import { ConfigValues } from "../config/ConfigValues";
 
@@ -54,7 +54,7 @@ export class CosmosDBService implements DataService {
 
         let actorName: string = queryParams.q;
 
-        const { size: pageSize, number: pageNumber } = this.conditionPages(queryParams.pageSize, queryParams.pageNumber);
+        const { size: pageSize, number: pageNumber } = this.setPagingParameters(queryParams.pageSize, queryParams.pageNumber);
 
         const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
@@ -85,7 +85,7 @@ export class CosmosDBService implements DataService {
         let actorId: string;
         let genre: string;
 
-        const { size: pageSize, number: pageNumber } = this.conditionPages(queryParams.pageSize, queryParams.pageNumber);
+        const { size: pageSize, number: pageNumber } = this.setPagingParameters(queryParams.pageSize, queryParams.pageNumber);
         const offsetLimit = ` offset ${pageNumber * pageSize} limit ${pageSize} `;
 
         // handle query parameters and build sql query
@@ -136,14 +136,11 @@ export class CosmosDBService implements DataService {
         return await this.queryDocuments({ query: sql, parameters: parameters });
     }
 
-    conditionPages(size, number) {
+    // Sets the default paging values if none are provided, and updates to 0 base index.
+    setPagingParameters(size, number) {
         // default values
         size = size || defaultPageSize;
         number = number || 1;
-
-        // make sure size is between 1 and the max
-        size = Math.max(1, size);
-        size = Math.min(maxPageSize, size);
 
         // make sure number is at least 0
         number = Math.max(--number, 0);
