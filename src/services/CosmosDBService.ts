@@ -3,7 +3,7 @@ import { inject, injectable } from "inversify";
 import { LogService } from "./LogService";
 import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
-import { defaultPageSize, maxPageSize } from "../config/constants";
+import { defaultPageSize } from "../config/constants";
 import { DataService } from "./DataService";
 import { ConfigValues } from "../config/ConfigValues";
 
@@ -32,46 +32,29 @@ export class CosmosDBService implements DataService {
         return queryResults;
     }
 
-    // retrieves a specific document by Id.
+    // retrieves a specific document by id
     public async getDocument(documentId: string): Promise<any> {
         const { resource: result, statusCode: status }
             = await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
         if (status === 200) {
             return result;
         }
-        
+
         // 404 not found does not throw an error
         throw Error("Cosmos Error: " + status);
     }
 
     // runs the given query for actors against the database.
     public async queryActors(queryParams: any): Promise<Actor[]> {
-        const ACTOR_SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
-        const ACTOR_ORDER_BY = " order by m.textSearch, m.actorId";
-
+        const SELECT = "select m.id, m.partitionKey, m.actorId, m.type, m.name, m.birthYear, m.deathYear, m.profession, m.textSearch, m.movies from m where m.type = 'Actor' ";
+        const ORDER_BY = " order by m.textSearch, m.actorId";
         const parameters = [];
 
-        let sql = ACTOR_SELECT;
-        let pageSize = 100;
-        let pageNumber = 1;
+        let sql = SELECT;
+
         let actorName: string = queryParams.q;
 
-        // handle paging parameters
-        // fall back to default values if none provided in query
-        pageSize = (queryParams.pageSize) ? queryParams.pageSize : pageSize;
-        pageNumber = (queryParams.pageNumber) ? queryParams.pageNumber : pageNumber;
-
-        if (pageSize < 1) {
-            pageSize = defaultPageSize;
-        } else if (pageSize > maxPageSize) {
-            pageSize = maxPageSize;
-        }
-
-        pageNumber--;
-
-        if (pageNumber < 0) {
-            pageNumber = 0;
-        }
+        const { size: pageSize, number: pageNumber } = this.setPagingParameters(queryParams.pageSize, queryParams.pageNumber);
 
         const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
 
@@ -85,43 +68,25 @@ export class CosmosDBService implements DataService {
             }
         }
 
-        sql += ACTOR_ORDER_BY + offsetLimit;
+        sql += ORDER_BY + offsetLimit;
 
         return await this.queryDocuments({ query: sql, parameters: parameters });
     }
 
     // runs the given query for movies against the database.
     public async queryMovies(queryParams: any): Promise<Movie[]> {
-        const MOVIE_SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
-        const MOVIE_ORDER_BY = " order by m.textSearch, m.movieId";
-
+        const SELECT = "select m.id, m.partitionKey, m.movieId, m.type, m.textSearch, m.title, m.year, m.runtime, m.rating, m.votes, m.totalScore, m.genres, m.roles from m where m.type = 'Movie' ";
+        const ORDER_BY = " order by m.textSearch, m.movieId";
         const parameters = [];
 
-        let sql: string = MOVIE_SELECT;
-        let pageSize = 100;
-        let pageNumber = 1;
+        let sql: string = SELECT;
+
         let queryParam: string;
         let actorId: string;
         let genre: string;
 
-        // handle paging parameters
-        // fall back to default values if none provided in query
-        pageSize = (queryParams.pageSize) ? queryParams.pageSize : pageSize;
-        pageNumber = (queryParams.pageNumber) ? queryParams.pageNumber : pageNumber;
-
-        if (pageSize < 1) {
-            pageSize = defaultPageSize;
-        } else if (pageSize > maxPageSize) {
-            pageSize = maxPageSize;
-        }
-
-        pageNumber--;
-
-        if (pageNumber < 0) {
-            pageNumber = 0;
-        }
-
-        const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
+        const { size: pageSize, number: pageNumber } = this.setPagingParameters(queryParams.pageSize, queryParams.pageNumber);
+        const offsetLimit = ` offset ${pageNumber * pageSize} limit ${pageSize} `;
 
         // handle query parameters and build sql query
         if (queryParams.q) {
@@ -146,9 +111,7 @@ export class CosmosDBService implements DataService {
             actorId = queryParams.actorId.trim().toLowerCase().replace("'", "''");
 
             if (actorId) {
-                sql += " and array_contains(m.roles, { actorId: ";
-                sql += "@actorId";
-                sql += " }, true) ";
+                sql += " and array_contains(m.roles, { actorId: @actorId }, true) ";
                 parameters.push({ name: "@actorId", value: actorId });
             }
         }
@@ -160,18 +123,29 @@ export class CosmosDBService implements DataService {
                 genreResult = await this.getDocument(queryParams.genre.trim().toLowerCase());
                 genre = genreResult.genre;
             } catch (err) {
-                if (err.toString().includes("404")) {
-                    // return empty array if no genre found
-                    return [];
-                }
+                // return empty array if no genre found
+                if (err.toString().includes("404")) return [];
             }
 
             sql += " and array_contains(m.genres, @genre)";
             parameters.push({name: "@genre", value: genre});
         }
 
-        sql += MOVIE_ORDER_BY + offsetLimit;
+        sql += ORDER_BY + offsetLimit;
 
         return await this.queryDocuments({ query: sql, parameters: parameters });
     }
+
+    // Sets the default paging values if none are provided, and updates to 0 base index.
+    setPagingParameters(size, number) {
+        // default values
+        size = size || defaultPageSize;
+        number = number || 1;
+
+        // make sure number is at least 0
+        number = Math.max(--number, 0);
+
+        return { size, number };
+    }
+
 }
