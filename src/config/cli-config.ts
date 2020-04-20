@@ -8,7 +8,7 @@ export const sections = [
                 "name": "keyvault-name",
                 "alias": "k",
                 "type": String,
-                "description": "The name or URL of the Azure Keyvault. required.",
+                "description": "The name or URL of the Azure Key Vault. required.",
                 "validationPattern": /^[a-z](?!.*--)([a-z0-9-]*[a-z0-9])?$/i,
                 "required": true
             },

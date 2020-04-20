@@ -7,7 +7,7 @@ import {
 // utilities for validating API parameters.
 export class ValidationUtilities {
 
-    // 
+    // validate common parameters
     public static validateCommon(query: any) {
 
         if ( query === null || query === undefined ) {
@@ -37,6 +37,7 @@ export class ValidationUtilities {
         return { validated: true };
     }
 
+    // validate movie-specific parameters
     public static validateMovies(query: any) {
 
         if ( query === null || query === undefined ) {

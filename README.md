@@ -108,7 +108,7 @@ docker build -t helium-dev -f Dockerfile-Dev .
 # run the container
 # mount your ~/.azure directory to container root/.azure directory
 # you can also run the container and run az login from a bash shell
-# $He_Name is set to the name of your key vault
+# $He_Name is set to the name of your Key Vault
 
 # option using command line args
 docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--keyvault-name" "${He_Name}" "--auth-type" "CLI"

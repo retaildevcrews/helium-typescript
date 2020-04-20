@@ -19,7 +19,7 @@ before(async function() {
 
     exec = promisify(childProcess.exec);
 
-    // test environment key vault
+    // test environment Key Vault
     // will need to update KEYVAULT_NAME to your own e2e environment
     process.env.KEYVAULT_NAME = "froyo-kv";
     process.env.AUTH_TYPE = "CLI";

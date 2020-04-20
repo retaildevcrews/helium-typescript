@@ -1,4 +1,4 @@
-// utilities for date/time functions.
+// utilities for date/time functions
 export class DateUtilities {
 
     public static getTimer() {
