@@ -1,6 +1,6 @@
 {
   "name": "helium",
-  "version": "0.0.7",
+  "version": "1.0.7",
   "description": "Azure App Service reference application",
   "main": "dist/server.js",
   "directories": {
@@ -51,10 +51,10 @@
     "@types/bunyan": "^1.8.6",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^13.11.1",
+    "@types/node": "^13.13.1",
     "@types/restify": "^8.4.2",
-    "@typescript-eslint/eslint-plugin": "^2.28.0",
-    "@typescript-eslint/parser": "^2.28.0",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
     "bufferutil": "^4.0.1",
     "chai": "^4.2.0",
     "eslint": "^6",
@@ -62,9 +62,9 @@
     "mockery": "^2.1.0",
     "node-mocks-http": "^1.8.1",
     "nyc": "^15.0.1",
-    "sinon": "^9.0.1",
+    "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
-    "source-map-support": "^0.5.16",
+    "source-map-support": "^0.5.17",
     "ts-node": "^8.8.2",
     "typescript": "^3.8.2",
     "utf-8-validate": "^5.0.2"
