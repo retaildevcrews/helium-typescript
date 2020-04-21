@@ -19,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/helium.git"
+    "url": "git+https://github.com/retaildevcrews/helium-typescript.git"
   },
   "author": "aka",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/helium/issues"
+    "url": "https://github.com/retaildevcrews/helium-typescript/issues"
   },
-  "homepage": "https://github.com/Microsoft/helium#readme",
+  "homepage": "https://github.com/retaildevcrews/helium-typescript#readme",
   "dependencies": {
     "@azure/cosmos": "^3.6.3",
     "@azure/identity": "^1.0.2",
