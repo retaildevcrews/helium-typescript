@@ -15,7 +15,7 @@ import { HeliumServer } from "./HeliumServer";
     container.bind<LogService>("LogService").to(BunyanLogService).inSingletonScope();
     const logService = container.get<LogService>("LogService");
     
-    // parse command line arguments to get the key vault url and auth type
+    // parse command line arguments to get the Key Vault url and auth type
     const consoleController = new ConsoleController(logService);
     const config = await consoleController.run();
 

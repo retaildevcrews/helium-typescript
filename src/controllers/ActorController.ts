@@ -11,7 +11,6 @@ import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 @injectable()
 export class ActorController implements interfaces.Controller {
 
-    // instantiate the actor controller
     constructor(
         @inject("DataService") private dataService: DataService,
         @inject("LogService") private logger: LogService

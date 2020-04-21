@@ -22,10 +22,12 @@ export class FeaturedController implements interfaces.Controller {
         let result: Movie;
 
         try {
+            // only build the weighted featured movie list once
             if ( this.featuredMovies == null || this.featuredMovies.length === 0 ) {
                 this.featuredMovies = await this.getFeaturedMovieList();
             }
 
+            // return a random featured movie from the list
             if (this.featuredMovies != null && this.featuredMovies.length > 0 ) {
                 const movieId = this.featuredMovies[ Math.floor(Math.random() * ( this.featuredMovies.length - 1 )) ];
                 result = new Movie(await this.cosmosDb.getDocument(movieId));
@@ -40,6 +42,7 @@ export class FeaturedController implements interfaces.Controller {
         return res.send(resCode, result);
     }
 
+    // build a weighted list of featured movies
     private async getFeaturedMovieList(): Promise<string[]> {
         const movieList: string[] = [];
         const sql = "select m.movieId, m.weight from m where m.type = 'Featured'";

@@ -345,7 +345,7 @@ describe("Utilities tests", () => {
   describe("CommandLineUtilities", () => {
     describe("parseArguments", () => {
       before(() => {
-        // HACK: strip the spec 
+        // strip the spec 
         // when tests are executed, the spec (file path) goofs up command-line-args parsing them
         const specIndex = process.argv.findIndex(a => a.includes("test/e2e/**/*.ts"));
         process.argv.splice(specIndex, 1);
@@ -353,7 +353,7 @@ describe("Utilities tests", () => {
         consoleController = new ConsoleController(logService)
       });
       // save the command line arguments so they can be restored after each test
-      const argvSave = process.argv.slice(); // TODO: use deep copy
+      const argvSave = JSON.parse(JSON.stringify(process.argv));
       const specIndex = argvSave.findIndex(a => a.includes("test/unit/**/*.ts"));
       if (specIndex >= 0) argvSave.splice(specIndex, 1);
 

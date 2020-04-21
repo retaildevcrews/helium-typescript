@@ -2,7 +2,7 @@ import * as ApplicationInsights from "applicationinsights";
 import { inject, injectable } from "inversify";
 import { ConfigValues } from "../config/ConfigValues";
 
-// handles sending telemetry data via AppInsights
+// handles sending telemetry data via App Insights
 @injectable()
 export class AppInsightsService {
 
@@ -11,7 +11,7 @@ export class AppInsightsService {
     // creates a new instance of the App Insights client.
     constructor(@inject("ConfigValues") configValues: ConfigValues) {
         if (configValues.insightsKey) {
-            // setup Application insights with the automatic collection and dependency tracking enabled
+            // setup App Insights with the automatic collection and dependency tracking enabled
             ApplicationInsights.setup(configValues.insightsKey)
                 .setAutoDependencyCorrelation(true)
                 .setAutoCollectRequests(true)
@@ -22,7 +22,7 @@ export class AppInsightsService {
                 .setUseDiskRetryCaching(true)
                 .start();
     
-            // create the Application insights telemetry client to write custom events to
+            // create the App Insights telemetry client to write custom events to
             this.telemetryClient = ApplicationInsights.defaultClient;
         }
     }

@@ -77,15 +77,16 @@ npm run build
 
 # run the app with command line args
 # for local run, you need to specify CLI authentication type
-npm start -- --keyvault-name {name of your keyvault} --auth-type CLI
+# $He_Name is set to the name of your Key Vault
+npm start -- --keyvault-name $He_Name --auth-type CLI
 
 # optionally, set the logging level verboseness with --log-level (or -l)
 # 'info' is the default
 # please type --help for all options
-npm start -- --keyvault-name {name of your keyvault} --auth-type CLI --log-level info
+npm start -- --keyvault-name $He_Name --auth-type CLI --log-level info
 
 # alternatively you can set the following environment variables and run without command line args
-export KEYVAULT_NAME={name of your keyvault}
+export KEYVAULT_NAME=$He_Name
 export AUTH_TYPE=CLI
 export LOG_LEVEL={logging level} # (optional)
 
@@ -93,6 +94,7 @@ npm start
 
 # test the application
 # the application takes about 10 seconds to start
+# output should show pass or warn
 curl http://localhost:4120/healthz
 
 ```
@@ -108,7 +110,7 @@ docker build -t helium-dev -f Dockerfile-Dev .
 # run the container
 # mount your ~/.azure directory to container root/.azure directory
 # you can also run the container and run az login from a bash shell
-# $He_Name is set to the name of your key vault
+# $He_Name is set to the name of your Key Vault
 
 # option using command line args
 docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--keyvault-name" "${He_Name}" "--auth-type" "CLI"

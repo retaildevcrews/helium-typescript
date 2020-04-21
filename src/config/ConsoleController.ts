@@ -26,6 +26,8 @@ export class ConsoleController {
             process.exit(-1);
         }
 
+        // set the log level based on input
+        // defaults to info
         this.logService.setLogLevel(values["log-level"]);
 
         // get config values
@@ -81,7 +83,7 @@ export class ConsoleController {
         options.filter(o => o.validationPattern && !o.validationPattern.test(values[o.name]))
             .forEach(o => validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid`));
 
-        // expand keyvault URL
+        // expand Key Vault URL
         if (values["keyvault-name"] && !values["keyvault-name"].startsWith("https://"))
             values["keyvault-name"] = `https://${values["keyvault-name"]}.vault.azure.net`;
 

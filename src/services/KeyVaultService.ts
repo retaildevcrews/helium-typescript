@@ -5,7 +5,7 @@ import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 import azureIdentity = require("@azure/identity");
 import { cosmosUrl } from "../config/constants";
 
-// handles accessing secrets from Azure Key vault.
+// handles accessing secrets from Azure Key Vault.
 @injectable()
 export class KeyVaultService {
     private client: SecretClient;
@@ -47,7 +47,7 @@ export class KeyVaultService {
             } catch (e) {
                 retries++;
                 if (this.authType === "MSI" && retries < MAX_RETRIES) {
-                    this.logger.info("KeyVault: Retry");
+                    this.logger.info("Key Vault: Retry");
                     // wait 1 second and retry (continue while loop)
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
