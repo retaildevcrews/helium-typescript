@@ -1,6 +1,6 @@
 # Managed Identity and Key Vault with Node.js
 
-Build a Node.js Web API application using Managed Identity, Key Vault, and Cosmos DB that is designed to be deployed to Azure App Service or AKS as a Docker container.
+> Build a Node.js Web API application using Managed Identity, Key Vault, and Cosmos DB that is designed to be deployed to Azure App Service or AKS as a Docker container.
 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Docker Image Build](https://github.com/retaildevcrews/helium-typescript/workflows/Docker%20Image%20Build/badge.svg)
@@ -13,7 +13,8 @@ This is a Node.js REST WebAPI reference application designed to "fork and code" 
 - Securely build and deploy the Docker container from Container Registry
 - Connect to and query CosmosDB
 - Automatically send telemetry and logs to Azure Monitor
-- Instructions for setting up Key Vault, ACR, Azure Monitor and Cosmos DB are in the Helium [readme](https://github.com/retaildevcrews/helium)
+
+> Instructions for setting up Key Vault, ACR, Azure Monitor and Cosmos DB are in the Helium [readme](https://github.com/retaildevcrews/helium)
 
 ## Prerequisites
 
@@ -24,7 +25,6 @@ This is a Node.js REST WebAPI reference application designed to "fork and code" 
 - Docker CLI ([download](https://docs.docker.com/install/))
 - Node.js 12.14.1+ ([download](https://nodejs.org/en/download/))
 - npm 6.14.4+ (comes with Node.js)
-- JQ ([download](https://stedolan.github.io/jq/download/))
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
 ## Package Status
@@ -38,7 +38,7 @@ Currently, helium-typescript has a dependency on inversify-restify-utils which h
 - Fork this repo and clone to your local machine
   - All instructions assume starting from the root of the repo
 
-Build the container using Docker
+### Build the container using Docker
 
 - The unit tests run as part of the Docker build process. You can also run the unit tests manually using `npm test`, with watch using `npm run test:watch`, and with test coverage using `npm run test:coverage`.
 
@@ -59,7 +59,7 @@ docker build -t helium-typescript -f Dockerfile .
 
 ```
 
-Run the application locally
+### Run the application locally
 
 - The application requires Key Vault and Cosmos DB to be setup per the Helium [readme](https://github.com/retaildevcrews/helium)
 
@@ -104,7 +104,7 @@ curl http://localhost:4120/healthz
 
 ```
 
-Run the application as a local container instead
+### Run the application as a local container instead
 
 ```bash
 
