@@ -20,7 +20,7 @@ This is a Node.js REST WebAPI reference application designed to "fork and code" 
 - Bash shell (tested on Mac, Ubuntu, Windows with WSL2)
   - Will not work with WSL1
   - Will not work in Cloud Shell unless you have a remote dockerd
-- Azure CLI 2.4+ ([download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest))
+- Azure CLI ([download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest))
 - Docker CLI ([download](https://docs.docker.com/install/))
 - Node.js 12.14.1+ ([download](https://nodejs.org/en/download/))
 - npm 6.14.4+ (comes with Node.js)
