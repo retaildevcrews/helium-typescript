@@ -1115,7 +1115,7 @@
                       "type": "string",
                       "nullable": true
                     },
-                    "affectedEndPointss": {
+                    "affectedEndPoints": {
                       "type": "array",
                       "nullable": true,
                       "items": {
