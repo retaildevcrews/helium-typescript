@@ -39,7 +39,7 @@ export class HeliumServer {
             // routes
             app.get("/swagger/*", restify.plugins.serveStatic({
                 directory: __dirname + "/..",
-                default: "swagger.json",
+                default: "helium.json",
             }));
 
             app.get("/", (req, res) => {
