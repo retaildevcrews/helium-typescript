@@ -31,6 +31,6 @@ USER helium
 COPY --from=base /app/package.json .
 COPY --from=base /app/prod_node_modules ./node_modules
 COPY --from=base /app/dist ./dist
-COPY --from=base /app/swagger/swagger.json ./swagger/swagger.json
+COPY --from=base /app/swagger/helium.json ./swagger/helium.json
 
 ENTRYPOINT ["/usr/local/bin/npm", "start"]

@@ -114,44 +114,6 @@ curl http://localhost:4120/healthz
 
 ```
 
-### Run the application as a local container instead
-
-```bash
-
-# make sure you are in the root of the repo
-# docker-dev builds an alpine image with Azure CLI installed in the container
-
-docker build . -t helium-dev -f Dockerfile-Dev
-
-# run the container
-# mount your ~/.azure directory to container root/.azure directory
-# you can also run the container and run az login from a bash shell
-# $He_Name is set to the name of your Key Vault
-
-# option using command line args
-
-docker run -d -p 4120:4120 --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start" "--"  "--keyvault-name" "${He_Name}" "--auth-type" "CLI"
-
-# option using environment variables
-
-docker run -d -p 4120:4120 -e KEYVAULT_NAME=$He_Name -e AUTH_TYPE=CLI --name helium-dev -v ~/.azure:/root/.azure helium-dev "npm" "start"
-
-# check the logs
-# re-run until the application started message appears
-
-docker logs helium-dev
-
-# curl the health check endpoint
-
-curl http://localhost:4120/healthz
-
-# Stop and remove the container
-
-docker stop helium-dev
-docker rm helium-dev
-
-```
-
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
