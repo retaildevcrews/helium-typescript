@@ -96,12 +96,6 @@ describe("Utilities tests", () => {
         assert.isEmpty(message);
       });
 
-      it("should validate movie ID tt333344", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId("tt333344");
-        assert.isTrue(validated);
-        assert.isEmpty(message);
-      });
-
       it("should invalidate TT333344 (uppercase prefix)", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("TT333344");
         assert.isFalse(validated);
