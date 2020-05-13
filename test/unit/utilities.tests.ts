@@ -78,6 +78,18 @@ describe("Utilities tests", () => {
 
   describe("ValidationUtilities", () => {
     describe("validateMovieId", () => {
+      it("should invalidate ( null )", () => {
+        const { validated, message } = ValidationUtilities.validateMovieId( null );
+        assert.isFalse(validated);
+        assert.equal(message, invalidMovieIDMessage);
+      });
+
+      it("should invalidate ( undefined )", () => {
+        const { validated, message } = ValidationUtilities.validateMovieId( undefined );
+        assert.isFalse(validated);
+        assert.equal(message, invalidMovieIDMessage);
+      });
+
       it("should validate movie ID tt333344", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("tt333344");
         assert.isTrue(validated);
@@ -162,6 +174,18 @@ describe("Utilities tests", () => {
         assert.isUndefined(message);
       });
 
+      it("should validate with null", () => {
+        const { validated, message } = ValidationUtilities.validateCommon( null );
+        assert.isTrue(validated);
+        assert.isUndefined(message);
+      });
+
+      it("should validate with undefined", () => {
+        const { validated, message } = ValidationUtilities.validateCommon( undefined );
+        assert.isTrue(validated);
+        assert.isUndefined(message);
+      });
+
       it("should validate with a valid q parameter", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ q: "valid" });
         assert.isTrue(validated);
@@ -236,6 +260,18 @@ describe("Utilities tests", () => {
         assert.isUndefined(message);
       });
 
+      it("should validate with null", () => {
+        const { validated, message } = ValidationUtilities.validateMovies( null );
+        assert.isTrue(validated);
+        assert.isUndefined(message);
+      });
+
+      it("should validate with undefined", () => {
+        const { validated, message } = ValidationUtilities.validateMovies( undefined );
+        assert.isTrue(validated);
+        assert.isUndefined(message);
+      });
+
       it("should validate with a valid genre", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ genre: "action" });
         assert.isTrue(validated);
@@ -276,6 +312,12 @@ describe("Utilities tests", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ pageSize: "size" });
         assert.isFalse(validated);
         assert.equal(message, invalidPageSizeMessage);
+      });
+
+      it("should invalidate with invalid genre parameter (null)", () => {
+        const { validated, message } = ValidationUtilities.validateMovies({ genre: null });
+        assert.isFalse(validated);
+        assert.equal(message, invalidGenreMessage);
       });
 
       it("should invalidate with invalid genre parameter (undefined)", () => {
