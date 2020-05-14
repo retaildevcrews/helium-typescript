@@ -54,9 +54,11 @@ export class CosmosDBService implements DataService {
 
         let actorName: string = queryParams.q;
 
-        const { size: pageSize, number: pageNumber } = this.setPagingParameters(queryParams.pageSize, queryParams.pageNumber);
+        const { size: pageSize, number: pageNumber } = this.setPagingParameters(parseInt(queryParams.pageSize, 10), parseInt(queryParams.pageNumber, 10));
 
-        const offsetLimit = " offset " + (pageNumber * pageSize) + " limit " + pageSize + " ";
+        const offsetLimit = " offset @offset limit @limit ";
+        parameters.push({name: "@offset", value: (pageNumber * pageSize)});
+        parameters.push({name: "@limit", value: pageSize});
 
         // apply search term if provided in query
         if (actorName) {
@@ -85,8 +87,10 @@ export class CosmosDBService implements DataService {
         let actorId: string;
         let genre: string;
 
-        const { size: pageSize, number: pageNumber } = this.setPagingParameters(queryParams.pageSize, queryParams.pageNumber);
-        const offsetLimit = ` offset ${pageNumber * pageSize} limit ${pageSize} `;
+        const { size: pageSize, number: pageNumber } = this.setPagingParameters(parseInt(queryParams.pageSize, 10), parseInt(queryParams.pageNumber, 10));
+        const offsetLimit = " offset @offset limit @limit ";
+        parameters.push({name: "@offset", value: (pageNumber * pageSize)});
+        parameters.push({name: "@limit", value: pageSize});
 
         // handle query parameters and build sql query
         if (queryParams.q) {
@@ -136,7 +140,7 @@ export class CosmosDBService implements DataService {
         return await this.queryDocuments({ query: sql, parameters: parameters });
     }
 
-    // Sets the default paging values if none are provided, and updates to 0 base index.
+    // sets the default paging values if none are provided, and updates to 0 base index.
     setPagingParameters(size, number) {
         // default values
         size = size || defaultPageSize;
