@@ -9,7 +9,6 @@ export const appInsightsKey = "AppInsightsKey";
 export const portConstant = "4120";
 export const webInstanceRole = "WEBSITE_ROLE_INSTANCE_ID";
 export const defaultPageSize = 100;
-export const maxPageSize = 1000;
 export const sqlGenres = "SELECT VALUE m.genre FROM m where m.type = 'Genre'";
 export const invalidMovieIDMessage = "Invalid Movie ID parameter";
 export const invalidActorIDMessage = "Invalid Actor ID parameter";
