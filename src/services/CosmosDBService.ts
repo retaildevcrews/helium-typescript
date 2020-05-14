@@ -17,7 +17,7 @@ export class CosmosDBService implements DataService {
 
     // creates a new instance of the CosmosDB class.
     constructor(@inject("ConfigValues") private config: ConfigValues, @inject("LogService") private logger: LogService) {
-        this.cosmosClient = new CosmosClient({ endpoint: config.cosmosDbUrl, key: config.cosmosDbKey });
+        this.cosmosClient = new CosmosClient({ endpoint: config.cosmosDbUrl, key: config.cosmosDbKey, consistencyLevel: "Session" });
     }
 
     // connect to the Cosmos DB Container.
