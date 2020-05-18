@@ -32,9 +32,14 @@ This is a Node.js and Restify Web API reference application designed to "fork an
 ### Dependency Vulnerability
 Currently, helium-typescript has a dependency on:
 
-* **inversify-restify-utils** which has a high severity [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
+- **inversify-restify-utils** which has a high severity [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158).
 
-* **yargs-parser** which has a low severity [vulnerability](https://www.npmjs.com/advisories/1500) (Prototype Pollution) due to a dependency on the current version of gulp. The npm owner of gulp, the package that introduces the dependency, determined "This 'vulnerability' does not have any attack vector in our software". More on this issue can be [found here](https://github.com/gulpjs/gulp/issues/2438).
+  - Workaround: The above issue can be resolve by installing version 3.4.1 directly from the Github repository with and including a pre-install script with:
+```
+npm install --save https://github.com/inversify/inversify-restify-utils#b305a368b11335efa5116064926574ac0ee6f46c
+```
+
+- **yargs-parser** which has a low severity [vulnerability](https://www.npmjs.com/advisories/1500) (Prototype Pollution) due to a dependency on the current version of gulp. The npm owner of gulp, the package that introduces the dependency, determined "This 'vulnerability' does not have any attack vector in our software". More on this issue can be [found here](https://github.com/gulpjs/gulp/issues/2438).
 
 ## Setup
 
@@ -55,9 +60,11 @@ Currently, helium-typescript has a dependency on:
 docker build . -t helium-typescript -f Dockerfile
 
 # note: you may see output like the following, this is expected and safe to ignore
-# npm WARN gulp-debug@4.0.0 requires a peer of gulp@>=4 but none is installed. You must install peer dependencies yourself.
-# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules/mocha/node_modules/fsevents):
-# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.3 (node_modules/chokidar/node_modules/fsevents):
+# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.3: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/fsevents):
+# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+
 
 # Tag and push the image to your Docker repo
 
@@ -79,9 +86,10 @@ az login
 
 # install modules in package.json file
 # note: you may see output like the following, this is expected and safe to ignore
-# npm WARN gulp-debug@4.0.0 requires a peer of gulp@>=4 but none is installed. You must install peer dependencies yourself.
-# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules/mocha/node_modules/fsevents):
-# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.3 (node_modules/chokidar/node_modules/fsevents):
+# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.3: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+# npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/fsevents):
+# npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
 
 npm install
 
