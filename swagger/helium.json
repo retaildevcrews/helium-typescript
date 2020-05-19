@@ -7,9 +7,7 @@
   "paths": {
     "/api/movies": {
       "get": {
-        "tags": [
-          "Movies"
-        ],
+        "tags": [ "Movies" ],
         "summary": "Search Movies",
         "description": "Returns an array of `Movie` documents optionally filtered by query string parameters",
         "parameters": [
@@ -292,9 +290,7 @@
     },
     "/api/movies/{movieId}": {
       "get": {
-        "tags": [
-          "Movies"
-        ],
+        "tags": [ "Movies" ],
         "summary": "Get Movie by ID",
         "description": "Get a single `Movie` document by movieId",
         "parameters": [
@@ -330,10 +326,7 @@
                   "rating": 8.7,
                   "votes": 1546282,
                   "totalScore": 13452653,
-                  "genres": [
-                    "Action",
-                    "Sci-Fi"
-                  ],
+                  "genres": [ "Action", "Sci-Fi" ],
                   "roles": [
                     {
                       "order": 1,
@@ -341,9 +334,7 @@
                       "name": "Keanu Reeves",
                       "birthYear": 1964,
                       "category": "Actor",
-                      "characters": [
-                        "Neo"
-                      ]
+                      "characters": [ "Neo" ]
                     },
                     {
                       "order": 2,
@@ -351,9 +342,7 @@
                       "name": "Laurence Fishburne",
                       "birthYear": 1961,
                       "category": "Actor",
-                      "characters": [
-                        "Morpheus"
-                      ]
+                      "characters": [ "Morpheus" ]
                     },
                     {
                       "order": 3,
@@ -361,9 +350,7 @@
                       "name": "Carrie-Anne Moss",
                       "birthYear": 1967,
                       "category": "Actress",
-                      "characters": [
-                        "Trinity"
-                      ]
+                      "characters": [ "Trinity" ]
                     }
                   ]
                 }
@@ -397,9 +384,7 @@
     },
     "/api/actors": {
       "get": {
-        "tags": [
-          "Actors"
-        ],
+        "tags": [ "Actors" ],
         "summary": "Search Actors",
         "description": "Returns an array of `Actor` documents",
         "parameters": [
@@ -589,9 +574,7 @@
     },
     "/api/actors/{actorId}": {
       "get": {
-        "tags": [
-          "Actors"
-        ],
+        "tags": [ "Actors" ],
         "summary": "Get Actor by ID",
         "description": "Returns an `Actor` document by actorId",
         "parameters": [
@@ -622,85 +605,56 @@
                   "type": "Actor",
                   "name": "Keanu Reeves",
                   "birthYear": 1964,
-                  "profession": [
-                    "actor",
-                    "producer",
-                    "soundtrack"
-                  ],
+                  "profession": [ "actor", "producer", "soundtrack" ],
                   "movies": [
                     {
                       "movieId": "tt0102685",
                       "title": "Point Break",
                       "year": 1991,
                       "runtime": 122,
-                      "genres": [
-                        "Action",
-                        "Crime",
-                        "Thriller"
-                      ]
+                      "genres": [ "Action", "Crime", "Thriller" ]
                     },
                     {
                       "movieId": "tt0133093",
                       "title": "The Matrix",
                       "year": 1999,
                       "runtime": 136,
-                      "genres": [
-                        "Action",
-                        "Sci-Fi"
-                      ]
+                      "genres": [ "Action", "Sci-Fi" ]
                     },
                     {
                       "movieId": "tt0234215",
                       "title": "The Matrix Reloaded",
                       "year": 2003,
                       "runtime": 138,
-                      "genres": [
-                        "Action",
-                        "Sci-Fi"
-                      ]
+                      "genres": [ "Action", "Sci-Fi" ]
                     },
                     {
                       "movieId": "tt0242653",
                       "title": "The Matrix Revolutions",
                       "year": 2003,
                       "runtime": 129,
-                      "genres": [
-                        "Action",
-                        "Sci-Fi"
-                      ]
+                      "genres": [ "Action", "Sci-Fi" ]
                     },
                     {
                       "movieId": "tt2911666",
                       "title": "John Wick",
                       "year": 2014,
                       "runtime": 101,
-                      "genres": [
-                        "Action",
-                        "Crime",
-                        "Thriller"
-                      ]
+                      "genres": [ "Action", "Crime", "Thriller" ]
                     },
                     {
                       "movieId": "tt4425200",
                       "title": "John Wick: Chapter 2",
                       "year": 2017,
                       "runtime": 122,
-                      "genres": [
-                        "Action",
-                        "Crime",
-                        "Thriller"
-                      ]
+                      "genres": [ "Action", "Crime", "Thriller" ]
                     },
                     {
                       "movieId": "tt6146586",
                       "title": "John Wick: Chapter 3 - Parabellum",
                       "year": 2019,
                       "runtime": 131,
-                      "genres": [
-                        "Action",
-                        "Crime",
-                        "Thriller"
-                      ]
+                      "genres": [ "Action", "Crime", "Thriller" ]
                     }
                   ]
                 }
@@ -734,9 +688,7 @@
     },
     "/api/featured/movie": {
       "get": {
-        "tags": [
-          "Featured"
-        ],
+        "tags": [ "Featured" ],
         "summary": "Get a random Movie from the featured list",
         "description": "Returns a random `Movie` document from the featured list",
         "responses": {
@@ -758,10 +710,7 @@
                   "rating": 8.7,
                   "votes": 1546282,
                   "totalScore": 13452653,
-                  "genres": [
-                    "Action",
-                    "Sci-Fi"
-                  ],
+                  "genres": [ "Action", "Sci-Fi" ],
                   "roles": [
                     {
                       "order": 1,
@@ -769,9 +718,7 @@
                       "name": "Keanu Reeves",
                       "birthYear": 1964,
                       "category": "Actor",
-                      "characters": [
-                        "Neo"
-                      ]
+                      "characters": [ "Neo" ]
                     },
                     {
                       "order": 2,
@@ -779,9 +726,7 @@
                       "name": "Laurence Fishburne",
                       "birthYear": 1961,
                       "category": "Actor",
-                      "characters": [
-                        "Morpheus"
-                      ]
+                      "characters": [ "Morpheus" ]
                     },
                     {
                       "order": 3,
@@ -789,9 +734,7 @@
                       "name": "Carrie-Anne Moss",
                       "birthYear": 1967,
                       "category": "Actress",
-                      "characters": [
-                        "Trinity"
-                      ]
+                      "characters": [ "Trinity" ]
                     }
                   ]
                 }
@@ -803,9 +746,7 @@
     },
     "/api/genres": {
       "get": {
-        "tags": [
-          "Genres"
-        ],
+        "tags": [ "Genres" ],
         "summary": "Array of Genres",
         "description": "Returns Genres as an array of `string`",
         "responses": {
@@ -850,9 +791,7 @@
     },
     "/healthz": {
       "get": {
-        "tags": [
-          "Health Check"
-        ],
+        "tags": [ "Health Check" ],
         "summary": "Health Check (simple)",
         "description": "Returns a text/plain health status (pass, warn or fail)",
         "responses": {
@@ -870,60 +809,14 @@
         }
       }
     },
-    "/healthz/warn": {
-      "get": {
-        "tags": [
-          "Health Check"
-        ],
-        "summary": "Health Check (simple)",
-        "description": "Returns a text/plain health status of warn",
-        "responses": {
-          "200": {
-            "description": "`string` warn",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "warn"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/healthz/fail": {
-      "get": {
-        "tags": [
-          "Health Check"
-        ],
-        "summary": "Health Check (simple)",
-        "description": "Returns a text/plain health status of fail",
-        "responses": {
-          "503": {
-            "description": "`string` fail",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                },
-                "example": "fail"
-              }
-            }
-          }
-        }
-      }
-    },
     "/healthz/ietf": {
       "get": {
-        "tags": [
-          "IETF Health Check"
-        ],
+        "tags": [ "Health Check" ],
         "summary": "Health Check (IETF)",
         "description": "Returns an `IetfHealthCheck` document from the Health Check",
         "responses": {
           "200": {
-            "description": "`IETF Health Check`",
+            "description": "`IetfHealthCheck`",
             "content": {
               "application/health+json": {
                 "schema": {
@@ -931,118 +824,55 @@
                 },
                 "example": {
                   "status": "pass",
-                  "serviceId": "ietfHealthCheck",
-                  "description": "IETF Health Check",
-                  "version": "0.0.1+yymm-ddhh",
+                  "serviceId": "helium",
+                  "description": "Helium Health Check",
+                  "instance": "0",
+                  "version": "1.0.0502.0026",
                   "checks": {
-                    "healthCheck1:responseTime": {
+                    "getGenres:responseTime": {
                       "status": "pass",
-                      "componentId": "healthCheck1",
-                      "componentType": "component",
-                      "observedUnit": "ms",
-                      "observedValue": 28,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z"
-                    },
-                    "healthCheck2:responseTime": {
-                      "status": "pass",
-                      "componentId": "healthCheck2",
-                      "componentType": "system",
-                      "observedUnit": "ms",
-                      "observedValue": 28,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z"
-                    },
-                    "healthCheck3:responseTime": {
-                      "status": "pass",
-                      "componentId": "healthCheck3",
+                      "componentId": "getGenres",
                       "componentType": "datastore",
                       "observedUnit": "ms",
-                      "observedValue": 28,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z"
+                      "observedValue": 6.17,
+                      "targetValue": 400,
+                      "time": "2020-03-02T01:49:17Z"
                     },
-                    "healthCheck4:responseTime": {
+                    "getActorById:responseTime": {
                       "status": "pass",
-                      "componentId": "healthCheck4",
+                      "componentId": "getActorById",
                       "componentType": "datastore",
                       "observedUnit": "ms",
-                      "observedValue": 28,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/healthz/ietf/fail": {
-      "get": {
-        "tags": [
-          "IETF Health Check"
-        ],
-        "summary": "Health Check (IETF)",
-        "description": "Returns an `IetfHealthCheck` document from the Health Check",
-        "responses": {
-          "503": {
-            "description": "`IETF Health Check`",
-            "content": {
-              "application/health+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IetfHealthCheck"
-                },
-                "example": {
-                  "status": "fail",
-                  "serviceId": "ietfHealthCheck",
-                  "description": "IETF Health Check",
-                  "version": "0.0.1+yymm-ddhh",
-                  "checks": {
-                    "healthCheck1:responseTime": {
-                      "status": "pass",
-                      "componentId": "healthCheck1",
-                      "componentType": "component",
-                      "observedUnit": "ms",
-                      "observedValue": 28,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z"
+                      "observedValue": 3.78,
+                      "targetValue": 250,
+                      "time": "2020-03-02T01:49:17Z"
                     },
-                    "healthCheck2:responseTime": {
+                    "getMovieById:responseTime": {
                       "status": "pass",
-                      "componentId": "healthCheck2",
-                      "componentType": "system",
-                      "observedUnit": "ms",
-                      "observedValue": 28,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z"
-                    },
-                    "healthCheck3:responseTime": {
-                      "status": "warn",
-                      "componentId": "healthCheck3",
+                      "componentId": "getMovieById",
                       "componentType": "datastore",
                       "observedUnit": "ms",
-                      "observedValue": 120,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z",
-                      "affectedEndpoints": [
-                        "/api/simulatedEndpoint3"
-                      ],
-                      "message": "Request exceeded expected duration"
+                      "observedValue": 1.4,
+                      "targetValue": 400,
+                      "time": "2020-03-02T01:49:17Z"
                     },
-                    "healthCheck4:responseTime": {
-                      "status": "fail",
-                      "componentId": "healthCheck4",
+                    "searchMovies:responseTime": {
+                      "status": "pass",
+                      "componentId": "searchMovies",
                       "componentType": "datastore",
                       "observedUnit": "ms",
-                      "observedValue": 31,
-                      "targetValue": 100,
-                      "time": "2020-05-01T01:49:17Z",
-                      "affectedEndpoints": [
-                        "/api/simulatedEndpoint4"
-                      ],
-                      "message": "Exception: Invalid parameter"
+                      "observedValue": 38.11,
+                      "targetValue": 400,
+                      "time": "2020-03-02T01:49:17Z"
+                    },
+                    "searchActors:responseTime": {
+                      "status": "pass",
+                      "componentId": "searchActors",
+                      "componentType": "datastore",
+                      "observedUnit": "ms",
+                      "observedValue": 57.27,
+                      "targetValue": 400,
+                      "time": "2020-03-02T01:49:17Z"
                     }
                   }
                 }
@@ -1209,13 +1039,16 @@
           "description": {
             "type": "string"
           },
+          "instance": {
+            "type": "string"
+          },
           "version": {
             "type": "string"
           },
           "checks": {
             "type": "object",
             "properties": {
-              "healthCheck1:responseTime": {
+              "getGenres:responseTime": {
                 "type": "object",
                 "properties": {
                   "status": {
@@ -1253,7 +1086,7 @@
                   }
                 }
               },
-              "healthCheck2:responseTime": {
+              "getActorById:responseTime": {
                 "type": "object",
                 "properties": {
                   "status": {
@@ -1291,7 +1124,7 @@
                   }
                 }
               },
-              "healthCheck3:responseTime": {
+              "getMovieById:responseTime": {
                 "type": "object",
                 "properties": {
                   "status": {
@@ -1300,9 +1133,8 @@
                   "componentId": {
                     "type": "string"
                   },
-                  "message": {
-                    "type": "string",
-                    "nullable": true
+                  "componentType": {
+                    "type": "string"
                   },
                   "observedUnit": {
                     "type": "string"
@@ -1317,6 +1149,10 @@
                     "type": "string",
                     "format": "datetime"
                   },
+                  "message": {
+                    "type": "string",
+                    "nullable": true
+                  },
                   "affectedEndPoints": {
                     "type": "array",
                     "nullable": true,
@@ -1326,7 +1162,45 @@
                   }
                 }
               },
-              "healthCheck4:responseTime": {
+              "searchMovies:responseTime": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "componentId": {
+                    "type": "string"
+                  },
+                  "componentType": {
+                    "type": "string"
+                  },
+                  "observedUnit": {
+                    "type": "string"
+                  },
+                  "observedValue": {
+                    "type": "integer"
+                  },
+                  "targetValue": {
+                    "type": "integer"
+                  },
+                  "time": {
+                    "type": "string",
+                    "format": "datetime"
+                  },
+                  "message": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "affectedEndPoints": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "searchActors:responseTime": {
                 "type": "object",
                 "properties": {
                   "status": {
