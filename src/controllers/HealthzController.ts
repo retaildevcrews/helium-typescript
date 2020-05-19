@@ -4,6 +4,7 @@ import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { sqlGenres, webInstanceRole, version } from "../config/constants";
 import { DateUtilities } from "../utilities/dateUtilities";
+import NodeCache = require("node-cache");
 
 enum IetfStatus {
     pass = "pass",
@@ -15,27 +16,46 @@ enum IetfStatus {
 @Controller("/healthz")
 @injectable()
 export class HealthzController implements interfaces.Controller {
-
-    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
+ 
+    constructor(@inject("DataService") private cosmosDb: DataService,
+                @inject("LogService") private logger: LogService,
+                @inject("NodeCache") private cache: NodeCache) {
 
     }
 
     @Get("/")
     public async healthCheck(req, res) {
+        res.setHeader("Content-Type", "text/plain");
+        let healthCheckResult: {[k: string]: any} = {};
 
-        const healthCheckResult = await this.runHealthChecks();
+        const cachedValue = this.cache.get("healthz");
+        if (cachedValue != undefined) {
+            healthCheckResult = cachedValue;
+        } else {
+            healthCheckResult = await this.runHealthChecks();
+            this.cache.set("healthz", healthCheckResult, 60);
+        }
+
         const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
-        res.setHeader("Content-Type", "text/plain");
         return res.send(resCode, healthCheckResult.status);
     }
 
     @Get("/ietf")
     public async healthCheckIetf(req, res) {
-        const healthCheckResult = await this.runHealthChecks();
+        res.setHeader("Content-Type", "application/health+json");
+        let healthCheckResult: {[k: string]: any} = {};
+
+        const cachedValue = this.cache.get("healthz");
+        if (cachedValue != undefined) {
+            healthCheckResult = cachedValue;
+        } else {
+            healthCheckResult = await this.runHealthChecks();
+            this.cache.set("healthz", healthCheckResult, 60);
+        }
+
         const resCode = healthCheckResult.status === IetfStatus.fail ? HttpStatus.SERVICE_UNAVAILABLE : HttpStatus.OK;
 
-        res.setHeader("Content-Type", "application/health+json");
         res.writeHead(resCode, {
             "Content-Length": Buffer.byteLength(JSON.stringify(healthCheckResult)),
             "Content-Type": "application/health+json",
