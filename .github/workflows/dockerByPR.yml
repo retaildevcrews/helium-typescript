@@ -51,9 +51,8 @@ jobs:
         # Strip git ref prefix from version
         VERSION=$(echo "${{ github.head_ref }}" | sed -e 's,.*/\(.*\),\1,')
 
-        docker tag image $IMAGE_ID:dev-$VERSION
-
-        docker push $IMAGE_ID:dev-$VERSION
+        docker tag image $IMAGE_ID:beta
+        docker push $IMAGE_ID:beta
 
   acr-build-push-version:
     runs-on: ubuntu-latest
@@ -80,7 +79,7 @@ jobs:
           az login --service-principal -u ${{ secrets.SERVICE_PRINCIPAL }} -p ${{ secrets.SERVICE_PRINCIPAL_SECRET }} --tenant ${{ secrets.TENANT }}
 
           # Push to ACR for Build and Push
-          az acr build -r ${ACR_REG} -f Dockerfile -t ${ACR_REPO}/${ACR_IMAGE}:dev-${VERSION} https://github.com/${GITHUB_REPOSITORY}.git#${{ github.ref }}
+          az acr build -r ${ACR_REG} -f Dockerfile -t ${ACR_REPO}/${ACR_IMAGE}:beta https://github.com/${GITHUB_REPOSITORY}.git#${{ github.ref }}
 
 
   
