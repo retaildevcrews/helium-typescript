@@ -32,7 +32,7 @@ This is a Node.js and Restify Web API reference application designed to "fork an
 ### Dependency Vulnerability
 Currently, helium-typescript has a dependency on:
 
-- **inversify-restify-utils** which has a high severity [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158). This vulnerability, which can be resolved by forking the module, is [documented below](#dependency-fix).
+- **inversify-restify-utils** which has a high severity [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158). This vulnerability, which can be resolved by forking the repo, is [documented below](#dependency-fix).
 
 - **yargs-parser** which has a low severity [vulnerability](https://www.npmjs.com/advisories/1500) (Prototype Pollution) due to a dependency on the current version of gulp. The npm owner of gulp, the package that introduces the dependency, determined "This 'vulnerability' does not have any attack vector in our software". More on this issue can be [found here](https://github.com/gulpjs/gulp/issues/2438).
 
@@ -122,14 +122,23 @@ curl http://localhost:4120/healthz
 
 ## Dependency Fix
 
-The severe vulnerability introduced through the [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/) package can be resolved by forking the code and publishing the code to a package manager such as npm.
+The severe vulnerability introduced through the [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/), there is a PR that updates version that fixes the issue, however the repo owner and the only one with permission to publish to the npm registry has beeen unreachable. The package can be resolved by forking the repo and publishing the code to a package manager.
 
-1. Fork the code at [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/)
-2. Update the [restify](https://github.com/restify/node-restify) version in package.json to the latest version. At the time of this README, the latest version is 8.5.1
-3. Rename the package if the intention is to publish to the npm registry
-4. Publish the package using ```npm run publish-please```. Please note, the command will throw an error if there are any vulnerbilies that need to addressed. Review the [.publishrc](https://github.com/inversify/inversify-restify-utils/blob/master/.publishrc) for publish settings
-5. Uninstall inversify-restify-utils, and install the new package.
-6. Update the code where inversify-restify-utils is called to the new package if there is a name change
+1. Fork the repo at [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/)
+2. Update the [restify](https://github.com/restify/node-restify) version in the inversify-restify-utils package.json to the latest version. At the time of this README, the latest version is 8.5.1
+3. Change the name of the package to avoid conflicts with original inversify-restify-utils package in the npm registry (ex: inversify-restify-utils-{myappname}, where {myaappname} is the name of your app)
+4. Publish the package to the npm registry using ```npm run publish-please```. Please note, the command will throw an error if there are any vulnerbilies that need to addressed. Review the [.publishrc](https://github.com/inversify/inversify-restify-utils/blob/master/.publishrc) for publish settings
+5. Uninstall inversify-restify-utils, and install the new package with ```npm uninstall inversify-restify-utils && install inversify-restify-utils-{myappname}```
+6. Update the code in this repo where inversify-restify-utils is called to the new package. Here is a list of files that need to change:
+    - HeliumServer.ts
+    - server.ts
+    - controllers/ActorController.ts
+    - controllers/FeaturedController.ts
+    - controllers/GenreController.ts
+    - controllers/HealthzController.ts
+    - controllers/MovieController.ts
+    - test/e2e/webv.tests.ts
+    
 7. Run ```npm run build``` to rebuild the code base
 
 ## Contributing
