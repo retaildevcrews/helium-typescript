@@ -6,6 +6,7 @@ import { ConsoleController } from "./config/ConsoleController";
 import { ConfigValues } from "./config/ConfigValues";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { HeliumServer } from "./HeliumServer";
+import NodeCache = require("node-cache");
 
 // main
 (async function main() {
@@ -18,8 +19,10 @@ import { HeliumServer } from "./HeliumServer";
     // parse command line arguments to get the Key Vault url and auth type
     const consoleController = new ConsoleController(logService);
     const config = await consoleController.run();
+    const healthzCache = new NodeCache();
 
     // setup ioc container
+    container.bind<NodeCache>("NodeCache").toConstantValue(healthzCache);
     container.bind<ConfigValues>("ConfigValues").toConstantValue(config);
     container.bind<interfaces.Controller>(TYPE.Controller).to(ActorController).whenTargetNamed("ActorController");
     container.bind<interfaces.Controller>(TYPE.Controller).to(FeaturedController).whenTargetNamed("FeaturedController");

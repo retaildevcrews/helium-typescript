@@ -40,6 +40,7 @@
     "http-status-codes": "^1.4.0",
     "inversify": "^5.0.1",
     "inversify-restify-utils": "^3.4.0",
+    "node-cache": "^5.1.0",
     "reflect-metadata": "^0.1.13",
     "restify": "^8.5.1",
     "swagger-ui-dist": "^3.25.2",
