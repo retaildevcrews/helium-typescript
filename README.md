@@ -122,14 +122,14 @@ curl http://localhost:4120/healthz
 
 ## Dependency Fix
 
-The severe vulnerability introduced through the [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/), there is a PR that updates version that fixes the issue, however the repo owner and the only one with permission to publish to the npm registry has beeen unreachable. The package can be resolved by forking the repo and publishing the code to a package manager.
+The severe vulnerability introduced through the [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/), has a PR that updates version of the dependency that fixes the issue, however the repo owner, the only one with permission to publish to the npm registry has beeen unreachable. The package can be resolved by forking the repo and publishing the code to a package manager.
 
 1. Fork the repo at [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/)
 2. Update the [restify](https://github.com/restify/node-restify) version in the inversify-restify-utils package.json to the latest version. At the time of this README, the latest version is 8.5.1
 3. Change the name of the package to avoid conflicts with original inversify-restify-utils package in the npm registry (ex: inversify-restify-utils-{myappname}, where {myaappname} is the name of your app)
 4. Publish the package to the npm registry using ```npm run publish-please```. Please note, the command will throw an error if there are any vulnerbilies that need to addressed. Review the [.publishrc](https://github.com/inversify/inversify-restify-utils/blob/master/.publishrc) for publish settings
 5. Uninstall inversify-restify-utils, and install the new package with ```npm uninstall inversify-restify-utils && install inversify-restify-utils-{myappname}```
-6. Update the code in this repo where inversify-restify-utils is called to the new package. Here is a list of files that need to change:
+6. Update the code in this repo where inversify-restify-utils is called to the new package ex: ```import { InversifyRestifyServer } from "inversify-restify-utils";``` to ```import { InversifyRestifyServer } from "inversify-restify-utils-{myappname}";```. Here is a list of files that need to change:
     - HeliumServer.ts
     - server.ts
     - controllers/ActorController.ts
