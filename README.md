@@ -32,7 +32,7 @@ This is a Node.js and Restify Web API reference application designed to "fork an
 ### Dependency Vulnerability
 Currently, helium-typescript has a dependency on:
 
-- **inversify-restify-utils** which has a high severity [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158). This vulnerability, which can be resolved by forking the repo, is [documented below](#dependency-fix).
+- **inversify-restify-utils** which has a high severity [vulnerability](https://www.npmjs.com/advisories/1171) (Regular Expression Denial of Service) due to a dependency on an older version of restify. This is being tracked in the appropriate github repo with [this issue](https://github.com/inversify/InversifyJS/issues/1158). This vulnerability, which can be resolved by forking the repo, is [documented below](#dependency-workaround).
 
 - **yargs-parser** which has a low severity [vulnerability](https://www.npmjs.com/advisories/1500) (Prototype Pollution) due to a dependency on the current version of gulp. The npm owner of gulp, the package that introduces the dependency, determined "This 'vulnerability' does not have any attack vector in our software". More on this issue can be [found here](https://github.com/gulpjs/gulp/issues/2438).
 
@@ -120,7 +120,7 @@ curl http://localhost:4120/healthz
 
 ```
 
-## Dependency Fix
+## Dependency workaround
 
 The severe vulnerability introduced through the [inversify-restify-utils](https://github.com/inversify/inversify-restify-utils/), has a PR that updates version of the dependency that fixes the issue, however the repo owner, the only one with permission to publish to the npm registry has beeen unreachable. The package can be resolved by forking the repo and publishing the code to a package manager.
 
