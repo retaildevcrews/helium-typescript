@@ -11,6 +11,7 @@ on:
       - '**.md'
       - 'saveenv.sh'
       - 'src/**/__tests__'
+      - '.devcontainer/**'
 
 jobs:
 
