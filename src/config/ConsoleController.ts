@@ -146,7 +146,7 @@ export class ConsoleController {
 export interface OptionDefinition {
     name: string;
     alias?: string;
-    type?: Function;
+    type?: any;
     description?: string;
     validationPattern?: RegExp;
     required?: boolean;
