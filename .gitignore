@@ -7,3 +7,5 @@ coverage
 # General
 .DS_Store
 .nyc_output
+
+.vscode/
