@@ -8,7 +8,6 @@
 
   // Install extensions
   "extensions": [
-    "ms-dotnettools.csharp",
     "eamodio.gitlens",
     "davidanson.vscode-markdownlint",
     "gruntfuggly.todo-tree",
