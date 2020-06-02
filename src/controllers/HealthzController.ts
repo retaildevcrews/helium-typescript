@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
-import { sqlGenres, webInstanceRole, version } from "../config/constants";
+import { healthzControllerException, sqlGenres, webInstanceRole, version } from "../config/constants";
 import { DateUtilities } from "../utilities/dateUtilities";
 import NodeCache = require("node-cache");
 
@@ -20,7 +20,6 @@ export class HealthzController implements interfaces.Controller {
     constructor(@inject("DataService") private cosmosDb: DataService,
                 @inject("LogService") private logger: LogService,
                 @inject("NodeCache") private cache: NodeCache) {
-
     }
 
     @Get("/")
@@ -113,7 +112,7 @@ export class HealthzController implements interfaces.Controller {
             ietfResult.checks = healthChecks;
             return ietfResult;
         } catch (err) {
-            this.logger.error(Error(err), "HealthzException: " + err.toString());
+            this.logger.error(Error(err), `${healthzControllerException}: ${err.toString()}`);
             ietfResult.status = IetfStatus.fail;
             ietfResult.cosmosException = err.toString();
             ietfResult.checks = healthChecks;

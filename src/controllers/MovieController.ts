@@ -3,6 +3,7 @@ import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Movie } from "../models/Movie";
+import { moviesControllerException } from "../config/constants";
 import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 
 // controller implementation for our movies endpoint
@@ -10,8 +11,8 @@ import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 @injectable()
 export class MovieController implements interfaces.Controller {
 
-    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
-        
+    constructor(@inject("DataService") private cosmosDb: DataService,
+                @inject("LogService") private logger: LogService) {
     }
 
     @Get("/")
@@ -20,9 +21,8 @@ export class MovieController implements interfaces.Controller {
         const { validated: validated, message: message } = ValidationUtilities.validateMovies(req.query);
         
         if (!validated) {
-            res.setHeader("Content-Type", "text/plain");
-            this.logger.warn("InvalidParameter|" + "getAllMovies" + "|" + message);
-            return res.send(HttpStatus.BAD_REQUEST, message);
+            this.logger.warn(`InvalidParameter|getAllMovies|${message}`);
+            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message });
         }
 
         let resCode: number = HttpStatus.OK;
@@ -32,10 +32,9 @@ export class MovieController implements interfaces.Controller {
         try {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
-            res.setHeader("Content-Type", "text/plain");
             resCode = getHttpStatusCode(err);
-            this.logger.error(Error(err), "MovieControllerException: " + err.toString());
-            return res.send(resCode, "MovieControllerException");
+            this.logger.error(Error(err), `${moviesControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: moviesControllerException });
         }
 
         return res.send(resCode, results);
@@ -48,9 +47,8 @@ export class MovieController implements interfaces.Controller {
         const { validated: validated, message: message } = ValidationUtilities.validateMovieId(movieId);
 
         if (!validated) {
-            res.setHeader("Content-Type", "text/plain");
-            this.logger.warn("getMovieById|" + movieId + "|" + message);
-            return res.send(HttpStatus.BAD_REQUEST, message);
+            this.logger.warn(`getMovieById|${movieId}|${message}`);
+            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message });
         }
 
         let resCode: number = HttpStatus.OK;
@@ -58,16 +56,15 @@ export class MovieController implements interfaces.Controller {
         try {
             result = new Movie(await this.cosmosDb.getDocument(movieId));
         } catch (err) {
-            res.setHeader("Content-Type", "text/plain");
             resCode = getHttpStatusCode(err);
 
             if (resCode === HttpStatus.NOT_FOUND) {
-                this.logger.warn("Movie Not Found: " + movieId);
-                return res.send(resCode, "Movie Not Found");
+                this.logger.warn(`Movie Not Found: ${movieId}`);
+                return res.send(resCode, { status: resCode, message: "Movie Not Found" });
             }
 
-            this.logger.error(Error(err), "MovieControllerException: " + err.toString());
-            return res.send(resCode, "MovieControllerException");
+            this.logger.error(Error(err), `${moviesControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: moviesControllerException });
         }
 
         return res.send(resCode, result);
