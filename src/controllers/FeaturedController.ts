@@ -3,6 +3,7 @@ import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Movie } from "../models/Movie";
+import { featuredControllerException } from "../config/constants";
 import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 // controller implementation for our featured movie endpoint
@@ -12,8 +13,8 @@ export class FeaturedController implements interfaces.Controller {
 
     private featuredMovies: string[];
 
-    constructor(@inject("DataService") private cosmosDb: DataService, @inject("LogService") private logger: LogService) {
-    
+    constructor(@inject("DataService") private cosmosDb: DataService,
+                @inject("LogService") private logger: LogService) {
     }
 
     @Get("/movie")
@@ -33,10 +34,9 @@ export class FeaturedController implements interfaces.Controller {
                 result = new Movie(await this.cosmosDb.getDocument(movieId));
             }
         } catch (err) {
-            res.setHeader("Content-Type", "text/plain");
             resCode = getHttpStatusCode(err);
-            this.logger.error(Error(err), "FeaturedControllerException: " + err.toString());
-            return res.send(resCode, "FeaturedControllerException");
+            this.logger.error(Error(err), `${featuredControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: featuredControllerException });
         }
 
         return res.send(resCode, result);

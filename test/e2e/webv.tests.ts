@@ -10,6 +10,7 @@ import { ConfigValues } from "../../src/config/ConfigValues";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { DataService, CosmosDBService, LogService, ConsoleLogService } from "../../src/services";
 import { Container } from "inversify";
+import NodeCache = require("node-cache");
 
 let heliumServer: HeliumServer;
 let exec;
@@ -37,9 +38,11 @@ before(async function() {
     // retrieve configuration
     const consoleController = new ConsoleController(logService);
     const config = await consoleController.run();
+    const healthzCache = new NodeCache();
 
     // setup an ioc container for test
     // these could be replaced with mocks if necessary
+    container.bind<NodeCache>("NodeCache").toConstantValue(healthzCache);
     container.bind<ConfigValues>("ConfigValues").toConstantValue(config);
     container.bind<interfaces.Controller>(TYPE.Controller).to(ActorController).whenTargetNamed("ActorController");
     container.bind<interfaces.Controller>(TYPE.Controller).to(FeaturedController).whenTargetNamed("FeaturedController");
@@ -69,7 +72,7 @@ it("Run webv against the running server", async function () {
     this.timeout(120000);
 
     const URL = "localhost:4120";
-    const FILES = "node.json baseline.json bad.json";
+    const FILES = "baseline.json bad.json";
 
     console.log(`Running webv against ${URL} using files: ${FILES}.`);
     const command = `./webvalidate --server ${URL} --files ${FILES}`;
@@ -80,13 +83,11 @@ it("Run webv against the running server", async function () {
         console.log(stdout);
     }
     catch (exc) {
+        console.log(exc);
         exitCode = exc.code;
     }
 
-    // currently, there is a known issue where the web validate returns 2 exceptions
-    // when running against an instance running locally
-    // this is reflected as an expected exit code until the issue is resolved
-    if(exitCode) assert.equal(exitCode, 2);
+    if(exitCode) assert.equal(exitCode, 0);
 
 });
 

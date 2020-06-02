@@ -4,6 +4,7 @@ import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Actor } from "../models/Actor";
+import { actorsControllerException } from "../config/constants";
 import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 
 // controller implementation for our actors endpoint
@@ -13,9 +14,7 @@ export class ActorController implements interfaces.Controller {
 
     constructor(
         @inject("DataService") private dataService: DataService,
-        @inject("LogService") private logger: LogService
-    ) {
-        
+        @inject("LogService") private logger: LogService) {
     }
 
     @Get("/")
@@ -24,9 +23,8 @@ export class ActorController implements interfaces.Controller {
         const { validated: validated, message: message } = ValidationUtilities.validateCommon(req.query);
         
         if (!validated) {
-            res.setHeader("Content-Type", "text/plain");
-            this.logger.warn("InvalidParameter|" + "getAllActors" + "|" + message);
-            return res.send(HttpStatus.BAD_REQUEST, message);
+            this.logger.warn(`InvalidParameter|getAllActors|${message}`);
+            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message});
         }
 
         let resCode: number = HttpStatus.OK;
@@ -36,10 +34,9 @@ export class ActorController implements interfaces.Controller {
         try {
             results = await this.dataService.queryActors(req.query);
         } catch (err) {
-            res.setHeader("Content-Type", "text/plain");
             resCode = getHttpStatusCode(err);
-            this.logger.error(Error(err), "ActorControllerException: " + err.toString());
-            return res.send(resCode, "ActorControllerException");
+            this.logger.error(Error(err), `${actorsControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: actorsControllerException });
         }
 
         return res.send(resCode, results);
@@ -52,9 +49,8 @@ export class ActorController implements interfaces.Controller {
         const { validated: validated, message: message } = ValidationUtilities.validateActorId(actorId);
         
         if (!validated) {
-            res.setHeader("Content-Type", "text/plain");
-            this.logger.warn("getActorById|" + actorId + "|" + message);
-            return res.send(HttpStatus.BAD_REQUEST, message);
+            this.logger.warn(`getActorById|${actorId}|${message}`);
+            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message});
         }
 
         let resCode: number = HttpStatus.OK;
@@ -62,16 +58,15 @@ export class ActorController implements interfaces.Controller {
         try {
             result = new Actor(await this.dataService.getDocument(actorId));
         } catch (err) {
-            res.setHeader("Content-Type", "text/plain");
             resCode = getHttpStatusCode(err);
 
             if (resCode === HttpStatus.NOT_FOUND) {
-                this.logger.warn("Actor Not Found: " + actorId);
-                return res.send(resCode, "Actor Not Found");
+                this.logger.warn(`Actor Not Found: ${actorId}`);
+                return res.send(resCode, {status: resCode, message: "Actor Not Found"});
             }
 
-            this.logger.error(Error(err), "ActorControllerException: " + err.toString());
-            return res.send(resCode, "ActorControllerException");
+            this.logger.error(Error(err), `${actorsControllerException}: ${err.toString()}`);
+            return res.send(resCode, {status: resCode, message: actorsControllerException});
         }
 
         return res.send(resCode, result);
