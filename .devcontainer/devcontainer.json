@@ -1,0 +1,20 @@
+{
+  "name": "helium-typescript",
+
+  "settings": { "terminal.integrated.shell.linux": "/bin/bash" },
+
+	// Open port 4120 by default
+  "forwardPorts": [4120],
+
+  // Install extensions
+  "extensions": [
+    "ms-dotnettools.csharp",
+    "eamodio.gitlens",
+    "davidanson.vscode-markdownlint",
+    "gruntfuggly.todo-tree",
+    "ms-azuretools.vscode-docker"
+  ],
+
+  // Run Bash script in .devcontainer directory
+  "postCreateCommand": "/bin/bash ./.devcontainer/post-install.sh"
+}
