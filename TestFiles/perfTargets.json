@@ -6,5 +6,5 @@
     "SearchActors":{"Category":"SearchActors","Quartiles":[100,200,400]},
     "SearchMovies":{"Category":"SearchMovies","Quartiles":[100,200,400]},
     "static":{"Category":"static","Quartiles":[40,80,160]}
-  }
+}
   
