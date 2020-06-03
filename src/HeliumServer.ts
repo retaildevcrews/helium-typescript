@@ -65,6 +65,7 @@ export class HeliumServer {
     public start() {
         this.server.listen(this.configValues.port, () => {
             this.logService.info(`Server is listening on port ${this.configValues.port}`);
+            console.log("allo", process.env.NODE_ENV)
         });
     }
 
