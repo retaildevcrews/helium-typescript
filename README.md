@@ -64,6 +64,45 @@ docker build . -t helium-typescript -f Dockerfile
 
 ```
 
+## CI-CD
+
+
+This repo uses [GitHub Actions](/.github/workflows/dockerCI.yml) for Continuous Integration.
+
+- CI supports pushing to Azure Container Registry or DockerHub
+- The action is setup to execute on a PR or commit to ```master```
+  - The action does not run on commits to branches other than ```master```
+- The action always publishes an image with the ```:beta``` tag
+- If you tag the repo with a version i.e. ```v1.0.8``` the action will also
+  - Tag the image with ```:1.0.8```
+  - Tag the image with ```:stable```
+  - Note that the ```v``` is case sensitive (lower case)
+
+CD is supported via webhooks in Azure App Services connected to the ACR or DockerHub repository.
+
+### Pushing to Azure Container Registry
+
+In order to push to ACR, you must create a Service Principal that has push permissions to the ACR and set the following ```secrets``` in your GitHub repo:
+
+- Azure Login Information
+  - TENANT
+  - SERVICE_PRINCIPAL
+  - SERVICE_PRINCIPAL_SECRET
+
+- ACR Information
+  - ACR_REG
+  - ACR_REPO
+  - ACR_IMAGE
+
+### Pushing to DockerHub
+
+In order to push to DockerHub, you must set the following ```secrets``` in your GitHub repo:
+
+- DOCKER_REPO
+- DOCKER_USER
+- DOCKER_PAT
+  - Personal Access Token
+
 ### Run the application locally
 
 - The application requires Key Vault and Cosmos DB to be setup per the Helium [readme](https://github.com/retaildevcrews/helium)
