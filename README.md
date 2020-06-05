@@ -103,7 +103,7 @@ In order to push to DockerHub, you must set the following ```secrets``` in your 
 - DOCKER_PAT
   - Personal Access Token
 
-### Run the application locally
+## Run the application locally
 
 - The application requires Key Vault and Cosmos DB to be setup per the Helium [readme](https://github.com/retaildevcrews/helium)
   - You can run the application locally by using Azure CLI cached credentials
