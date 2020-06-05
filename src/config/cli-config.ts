@@ -16,8 +16,8 @@ export const sections = [
                 "name": "auth-type",
                 "alias": "a",
                 "type": String,
-                "description": "Authentication type - MSI or CLI. Defaults to 'MSI'.",
-                "validationPattern": /^(MSI|CLI)$/gi,
+                "description": "Authentication type - Defaults to 'MSI'. 'CLI' is available in development environments only",
+                "validationPattern": /^(MSI)$/gi,
             },
             {
                 "name": "dry-run",

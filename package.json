@@ -37,6 +37,7 @@
     "bunyan": "^1.8.12",
     "command-line-args": "^5",
     "command-line-usage": "^6",
+    "dotenv": "^8.2.0",
     "http-status-codes": "^1.4.0",
     "inversify": "^5.0.1",
     "inversify-restify-utils": "^3.4.0",

@@ -3,8 +3,10 @@ import { KeyVaultService, LogService } from "../services";
 import commandLineArgs = require("command-line-args");
 import commandLineUsage = require("command-line-usage");
 import { sections } from "./cli-config";
-import { cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl, appInsightsKey, portConstant, version } from "./constants";
+import { cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl, appInsightsKey, portConstant, version, envConstant } from "./constants";
 import { ConfigValues } from "./ConfigValues";
+import  dotenv = require('dotenv')
+
 
 export class ConsoleController {
     constructor(private logService: LogService) { }
@@ -58,6 +60,13 @@ export class ConsoleController {
             "log-level": process.env.LOG_LEVEL,
         }
 
+        const isProduction: boolean = this.setEnvironment();
+
+        if (isProduction) {
+            const optIndex: number = options.findIndex(i => i.name == "auth-type");
+            options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
+        }
+
         // command line arguments
         try {
             args = commandLineArgs(options);
@@ -72,6 +81,7 @@ export class ConsoleController {
         // set default values if no cli args or env vars provided
         if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MSI";
         if (!("log-level" in args) && !values["log-level"]) values["log-level"] = "info";
+
 
         const validationMessages = [];
 
@@ -93,6 +103,17 @@ export class ConsoleController {
     showHelp(message?: string) {
         if (message) console.log(message);
         console.log(commandLineUsage(sections));
+    }
+
+    setEnvironment() {
+        dotenv.config();
+        process.env.NODE_ENV = process.env.NODE_ENV || envConstant;
+
+        if (process.env.NODE_ENV === "production") {
+            return true;
+        }
+
+        return false
     }
 
     dryRun(config, values) {

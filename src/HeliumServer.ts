@@ -6,7 +6,7 @@ import { InversifyRestifyServer } from "inversify-restify-utils";
 import { ConfigValues } from "./config/ConfigValues";
 import { html } from "./swagger-html";
 import { robotsHandler } from "./middleware/robotsText";
-import { version } from "./config/constants";
+import { version, envConstant } from "./config/constants";
 import bodyParser = require("body-parser");
 import restify = require("restify");
 
@@ -65,7 +65,6 @@ export class HeliumServer {
     public start() {
         this.server.listen(this.configValues.port, () => {
             this.logService.info(`Server is listening on port ${this.configValues.port}`);
-            console.log("allo", process.env.NODE_ENV)
         });
     }
 
