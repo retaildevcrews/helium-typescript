@@ -1,16 +1,18 @@
 name: Docker Image Build
 
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
       - master
 
     paths-ignore:
       - 'docs/**'
-      - '.github/**'
-      - '**.md'
-      - 'saveenv.sh'
+      - '.devcontainer/**'
       - 'src/**/__tests__'
+      - '**.md'
 
     tags:
       - v*
@@ -22,32 +24,91 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      #  DOCKER_REPO  - the docker repository name in the form: organization/repository
-      DOCKER_REPO: 'retaildevcrew/helium-typescript'
+      # copy the secrets to env vars for if: conditions
+
+      DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+
+      TENANT: ${{ secrets.TENANT }}
+      SERVICE_PRINCIPAL: ${{ secrets.SERVICE_PRINCIPAL }}
+      SERVICE_PRINCIPAL_SECRET: ${{ secrets.SERVICE_PRINCIPAL_SECRET }}
+
+      ACR_REG: ${{ secrets.ACR_REG }}
+      ACR_REPO: ${{ secrets.ACR_REPO }}
+      ACR_IMAGE: ${{ secrets.ACR_IMAGE }}
+
+      AZURE_SET: false
+      DOCKER_SET: false
+      ACR_SET: false
 
     steps:
     - uses: actions/checkout@v1
 
-    - name: Login to registry
+    - name: Set conditions
       run: |
-        # Login to registry
+        echo "::set-env name=AZURE_SET::${{ env.SERVICE_PRINCIPAL_SECRET != '' && env.TENANT != '' && env.SERVICE_PRINCIPAL != '' }}"
+        echo "::set-env name=DOCKER_SET::${{ env.DOCKER_PAT != '' && env.DOCKER_REPO != '' && env.DOCKER_USER != '' }}"
+        echo "::set-env name=ACR_SET::${{ env.ACR_REG != '' && env.ACR_REPO != '' && env.ACR_IMAGE !='' }}"
 
-        #    You must add the following secrets to github
-        #    DOCKER_USER  - your dockerhub user name
-        #    DOCKER_PAT   - the personal access token for dockerhub
-       
-
-        ## login to dockerhub
-        echo "${{ secrets.DOCKER_PAT }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-
-    - name: Build Container
-      run: docker build . --file Dockerfile --tag image
-
-    - name: Docker Push
+    - name: Validate Azure Access
+      if: ${{ env.AZURE_SET == 'true' }}
       run: |
-        # Tag and push the docker image
+        # login to Azure
+        az login --service-principal -u ${SERVICE_PRINCIPAL} --tenant ${TENANT} -p ${SERVICE_PRINCIPAL_SECRET}
 
-        IMAGE_ID=$DOCKER_REPO
+        # verify SP has access to Key Vault
+        az keyvault secret show --name CosmosDatabase --vault-name $KEYVAULT_NAME
+
+    - name: Docker Login
+      if: ${{ env.DOCKER_SET == 'true' }}
+      run: |
+        # login to dockerhub
+        echo "${DOCKER_PAT}" | docker login -u ${DOCKER_USER} --password-stdin
+
+    - name: Docker Pull
+      if: ${{ env.AZURE_SET == 'true' || env.DOCKER_SET == 'true' || env.ACR_SET == 'true' }}
+      run: |
+        # Pull the latest image if needed
+        # This doesn't have to be a separate step, but makes the output easier to read and debug
+        docker pull node
+        docker pull node:lts-alpine
+
+    - name: Docker Build
+      if: ${{ env.DOCKER_SET == 'true' || env.ACR_SET == 'true' }}
+      run: |
+        # build release image
+        docker build . -t helium
+
+    - name: Docker Tag and Push
+      if: ${{ env.DOCKER_SET == 'true' }}
+      run: |
+        # tag the repo with :beta
+        docker tag helium $DOCKER_REPO:beta
+
+        # Tag image based on repo tag if a github label
+        if [[ "${{ github.ref }}" == "refs/tags/"* ]]
+        then
+
+          # Strip git ref prefix from version
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,'  | sed -e 's/^v//')
+
+          # tag the image with :version and :stable
+          docker tag helium $DOCKER_REPO:$VERSION
+          docker tag helium $DOCKER_REPO:stable
+        fi
+
+        # Push to the repo
+        docker push $DOCKER_REPO
+    
+    - name: ACR Push
+      if: ${{ env.ACR_SET == 'true' && env.AZURE_SET == 'true' }}
+      run: |
+        # login to acr
+        az acr login -n ${ACR_REG}
+        
+        # build release image
+        docker tag helium $ACR_REPO:beta
 
         # Tag image based on repo tag if a github label
         if [[ "${{ github.ref }}" == "refs/tags/"* ]]
@@ -58,52 +119,15 @@ jobs:
         
           # Strip "v" prefix from tag name
           VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # tag the image with :beta, :Version and :stable
-          docker tag image $IMAGE_ID:beta 
-          docker tag image $IMAGE_ID:$VERSION
-          docker tag image $IMAGE_ID:stable
-
-        else
-          # tag the image with :beta only if no tag
-          docker tag image $IMAGE_ID:beta
-        fi
-
-        # Push to the repo
-        docker push $IMAGE_ID
-
-  acr-build-push-version:
-    runs-on: ubuntu-latest
-    env:
-      ACR_REG: 'heliume2e'
-      ACR_REPO: 'heliume2e.azurecr.io'
-      ACR_IMAGE: 'helium-typescript'
-      ACR_TAG: 'stable'
-    steps:
-      - uses: actions/checkout@v1
-      - name: acr-push-build
-        run: |
-          #    You must add the following secrets to github
-          #    SERVICE_PRINCIPAL  - your SP Client ID that has ACR Push IAM role
-          #    SERVICE_PRINCIPAL_PASSWORD   - the personal access token for the SP Client id
-          #    TENANT  - The tenant ID of the subscription of the ACR
-
-
-          echo "Building Docker image ${ACR_REPO}/${ACR_IMAGE} from ${GITHUB_REPOSITORY} on ${{ github.ref }}; and pushing it to ${ACR_REG} Azure Container Registry"
-          az login --service-principal -u ${{ secrets.SERVICE_PRINCIPAL }} -p ${{ secrets.SERVICE_PRINCIPAL_SECRET }} --tenant ${{ secrets.TENANT }}
           
-          if [[ "${{ github.ref }}" == "refs/tags/"* ]]
-          then
-
-          # Strip git ref prefix from version
-            VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          # tag the image with :version and :stable
+          docker tag helium $ACR_REPO:$VERSION
+          docker tag helium $ACR_REPO:stable
+        fi
         
-          # Strip "v" prefix from tag name
-            VERSION=$(echo $VERSION | sed -e 's/^v//')
+        # push the repo
+        docker push $ACR_REPO
 
-            az acr build -r ${ACR_REG} -f Dockerfile -t ${ACR_REPO}/${ACR_IMAGE}:${VERSION} -t ${ACR_REPO}/${ACR_IMAGE}:${ACR_TAG} -t ${ACR_REPO}/${ACR_IMAGE}:beta https://github.com/${GITHUB_REPOSITORY}.git#${{ github.ref }}
-          else
-            az acr build -r ${ACR_REG} -f Dockerfile -t ${ACR_REPO}/${ACR_IMAGE}:beta https://github.com/${GITHUB_REPOSITORY}.git#${{ github.ref }}
-          fi
-
-  
+        # display repo info
+        echo "${ACR_IMAGE} info:"
+        az acr repository show -n ${ACR_REG} --image ${ACR_IMAGE}:beta -o table
