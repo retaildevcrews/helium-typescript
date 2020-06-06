@@ -57,9 +57,6 @@ jobs:
         # login to Azure
         az login --service-principal -u ${SERVICE_PRINCIPAL} --tenant ${TENANT} -p ${SERVICE_PRINCIPAL_SECRET}
 
-        # verify SP has access to Key Vault
-        az keyvault secret show --name CosmosDatabase --vault-name $KEYVAULT_NAME
-
     - name: Docker Login
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
