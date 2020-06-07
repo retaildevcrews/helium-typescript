@@ -51,17 +51,21 @@ jobs:
         echo "::set-env name=DOCKER_SET::${{ env.DOCKER_PAT != '' && env.DOCKER_REPO != '' && env.DOCKER_USER != '' }}"
         echo "::set-env name=ACR_SET::${{ env.ACR_REG != '' && env.ACR_REPO != '' && env.ACR_IMAGE !='' }}"
 
+        # unset the secrets from the env vars to prevent leakage
+        echo "::set-env name=SERVICE_PRINCIPAL_SECRET::null"
+        echo "::set-env name=DOCKER_PAT::null"
+
     - name: Validate Azure Access
       if: ${{ env.AZURE_SET == 'true' }}
       run: |
         # login to Azure
-        az login --service-principal -u ${SERVICE_PRINCIPAL} --tenant ${TENANT} -p ${SERVICE_PRINCIPAL_SECRET}
+        az login --service-principal -u ${SERVICE_PRINCIPAL} --tenant ${TENANT} -p ${{ secrets.SERVICE_PRINCIPAL_SECRET }}
 
     - name: Docker Login
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
         # login to dockerhub
-        echo "${DOCKER_PAT}" | docker login -u ${DOCKER_USER} --password-stdin
+        echo "${{ secrets.DOCKER_PAT }}" | docker login -u ${DOCKER_USER} --password-stdin
 
     - name: Docker Pull
       if: ${{ env.AZURE_SET == 'true' || env.DOCKER_SET == 'true' || env.ACR_SET == 'true' }}
