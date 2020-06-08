@@ -488,20 +488,19 @@ describe("Utilities tests", () => {
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });
 
+      it("should validate if value of environment is developemnt and auth-type is CLI", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.argv = process.argv.concat(["--auth-type", "CLI"]);
+        process.env.NODE_ENV = "development";
+        assert(consoleController.parseArguments().validationMessages.length === 0);
+      });
+
       it("should reflect environment set in NODE_ENV", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         process.argv = process.argv.concat(["--auth-type", "MSI"]);
         process.env.NODE_ENV = "development";
         const { values } = consoleController.parseArguments();
         assert(values["environment"] == "development");
-      });
-
-      it("should validate if value of environment is developemnt and auth-type is CLI", () => {
-        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
-        process.argv = process.argv.concat(["--auth-type", "CLI"]);
-        process.env.NODE_ENV = "development";
-        console.log(consoleController.parseArguments().validationMessages.length)
-        assert(consoleController.parseArguments().validationMessages.length == 0);
       });
 
       afterEach(() => {
