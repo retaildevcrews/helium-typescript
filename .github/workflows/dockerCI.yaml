@@ -24,48 +24,54 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      # copy the secrets to env vars for if: conditions
+      # copy the config value to environment variables
+      # do not copy the actual secrets!
 
+      KEYVAULT_NAME: ${{ secrets.KEYVAULT_NAME }}
       DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
-      DOCKER_USER: ${{ secrets.DOCKER_USER }}
-      DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
-
-      TENANT: ${{ secrets.TENANT }}
-      SERVICE_PRINCIPAL: ${{ secrets.SERVICE_PRINCIPAL }}
-      SERVICE_PRINCIPAL_SECRET: ${{ secrets.SERVICE_PRINCIPAL_SECRET }}
-
-      ACR_REG: ${{ secrets.ACR_REG }}
       ACR_REPO: ${{ secrets.ACR_REPO }}
       ACR_IMAGE: ${{ secrets.ACR_IMAGE }}
+      ACR_REG: ${{ secrets.ACR_REG }}
 
+      # These are used in if: conditions
       AZURE_SET: false
       DOCKER_SET: false
       ACR_SET: false
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Set conditions
       run: |
-        echo "::set-env name=AZURE_SET::${{ env.SERVICE_PRINCIPAL_SECRET != '' && env.TENANT != '' && env.SERVICE_PRINCIPAL != '' }}"
-        echo "::set-env name=DOCKER_SET::${{ env.DOCKER_PAT != '' && env.DOCKER_REPO != '' && env.DOCKER_USER != '' }}"
-        echo "::set-env name=ACR_SET::${{ env.ACR_REG != '' && env.ACR_REPO != '' && env.ACR_IMAGE !='' }}"
+        # check that all Azure secrets are set
+        if [[ "${{ secrets.SERVICE_PRINCIPAL_SECRET }}" != "" && "${{ secrets.TENANT }}" != "" && "${{ secrets.SERVICE_PRINCIPAL }}" != "" && "${{ secrets.KEYVAULT_NAME }}" != "" ]];
+        then
+          echo "::set-env name=AZURE_SET::true"
+        fi
 
-        # unset the secrets from the env vars to prevent leakage
-        echo "::set-env name=SERVICE_PRINCIPAL_SECRET::null"
-        echo "::set-env name=DOCKER_PAT::null"
+        # check that all Docker secrets are set
+        if [[ "${{ secrets.DOCKER_PAT }}" != "" && "${{ secrets.DOCKER_REPO }}" != "" && "${{ secrets.DOCKER_USER }}" != "" ]];
+        then
+          echo "::set-env name=DOCKER_SET::true"
+        fi
+        
+        # check that all ACR secrets are set
+        if [[ "${{ secrets.ACR_REG }}" != "" && "${{ secrets.ACR_REPO }}" != "" && "${{ secrets.ACR_IMAGE }}" != "" ]];
+        then
+          echo "::set-env name=ACR_SET::true"
+        fi
 
     - name: Validate Azure Access
       if: ${{ env.AZURE_SET == 'true' }}
       run: |
         # login to Azure
-        az login --service-principal -u ${SERVICE_PRINCIPAL} --tenant ${TENANT} -p ${{ secrets.SERVICE_PRINCIPAL_SECRET }}
+        az login --service-principal -u ${{ secrets.SERVICE_PRINCIPAL }} --tenant ${{ secrets.TENANT }} -p ${{ secrets.SERVICE_PRINCIPAL_SECRET }}
 
     - name: Docker Login
       if: ${{ env.DOCKER_SET == 'true' }}
       run: |
         # login to dockerhub
-        echo "${{ secrets.DOCKER_PAT }}" | docker login -u ${DOCKER_USER} --password-stdin
+        echo "${{ secrets.DOCKER_PAT }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
 
     - name: Docker Pull
       if: ${{ env.AZURE_SET == 'true' || env.DOCKER_SET == 'true' || env.ACR_SET == 'true' }}
