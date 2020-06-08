@@ -62,7 +62,7 @@ export class ConsoleController {
             "environment": process.env.NODE_ENV
         }
 
-        if (isProduction) {
+        if (!isProduction) {
             const optIndex: number = options.findIndex(i => i.name == "auth-type");
             options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
         }
