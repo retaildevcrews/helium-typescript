@@ -6,7 +6,7 @@ import { InversifyRestifyServer } from "inversify-restify-utils";
 import { ConfigValues } from "./config/ConfigValues";
 import { html } from "./swagger-html";
 import { robotsHandler } from "./middleware/robotsText";
-import { version, envConstant } from "./config/constants";
+import { version } from "./config/constants";
 import bodyParser = require("body-parser");
 import restify = require("restify");
 

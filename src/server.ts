@@ -4,7 +4,6 @@ import { AppInsightsService, BunyanLogService, CosmosDBService, DataService, Tel
 import { Container } from "inversify";
 import { ConsoleController } from "./config/ConsoleController";
 import { ConfigValues } from "./config/ConfigValues";
-import { envConstant } from "./config/constants";
 import { interfaces, TYPE } from "inversify-restify-utils";
 import { HeliumServer } from "./HeliumServer";
 import NodeCache = require("node-cache");
