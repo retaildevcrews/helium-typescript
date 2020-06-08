@@ -51,6 +51,7 @@ export class ConsoleController {
 
     public parseArguments() {
         const options: OptionDefinition[] = sections.find(s => s.header == "Options").optionList;
+        const isProduction: boolean = this.setEnvironment();
         let args;
 
         // environment variables
@@ -58,9 +59,8 @@ export class ConsoleController {
             "keyvault-name": process.env.KEYVAULT_NAME,
             "auth-type": process.env.AUTH_TYPE,
             "log-level": process.env.LOG_LEVEL,
+            "environment": process.env.NODE_ENV
         }
-
-        const isProduction: boolean = this.setEnvironment();
 
         if (isProduction) {
             const optIndex: number = options.findIndex(i => i.name == "auth-type");
@@ -113,12 +113,13 @@ export class ConsoleController {
             return true;
         }
 
-        return false
+        return false;
     }
 
     dryRun(config, values) {
         console.log(`
             Version                       ${version}
+            Environment                   ${values["environment"]}
             Keyvault                      ${values["keyvault-name"]}
             Auth Type                     ${values["auth-type"]}
             Cosmos Server                 ${config.cosmosDbUrl}
