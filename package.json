@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node dist/server.js",
+    "start:dev": "NODE_ENV=development node dist/server.js",
     "test": "mocha test/unit/**/*.ts",
     "test:watch": "npm test -- -w",
     "test:coverage": "nyc mocha test/unit/**/*.ts",
