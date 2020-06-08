@@ -5,7 +5,7 @@ import commandLineUsage = require("command-line-usage");
 import { sections } from "./cli-config";
 import { cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl, appInsightsKey, portConstant, version, envConstant } from "./constants";
 import { ConfigValues } from "./ConfigValues";
-import  dotenv = require('dotenv')
+import  dotenv = require("dotenv");
 
 
 export class ConsoleController {
