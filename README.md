@@ -131,22 +131,23 @@ npm install
 npm run build
 
 # run the app with command line args
-# for local run, you need to specify CLI authentication type
+# for local run, you need to specify CLI authentication type and set the debug flag
 # $He_Name is set to the name of your Key Vault
 
-npm start -- --keyvault-name $He_Name --auth-type CLI
+npm start -- --keyvault-name $He_Name --auth-type CLI -debug
 
 # optionally, set the logging level verboseness with --log-level (or -l)
 # 'info' is the default
 # please type --help for all options
 
-npm start -- --keyvault-name $He_Name --auth-type CLI --log-level info
+npm start -- --keyvault-name $He_Name --auth-type CLI --log-level info -debug
 
 # alternatively you can set the following environment variables and run without command line args
 
 export KEYVAULT_NAME=$He_Name
 export AUTH_TYPE=CLI
 export LOG_LEVEL=info # (optional)
+export LOG_LEVEL=debug # (required when using AUTH_TYPE=CLI)
 
 npm start
 

@@ -56,6 +56,7 @@ export class ConsoleController {
             "keyvault-name": process.env.KEYVAULT_NAME,
             "auth-type": process.env.AUTH_TYPE,
             "log-level": process.env.LOG_LEVEL,
+            "debug": process.env.DEBUG
         }
 
         // command line arguments
