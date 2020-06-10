@@ -55,8 +55,7 @@ export class ConsoleController {
         const env = {
             "keyvault-name": process.env.KEYVAULT_NAME,
             "auth-type": process.env.AUTH_TYPE,
-            "log-level": process.env.LOG_LEVEL,
-            "debug": process.env.DEBUG
+            "log-level": process.env.LOG_LEVEL
         }
 
         // command line arguments
@@ -76,7 +75,7 @@ export class ConsoleController {
 
         // enables CLI option for auth-type if debug is true
 
-        if (values.debug) {
+        if (values.dev) {
             const optIndex: number = options.findIndex(i => i.name == "auth-type");
             options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
         }
@@ -89,7 +88,13 @@ export class ConsoleController {
 
         // check validation patterns
         options.filter(o => o.validationPattern && !o.validationPattern.test(values[o.name]))
-            .forEach(o => validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid`));
+            .forEach(o => {
+                if (values[o.name] == "CLI") {
+                    validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid in production. Add the --dev flag or use MSI`);
+                    return;
+                }
+                validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid`)
+            });
 
         // expand Key Vault URL
         if (values["keyvault-name"] && !values["keyvault-name"].startsWith("https://"))

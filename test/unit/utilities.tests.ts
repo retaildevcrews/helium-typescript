@@ -472,9 +472,9 @@ describe("Utilities tests", () => {
       it("should validate if the value of auth-type is CLI with a debug flag valid", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         process.argv = process.argv.concat(["--auth-type", "CLI"]);
-        process.argv = process.argv.concat(["--debug"]);
+        process.argv = process.argv.concat(["--dev"]);
         const { values } = consoleController.parseArguments();
-        assert.exists(values["debug"]);
+        assert.exists(values["dev"]);
       });
 
       it("should expand the keyvault URL if only the name was provided", () => {
