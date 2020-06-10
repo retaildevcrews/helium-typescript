@@ -16,8 +16,8 @@ export const sections = [
                 "name": "auth-type",
                 "alias": "a",
                 "type": String,
-                "description": "Authentication type - MSI or CLI. Defaults to 'MSI'.",
-                "validationPattern": /^(MSI|CLI)$/gi,
+                "description": "Authentication type - MSI or CLI. Defaults to 'MSI'. CLI is enabled with the debug flag is set",
+                "validationPattern": /^(MSI)$/gi,
             },
             {
                 "name": "dry-run",
@@ -32,6 +32,13 @@ export const sections = [
                 "type": String,
                 "description": "Sets the debug verboseness level, from highest to lowest: 'trace', 'info', 'warn', 'error', 'fatal'. Defaults to 'info'",
                 "validationPattern": /^(trace|debug|info|warn|error|fatal)$/gi,
+            },
+            {
+                "name": "debug",
+                "alias": "e",
+                "type": Boolean,
+                "description": "Enables debug mode - including CLI authorization type",
+                "defaultValue": false
             },
             {
                 "name": "help",

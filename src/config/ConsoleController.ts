@@ -73,6 +73,12 @@ export class ConsoleController {
         if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MSI";
         if (!("log-level" in args) && !values["log-level"]) values["log-level"] = "info";
 
+        // enables CLI if debug is true
+        if (values.debug) {
+            const optIndex: number = options.findIndex(i => i.name == "auth-type");
+            options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
+        }
+
         const validationMessages = [];
 
         // check required arguments
