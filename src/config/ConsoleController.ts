@@ -48,7 +48,7 @@ export class ConsoleController {
     }
 
     public parseArguments() {
-        const options: OptionDefinition[] = sections.find(s => s.header == "Options").optionList;
+        let options: OptionDefinition[] = sections.find(s => s.header == "Options").optionList;
         let args;
 
         // environment variables
@@ -73,7 +73,8 @@ export class ConsoleController {
         if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MSI";
         if (!("log-level" in args) && !values["log-level"]) values["log-level"] = "info";
 
-        // enables CLI if debug is true
+        // enables CLI option for auth-type if debug is true
+
         if (values.debug) {
             const optIndex: number = options.findIndex(i => i.name == "auth-type");
             options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
