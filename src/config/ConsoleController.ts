@@ -48,7 +48,7 @@ export class ConsoleController {
     }
 
     public parseArguments() {
-        let options: OptionDefinition[] = sections.find(s => s.header == "Options").optionList;
+        const options: OptionDefinition[] = sections.find(s => s.header == "Options").optionList;
         let args;
 
         // environment variables
