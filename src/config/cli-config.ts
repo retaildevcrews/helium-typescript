@@ -16,7 +16,7 @@ export const sections = [
                 "name": "auth-type",
                 "alias": "a",
                 "type": String,
-                "description": "Authentication type - MSI or CLI. Defaults to 'MSI'. CLI is only supported with the debug flag set",
+                "description": "Authentication type - MSI or CLI. Defaults to 'MSI'. CLI is only supported with the dev flag set",
                 "validationPattern": /^(MSI)$/gi,
             },
             {
@@ -30,7 +30,7 @@ export const sections = [
                 "name": "log-level",
                 "alias": "l",
                 "type": String,
-                "description": "Sets the debug verboseness level, from highest to lowest: 'trace', 'info', 'warn', 'error', 'fatal'. Defaults to 'info'",
+                "description": "Sets the log verboseness level, from highest to lowest: 'trace', 'info', 'warn', 'error', 'fatal'. Defaults to 'info'",
                 "validationPattern": /^(trace|debug|info|warn|error|fatal)$/gi,
             },
             {

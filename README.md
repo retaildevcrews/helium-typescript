@@ -131,7 +131,7 @@ npm install
 npm run build
 
 # run the app with command line args
-# for local run, you need to specify CLI authentication type and set the debug flag
+# for local run, you need to specify CLI authentication type and set the dev flag
 # $He_Name is set to the name of your Key Vault
 
 npm start -- --keyvault-name $He_Name --auth-type CLI --dev

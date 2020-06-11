@@ -73,8 +73,7 @@ export class ConsoleController {
         if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MSI";
         if (!("log-level" in args) && !values["log-level"]) values["log-level"] = "info";
 
-        // enables CLI option for auth-type if debug is true
-
+        // enables CLI option for auth-type if dev is true
         if (values.dev) {
             const optIndex: number = options.findIndex(i => i.name == "auth-type");
             options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
@@ -119,6 +118,7 @@ export class ConsoleController {
             Cosmos Collection             ${config.collection}
             App Insights Key              ${config.insightsKey ? `Length(${config.insightsKey.length})` : "(not set)"}
             Logging Level                 ${values["log-level"]}
+            Development Flag              ${values["dev"]}
         `);
     }
 

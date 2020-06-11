@@ -463,13 +463,13 @@ describe("Utilities tests", () => {
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });
 
-      it("should invalidate if the value of auth-type is CLI with out a debug flag", () => {
+      it("should invalidate if the value of auth-type is CLI with out a dev flag", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         process.argv = process.argv.concat(["--auth-type", "CLI"]);
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });
 
-      it("should validate if the value of auth-type is CLI with a debug flag valid", () => {
+      it("should validate if the value of auth-type is CLI with a dev flag valid", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         process.argv = process.argv.concat(["--auth-type", "CLI"]);
         process.argv = process.argv.concat(["--dev"]);
