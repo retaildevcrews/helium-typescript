@@ -35,7 +35,6 @@ export const sections = [
             },
             {
                 "name": "dev",
-                "alias": "e",
                 "type": Boolean,
                 "description": "Enables development mode - including CLI authorization type",
                 "defaultValue": false
