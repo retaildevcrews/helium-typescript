@@ -55,7 +55,7 @@ export class ConsoleController {
         const env = {
             "keyvault-name": process.env.KEYVAULT_NAME,
             "auth-type": process.env.AUTH_TYPE,
-            "log-level": process.env.LOG_LEVEL,
+            "log-level": process.env.LOG_LEVEL
         }
 
         // command line arguments
@@ -73,6 +73,12 @@ export class ConsoleController {
         if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MSI";
         if (!("log-level" in args) && !values["log-level"]) values["log-level"] = "info";
 
+        // enables CLI option for auth-type if dev is true
+        if (values.dev) {
+            const optIndex: number = options.findIndex(i => i.name == "auth-type");
+            options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
+        }
+
         const validationMessages = [];
 
         // check required arguments
@@ -81,7 +87,13 @@ export class ConsoleController {
 
         // check validation patterns
         options.filter(o => o.validationPattern && !o.validationPattern.test(values[o.name]))
-            .forEach(o => validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid`));
+            .forEach(o => {
+                if (values[o.name] == "CLI") {
+                    validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid in production. Add the --dev flag or use MSI`);
+                    return;
+                }
+                validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid`)
+            });
 
         // expand Key Vault URL
         if (values["keyvault-name"] && !values["keyvault-name"].startsWith("https://"))
@@ -106,6 +118,7 @@ export class ConsoleController {
             Cosmos Collection             ${config.collection}
             App Insights Key              ${config.insightsKey ? `Length(${config.insightsKey.length})` : "(not set)"}
             Logging Level                 ${values["log-level"]}
+            Development Flag              ${values["dev"]}
         `);
     }
 

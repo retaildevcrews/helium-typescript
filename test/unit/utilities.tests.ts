@@ -463,6 +463,20 @@ describe("Utilities tests", () => {
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });
 
+      it("should invalidate if the value of auth-type is CLI with out a dev flag", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.argv = process.argv.concat(["--auth-type", "CLI"]);
+        assert(consoleController.parseArguments().validationMessages.length > 0);
+      });
+
+      it("should validate if the value of auth-type is CLI with a dev flag valid", () => {
+        process.argv = process.argv.concat(["--keyvault-name", "abc"]);
+        process.argv = process.argv.concat(["--auth-type", "CLI"]);
+        process.argv = process.argv.concat(["--dev"]);
+        const { values } = consoleController.parseArguments();
+        assert.exists(values["dev"]);
+      });
+
       it("should expand the keyvault URL if only the name was provided", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         const { values } = consoleController.parseArguments();
