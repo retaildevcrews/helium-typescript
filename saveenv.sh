@@ -19,8 +19,7 @@ else
       fi
     fi
   fi
-  export He_Repo=helium-csharp
-
+  
   echo '#!/bin/bash' > ~/.helium.env
   echo '' >> ~/.helium.env
 
