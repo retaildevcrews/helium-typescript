@@ -1,8 +1,5 @@
 #!/bin/sh
 
-date >> ~/status
-echo "post-install.sh ..." >> ~/status
-
 # copy vscode files
 mkdir -p .vscode && cp docs/vscode-template/* .vscode
 
@@ -13,33 +10,20 @@ mkdir -p .vscode && cp docs/vscode-template/* .vscode
 echo "" >> ~/.bashrc
 echo ". ${PWD}/.devcontainer/.bashrc-append" >> ~/.bashrc
 
-date >> ~/status
-echo "Updating Packages ..." >> ~/status
-
 DEBIAN_FRONTEND=noninteractive
 sudo apt-get update
-
-date >> ~/status
-echo "Installing basics ..." >> ~/status
-
 sudo apt-get install -y --no-install-recommends apt-utils dialog
-
+sudo apt-get install -y --no-install-recommends dnsutils httpie
 DEBIAN_FRONTEND=dialog
-
-date >> ~/status
-echo "Building helium ..." >> ~/status
 
 npm install
 npm run build
 
-# add tools to path
-export PATH="$PATH:~/.dotnet/tools"
-
-# set dotnet root
-export DOTNET_ROOT=~/.dotnet
 
 # install WebV
+export PATH="$PATH:~/.dotnet/tools"
+export DOTNET_ROOT=~/.dotnet
 dotnet tool install -g webvalidate --version 1.0.7.3
 
-date >> ~/status
-echo "Done" >> ~/status
+# set auth type
+export AUTH_TYPE=CLI
