@@ -14,6 +14,8 @@ export function robotsHandler(req: any, res: any, next) {
             "Content-Type": "text/plain",
         });
         res.write(robotsResponse);
+
+        res.end();
     } else {
         next();
     }
