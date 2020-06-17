@@ -18,9 +18,8 @@ This is a Node.js and Restify Web API reference application designed to "fork an
 
 ## Prerequisites
 
-- Bash shell (tested on Mac, Ubuntu, Windows with WSL2)
-  - Will not work with WSL1
-  - Will not work in Cloud Shell unless you have a remote dockerd
+- Bash shell (tested on Visual Studio Codespaces, Mac, Ubuntu, Windows with WSL2)
+  - Will not work with WSL1 or Cloud Shell
 - Azure CLI ([download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest))
 - Docker CLI ([download](https://docs.docker.com/install/))
 - Node.js 12.14.1+ ([download](https://nodejs.org/en/download/))
