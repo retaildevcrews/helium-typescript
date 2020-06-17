@@ -37,8 +37,46 @@ Currently, helium-typescript has a dependency on:
 
 ## Setup
 
-- Fork this repo and clone to your local machine
-  - All instructions assume starting from the root of the repo
+- Initial setup instructions are in the [Helium readme](https://github.com/retaildevcrews/helium)
+  - Please complete the setup steps and then continue below
+
+### Using Visual Studio Codespaces
+
+Visual Studio Codespaces is the easiest way to evaluate helium. Follow the setup steps in the [Helium readme](https://github.com/retaildevcrews/helium) to setup Codespaces.
+
+- Open `launch.json` in the `.vscode` directory
+- Replace `{your key vault name}` with the name of your key vault
+  - the file saves automatically
+- Press F5
+- Wait for `Debugger attached` in the Debug Console
+- Skip to the testing step below
+
+### Using bash shell
+
+> This will work from a terminal in Visual Studio Codespaces as well
+
+```bash
+
+# run the application
+# He_Name was set during setup and is your Key Vault name
+npm start -- --auth-type CLI --dev --keyvault-name $He_Name
+
+```
+
+wait for `Server is listening on port 4120`
+
+### Testing the application
+
+Open a new bash shell
+
+```bash
+
+# test the application
+webv -s localhost:4120 -t 2 -f baseline.json
+
+```
+
+Stop helium by typing Ctrl-C or the stop button if run via F5
 
 ### Build the container using Docker
 
@@ -65,7 +103,6 @@ docker build . -t helium-typescript -f Dockerfile
 ```
 
 ## CI-CD
-
 
 This repo uses [GitHub Actions](/.github/workflows/dockerCI.yml) for Continuous Integration.
 
