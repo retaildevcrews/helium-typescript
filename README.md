@@ -71,7 +71,7 @@ az keyvault secret show --name CosmosDatabase --vault-name $He_Name
 - Replace `{your key vault name}` with the name of your key vault
   - the file saves automatically
 - Press F5
-- Wait for `Server is listening on port 4120` in the Debug Console
+- Wait for `Debugger attached` in the Debug Console
 - Skip to the testing step below
 
 ### Using bash shell
@@ -161,8 +161,9 @@ Test using Docker image
 # make sure you are in the root of the repository
 
 # run the validation tests
-# validation tests are located in the TestFiles directory
-docker run -it --rm -v ./TestFiles:/app/TestFiles -s localhost:4120 -f baseline.json
+# mount the local TestFiles directory to /app/TestFiles in the container
+# 172.17.0.1 is the docker host IP
+docker run -it --rm -v TestFiles:/app/TestFiles retaildevcrew/webvalidate -s http://172.17.0.1:4120 -f baseline.json
 
 # bad.json tests error conditions that return 4xx codes
 
