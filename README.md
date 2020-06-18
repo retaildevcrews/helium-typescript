@@ -157,6 +157,11 @@ cd TestFiles
 
 webv -s localhost:4120 -f baseline.json
 
+# there may be a validation error on the /healthz/ietf endpoint test
+#   json: status: warn : Expected: pass
+# the "warn" status indicates a slower than normal response time
+# this is OK and will occasionally occur
+
 # bad.json tests error conditions that return 4xx codes
 
 # benchmark.json is a 300 request test that covers the entire API
@@ -176,6 +181,11 @@ Test using Docker image
 # mount the local TestFiles directory to /app/TestFiles in the container
 # 172.17.0.1 is the docker host IP
 docker run -it --rm -v TestFiles:/app/TestFiles retaildevcrew/webvalidate -s http://172.17.0.1:4120 -f baseline.json
+
+# there may be a validation error on the /healthz/ietf endpoint test
+#   json: status: warn : Expected: pass
+# the "warn" status indicates a slower than normal response time
+# this is OK and will occasionally occur
 
 # bad.json tests error conditions that return 4xx codes
 
