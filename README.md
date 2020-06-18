@@ -129,7 +129,7 @@ Stop helium by typing Ctrl-C or the stop button if run via F5
 
 We use [Web Validate](https://github.com/retaildevcrews/webvalidate) to run deep verification tests on the Web API
 
-If you have dotnet core sdk installed
+If you have dotnet core sdk installed (Codespaces has dotnet core installed)
 
 ```bash
 
