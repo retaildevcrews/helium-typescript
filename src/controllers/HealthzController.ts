@@ -60,6 +60,8 @@ export class HealthzController implements interfaces.Controller {
             "Content-Type": "application/health+json",
         });
         res.write(JSON.stringify(healthCheckResult));
+
+        res.end();
     }
 
     // executes all health checks and builds the final ietf result

@@ -25,6 +25,7 @@ before(async function() {
     process.env.KEYVAULT_NAME = "froyo-kv";
     process.env.AUTH_TYPE = "CLI";
     process.env.LOG_LEVEL = "info";
+    process.argv.push("--dev");
 
     console.log("Setting up server for test...");
     const container: Container = new Container();

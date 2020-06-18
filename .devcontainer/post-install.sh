@@ -23,7 +23,7 @@ npm run build
 # install WebV
 export PATH="$PATH:~/.dotnet/tools"
 export DOTNET_ROOT=~/.dotnet
-dotnet tool install -g webvalidate --version 1.0.7.3
+dotnet tool install -g webvalidate
 
 # set auth type
 export AUTH_TYPE=CLI
