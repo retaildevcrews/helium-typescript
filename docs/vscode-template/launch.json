@@ -5,6 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "args": [ 
+                "--keyvault-name", "{your key vault name}",
+                "--auth-type", "CLI",
+                "--dev"
+            ],
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
@@ -12,11 +17,6 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/dist/server.js",
-            "args": [ 
-                "--keyvault-name", "{your key vault name}",
-                "--auth-type", "CLI",
-                "--dev"
-            ],
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
