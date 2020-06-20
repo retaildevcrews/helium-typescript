@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sudo curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker
+
 # copy vscode files
 mkdir -p .vscode && cp docs/vscode-template/* .vscode
 
@@ -10,15 +12,8 @@ mkdir -p .vscode && cp docs/vscode-template/* .vscode
 echo "" >> ~/.bashrc
 echo ". ${PWD}/.devcontainer/.bashrc-append" >> ~/.bashrc
 
-DEBIAN_FRONTEND=noninteractive
-sudo apt-get update
-sudo apt-get install -y --no-install-recommends apt-utils dialog
-sudo apt-get install -y --no-install-recommends dnsutils httpie
-DEBIAN_FRONTEND=dialog
-
 npm install
 npm run build
-
 
 # install WebV
 export PATH="$PATH:~/.dotnet/tools"
