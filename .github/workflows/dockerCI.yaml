@@ -4,19 +4,27 @@ on:
   pull_request:
     branches:
       - master
+
+    paths-ignore:
+    - 'docs/**'
+    - '.devcontainer/**'
+    - 'src/**/__tests__'
+    - '**.md'
+    - 'TestFiles/**'
+
   push:
     branches:
       - master
 
     paths-ignore:
-      - 'docs/**'
-      - '.devcontainer/**'
-      - 'src/**/__tests__'
-      - '**.md'
+    - 'docs/**'
+    - '.devcontainer/**'
+    - 'src/**/__tests__'
+    - '**.md'
+    - 'TestFiles/**'
 
     tags:
       - v*
-
 
 jobs:
 
