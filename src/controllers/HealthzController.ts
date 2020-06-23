@@ -24,7 +24,10 @@ export class HealthzController implements interfaces.Controller {
 
     @Get("/")
     public async healthCheck(req, res) {
+        // set Content-Type and Cache-Control headers
         res.setHeader("Content-Type", "text/plain");
+        res.cache({maxAge: 60});
+
         let healthCheckResult: {[k: string]: any} = {};
 
         const cachedValue = this.cache.get("healthz");
@@ -42,7 +45,10 @@ export class HealthzController implements interfaces.Controller {
 
     @Get("/ietf")
     public async healthCheckIetf(req, res) {
+        // set Content-Type and Cache-Control headers
         res.setHeader("Content-Type", "application/health+json");
+        res.cache({maxAge: 60});
+
         let healthCheckResult: {[k: string]: any} = {};
 
         const cachedValue = this.cache.get("healthz");
