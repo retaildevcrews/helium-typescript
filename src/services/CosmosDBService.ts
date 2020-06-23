@@ -121,18 +121,9 @@ export class CosmosDBService implements DataService {
         }
 
         if (queryParams.genre) {
-            let genreResult: any;
-
-            try {
-                genreResult = await this.getDocument(queryParams.genre.trim().toLowerCase());
-                genre = genreResult.genre;
-            } catch (err) {
-                // return empty array if no genre found
-                if (err.toString().includes("404")) return [];
-            }
-
-            sql += " and array_contains(m.genres, @genre)";
-            parameters.push({name: "@genre", value: genre});
+            genre = queryParams.genre.trim();
+            sql += " and contains(m.genreSearch, @genre, true)";
+            parameters.push({name: "@genre", value: ":" + genre + ":"});
         }
 
         sql += ORDER_BY + offsetLimit;
