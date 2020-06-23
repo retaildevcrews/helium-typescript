@@ -123,7 +123,7 @@ export class CosmosDBService implements DataService {
         if (queryParams.genre) {
             genre = queryParams.genre.trim();
             sql += " and contains(m.genreSearch, @genre, true)";
-            parameters.push({name: "@genre", value: ":" + genre + ":"});
+            parameters.push({name: "@genre", value: "|" + genre + "|"});
         }
 
         sql += ORDER_BY + offsetLimit;
