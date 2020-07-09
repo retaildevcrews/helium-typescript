@@ -69,11 +69,12 @@ before(async function() {
 });
 
 // this test requires that you have the helium/webvalidate project in a directory next to helium-typescript
+// note, in the FILES variable, you may need to update helium-typescript with the name of your repo folder if different
 it("Run webv against the running server", async function () {
     this.timeout(120000);
 
     const URL = "localhost:4120";
-    const FILES = "baseline.json bad.json";
+    const FILES = "../../../../../../helium-typescript/TestFiles/baseline.json ../../../../../../helium-typescript/TestFiles/bad.json";
 
     console.log(`Running webv against ${URL} using files: ${FILES}.`);
     const command = `./webvalidate --server ${URL} --files ${FILES}`;
