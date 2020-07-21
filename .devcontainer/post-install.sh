@@ -25,7 +25,6 @@ echo "" >> ~/.bashrc
 echo ". ${PWD}/.devcontainer/.bashrc-append" >> ~/.bashrc
 
 npm install
-npm upgrade
 npm run build
 
 # install WebV
