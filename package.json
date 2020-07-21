@@ -43,7 +43,7 @@
     "node-cache": "^5.1.2",
     "reflect-metadata": "^0.1.13",
     "restify": "^8.5.1",
-    "swagger-ui-dist": "^3.28.0",
+    "swagger-ui-dist": "^3.30.1",
     "uuid": "^8.2.0"
   },
   "devDependencies": {
@@ -52,13 +52,13 @@
     "@types/bunyan": "^1.8.6",
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^14.0.20",
+    "@types/node": "^14.0.24",
     "@types/restify": "^8.4.2",
-    "@typescript-eslint/eslint-plugin": "^3.6.0",
-    "@typescript-eslint/parser": "^3.6.0",
+    "@typescript-eslint/eslint-plugin": "^3.7.0",
+    "@typescript-eslint/parser": "^3.7.0",
     "bufferutil": "^4.0.1",
     "chai": "^4.2.0",
-    "eslint": "^7.4.0",
+    "eslint": "^7.5.0",
     "gulp": "^4.0.2",
     "mocha": "^8.0.1",
     "mockery": "^2.1.0",
@@ -68,7 +68,7 @@
     "sinon-chai": "^3.5.0",
     "source-map-support": "^0.5.19",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.6",
+    "typescript": "^3.9.7",
     "utf-8-validate": "^5.0.2"
   }
 }
