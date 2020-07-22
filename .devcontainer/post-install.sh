@@ -26,7 +26,6 @@ echo ". ${PWD}/.devcontainer/.bashrc-append" >> ~/.bashrc
 
 # update npm to latest version
 npm install npm@latest -g
-export PATH="/home/codespace/.npm-global/bin:$PATH"
 
 npm install
 npm run build
