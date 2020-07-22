@@ -6,7 +6,7 @@
     "configurations": [
         {
             "args": [ 
-                "--keyvault-name", "{your key vault name}",
+                "--keyvault-name", "your_key_vault_name",
                 "--auth-type", "CLI",
                 "--dev"
             ],

@@ -19,6 +19,9 @@ then
   source ~/.helium.env
 fi
 
+# set new path
+export PATH="/home/codespace/.npm-global/bin:$PATH"
+
 # you can add project specific settings to this file and
 # they will be added for every user that clones the repo with Codespaces
 # including keys or secrets could be a SECURITY RISK

@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# copy vscode files
+mkdir -p .vscode
+cp .devcontainer/vscode-template/* .vscode
+
 # docker bash-completion
 sudo curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker
 
@@ -13,15 +17,15 @@ sudo apt-get install -y --no-install-recommends apt-utils dialog
 sudo apt-get install -y --no-install-recommends dnsutils httpie bash-completion curl wget git unzip
 DEBIAN_FRONTEND=dialog
 
-# copy vscode files
-mkdir -p .vscode && cp docs/vscode-template/* .vscode
-
 # source the bashrc-append from the repo
 # you can add project specific settings to .bashrc-append and 
 # they will be added for every user that clones the repo with Codespaces
 # including keys or secrets could be a SECURITY RISK
 echo "" >> ~/.bashrc
 echo ". ${PWD}/.devcontainer/.bashrc-append" >> ~/.bashrc
+
+# update npm to latest version
+npm install npm@latest -g
 
 npm install
 npm run build
