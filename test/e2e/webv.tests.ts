@@ -22,7 +22,7 @@ before(async function() {
 
     // test environment Key Vault
     // will need to update KEYVAULT_NAME to your own e2e environment
-    process.env.KEYVAULT_NAME = "froyo-kv";
+    process.env.KEYVAULT_NAME = "helium-kv";
     process.env.AUTH_TYPE = "CLI";
     process.env.LOG_LEVEL = "info";
     process.argv.push("--dev");
