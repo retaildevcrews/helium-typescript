@@ -70,8 +70,12 @@ describe("Utilities tests", () => {
   describe("VersionUtilities", () => {
     describe("getBuildVersion", () => {
       it("should return correct type", () => {
-        // expect(VersionUtilities.getBuildVersion()).toEqual(expect.any(String));
         assert.typeOf(VersionUtilities.getBuildVersion(), "string");
+      });
+    });
+    describe("getSwaggerVersion", () => {
+      it("should return correct type", () => {
+        assert.typeOf(VersionUtilities.getSwaggerVersion(), "string");
       });
     });
   });
