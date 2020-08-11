@@ -6,7 +6,7 @@ import { InversifyRestifyServer } from "inversify-restify-utils";
 import { ConfigValues } from "./config/ConfigValues";
 import { html } from "./swagger-html";
 import { robotsHandler } from "./middleware/robotsText";
-import { version } from "./config/constants";
+import { buildVersion, swaggerVersion } from "./config/constants";
 import bodyParser = require("body-parser");
 import restify = require("restify");
 
@@ -22,7 +22,7 @@ export class HeliumServer {
         this.configValues = this.container.get<ConfigValues>("ConfigValues");
         this.server = this.createRestifyServer();
 
-        this.logService.info(`Version: ${version}`);
+        this.logService.info(`Build Version: ${buildVersion}`);
     }
 
     createRestifyServer() {
@@ -56,8 +56,10 @@ export class HeliumServer {
             }));
 
             app.get("/version", (req, res) => {
-                res.setHeader("Content-Type", "text/plain");
-                res.send(version);
+                res.setHeader("Content-Type", "application/json");
+                res.send({
+                    appVersion: buildVersion,
+                    apiVersion: swaggerVersion});
             });
         }).build();
     }

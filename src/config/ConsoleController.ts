@@ -3,7 +3,7 @@ import { KeyVaultService, LogService } from "../services";
 import commandLineArgs = require("command-line-args");
 import commandLineUsage = require("command-line-usage");
 import { sections } from "./cli-config";
-import { cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl, appInsightsKey, portConstant, version } from "./constants";
+import { cosmosCollection, cosmosDatabase, cosmosKey, cosmosUrl, appInsightsKey, portConstant, buildVersion } from "./constants";
 import { ConfigValues } from "./ConfigValues";
 
 export class ConsoleController {
@@ -109,7 +109,7 @@ export class ConsoleController {
 
     dryRun(config, values) {
         console.log(`
-            Version                       ${version}
+            Version                       ${buildVersion}
             Keyvault                      ${values["keyvault-name"]}
             Auth Type                     ${values["auth-type"]}
             Cosmos Server                 ${config.cosmosDbUrl}
