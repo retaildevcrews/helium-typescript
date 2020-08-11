@@ -58,8 +58,9 @@ export class HeliumServer {
             app.get("/version", (req, res) => {
                 res.setHeader("Content-Type", "application/json");
                 res.send({
-                    appVersion: buildVersion,
-                    apiVersion: swaggerVersion});
+                    apiVersion: swaggerVersion,
+                    appVersion: buildVersion
+                });
             });
         }).build();
     }
