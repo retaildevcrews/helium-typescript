@@ -1,6 +1,7 @@
 import { VersionUtilities } from "../utilities/versionUtilities";
 
-export const version = VersionUtilities.getBuildVersion();
+export const buildVersion = VersionUtilities.getBuildVersion();
+export const swaggerVersion = VersionUtilities.getSwaggerVersion();
 export const cosmosUrl = "CosmosUrl";
 export const cosmosKey = "CosmosKey";
 export const cosmosDatabase = "CosmosDatabase";

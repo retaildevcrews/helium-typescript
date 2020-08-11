@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
-import { healthzControllerException, sqlGenres, webInstanceRole, version } from "../config/constants";
+import { healthzControllerException, sqlGenres, webInstanceRole, buildVersion } from "../config/constants";
 import { DateUtilities } from "../utilities/dateUtilities";
 import NodeCache = require("node-cache");
 
@@ -77,7 +77,7 @@ export class HealthzController implements interfaces.Controller {
         ietfResult.serviceId =  "helium-typescript";
         ietfResult.description = "Helium Typescript Health Check";
         ietfResult.instance = process.env[webInstanceRole] ?? "unknown";
-        ietfResult.version = version;
+        ietfResult.version = buildVersion;
 
         // declare health checks
         const healthChecks: {[k: string]: any} = {};
