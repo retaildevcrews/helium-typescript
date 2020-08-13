@@ -70,13 +70,13 @@ export class ConsoleController {
         const values = { ...env, ...args };
 
         // set default values if no cli args or env vars provided
-        if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MSI";
+        if (!("auth-type" in args) && !values["auth-type"]) values["auth-type"] = "MI";
         if (!("log-level" in args) && !values["log-level"]) values["log-level"] = "info";
 
         // enables CLI option for auth-type if dev is true
         if (values.dev) {
             const optIndex: number = options.findIndex(i => i.name == "auth-type");
-            options[optIndex].validationPattern = /^(MSI|CLI)$/gi;
+            options[optIndex].validationPattern = /^(MI|CLI)$/gi;
         }
 
         const validationMessages = [];
@@ -89,7 +89,7 @@ export class ConsoleController {
         options.filter(o => o.validationPattern && !o.validationPattern.test(values[o.name]))
             .forEach(o => {
                 if (values[o.name] == "CLI") {
-                    validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid in production. Add the --dev flag or use MSI`);
+                    validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid in production. Add the --dev flag or use MI`);
                     return;
                 }
                 validationMessages.push(`Value: "${values[o.name]}" for ${o.name} argument is not valid`)

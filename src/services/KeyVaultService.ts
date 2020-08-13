@@ -34,8 +34,8 @@ export class KeyVaultService {
         let retries = 0;
         while (retries < MAX_RETRIES){
             try {
-                // use specified authentication type (either MSI or CLI)
-                const creds: any = this.authType === "MSI" ?
+                // use specified authentication type (either MI or CLI)
+                const creds: any = this.authType === "MI" ?
                     new azureIdentity.ManagedIdentityCredential() :
                     await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
 
@@ -46,12 +46,12 @@ export class KeyVaultService {
                 return;
             } catch (e) {
                 retries++;
-                if (this.authType === "MSI" && retries < MAX_RETRIES) {
+                if (this.authType === "MI" && retries < MAX_RETRIES) {
                     this.logger.info("Key Vault: Retry");
                     // wait 1 second and retry (continue while loop)
                     await new Promise(resolve => setTimeout(resolve, 1000));
                 } else {
-                    throw new Error("Failed to connect to Key Vault with MSI");
+                    throw new Error("Failed to connect to Key Vault with MI");
                 }
             }
         }
