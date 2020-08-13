@@ -405,7 +405,7 @@ describe("Utilities tests", () => {
 
       it("should pass with no validation errors", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
-        process.argv = process.argv.concat(["--auth-type", "MSI"]);
+        process.argv = process.argv.concat(["--auth-type", "MI"]);
         process.argv = process.argv.concat(["--log-level", "info"]);
         assert(consoleController.parseArguments().validationMessages.length == 0);
       });
@@ -415,10 +415,10 @@ describe("Utilities tests", () => {
         assert(validationMessages.length > 0);
       });
 
-      it("should default --auth-type to MSI", () => {
+      it("should default --auth-type to MI", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
         const { values } = consoleController.parseArguments();
-        assert(values["auth-type"] && values["auth-type"].toUpperCase() == "MSI");
+        assert(values["auth-type"] && values["auth-type"].toUpperCase() == "MI");
       });
 
       it("should set --auth-type to CLI", () => {
@@ -455,14 +455,14 @@ describe("Utilities tests", () => {
 
       it("should invalidate if the value of log-level is not valid", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
-        process.argv = process.argv.concat(["--auth-type", "MSI"]);
+        process.argv = process.argv.concat(["--auth-type", "MI"]);
         process.argv = process.argv.concat(["--log-level", "boffo"]);
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });
 
       it("should invalidate if the value of log-level is not valid from env var", () => {
         process.argv = process.argv.concat(["--keyvault-name", "abc"]);
-        process.argv = process.argv.concat(["--auth-type", "MSI"]);
+        process.argv = process.argv.concat(["--auth-type", "MI"]);
         process.env.LOG_LEVEL = "boffo";
         assert(consoleController.parseArguments().validationMessages.length > 0);
       });

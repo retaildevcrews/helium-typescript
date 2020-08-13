@@ -187,7 +187,7 @@ docker run -it --rm -v TestFiles:/app/TestFiles retaildevcrew/webvalidate -s htt
 
 ## Build the release container using Docker
 
-> A release build requires MSI to connect to Key Vault.
+> A release build requires MI to connect to Key Vault.
 
 - The unit tests run as part of the Docker build process. You can also run the unit tests manually using `npm test`, with watch using `npm run test:watch`, and with test coverage using `npm run test:coverage`.
 
