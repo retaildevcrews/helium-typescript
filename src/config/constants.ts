@@ -11,16 +11,20 @@ export const portConstant = "4120";
 export const webInstanceRole = "WEBSITE_ROLE_INSTANCE_ID";
 export const defaultPageSize = 100;
 export const sqlGenres = "SELECT VALUE m.genre FROM m where m.type = 'Genre'";
-export const invalidMovieIDMessage = "Invalid Movie ID parameter";
-export const invalidActorIDMessage = "Invalid Actor ID parameter";
-export const invalidQSearchMessage = "Invalid q (search) parameter";
-export const invalidPageNumberMessage = "Invalid PageNumber parameter";
-export const invalidPageSizeMessage = "Invalid PageSize parameter"
-export const invalidGenreMessage = "Invalid Genre parameter";
-export const invalidYearMessage = "Invalid Year parameter";
-export const invalidRatingMessage = "Invalid Rating parameter";
-export const actorsControllerException = "ActorsControllerException";
-export const featuredControllerException = "FeaturedControllerException";
-export const genresControllerException = "GenresControllerException";
-export const healthzControllerException = "HealthzControllerException";
-export const moviesControllerException = "MoviesControllerException";
+export const queryErrorMessages = {
+    invalidMovieIDMessage: "Invalid Movie ID parameter",
+    invalidActorIDMessage: "Invalid Actor ID parameter",
+    invalidQSearchMessage: "Invalid q (search) parameter",
+    invalidPageNumberMessage: "Invalid PageNumber parameter",
+    invalidPageSizeMessage: "Invalid PageSize parameter",
+    invalidGenreMessage: "Invalid Genre parameter",
+    invalidYearMessage: "Invalid Year parameter",
+    invalidRatingMessage: "Invalid Rating parameter"
+};
+export const controllerExceptions = {
+    actorsControllerException: "ActorsControllerException",
+    featuredControllerException: "FeaturedControllerException",
+    genresControllerException: "GenresControllerException",
+    healthzControllerException: "HealthzControllerException",
+    moviesControllerException: "MoviesControllerException"
+}

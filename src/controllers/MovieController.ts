@@ -3,7 +3,7 @@ import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Movie } from "../models/Movie";
-import { moviesControllerException } from "../config/constants";
+import { controllerExceptions } from "../config/constants";
 import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 
 // controller implementation for our movies endpoint
@@ -33,8 +33,8 @@ export class MovieController implements interfaces.Controller {
             results = await this.cosmosDb.queryMovies(req.query);
         } catch (err) {
             resCode = getHttpStatusCode(err);
-            this.logger.error(Error(err), `${moviesControllerException}: ${err.toString()}`);
-            return res.send(resCode, { status: resCode, message: moviesControllerException });
+            this.logger.error(Error(err), `${controllerExceptions.moviesControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: controllerExceptions.moviesControllerException });
         }
 
         return res.send(resCode, results);
@@ -63,8 +63,8 @@ export class MovieController implements interfaces.Controller {
                 return res.send(resCode, { status: resCode, message: "Movie Not Found" });
             }
 
-            this.logger.error(Error(err), `${moviesControllerException}: ${err.toString()}`);
-            return res.send(resCode, { status: resCode, message: moviesControllerException });
+            this.logger.error(Error(err), `${controllerExceptions.moviesControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: controllerExceptions.moviesControllerException });
         }
 
         return res.send(resCode, result);
