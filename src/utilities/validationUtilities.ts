@@ -12,21 +12,57 @@ export class ValidationUtilities {
 
         if ("q" in query) {
             if (query.q === null || query.q === undefined || query.q.length < 2 || query.q.length > 20 ) {
-                return { validated: false, message: queryErrorMessages.invalidQSearchMessage };
+                let errorResponse = { error: {
+                    code: "BadArgument",
+                    message: queryErrorMessages.invalidQSearchMessage,
+                    target: "q",
+                    innererror: {
+                        code: "InvalidQSearchMessage"
+                        //minLength": "2",
+                        //"maxLength": "20",
+                        //"characterTypes": ["lowerCase","upperCase","number","symbol"]
+                    }
+                }};
+                return { validated: false, message: errorResponse };
+                //return { validated: false, message: queryErrorMessages.invalidQSearchMessage };
             }
         }
 
         if ("pageNumber" in query) {
             const pageNumber = parseInt(query.pageNumber, 10)
             if (isNaN(pageNumber) || pageNumber != query.pageNumber || pageNumber < 1 || pageNumber > 10000) {
-                return { validated: false, message: queryErrorMessages.invalidPageNumberMessage };
+                let errorResponse = { error: {
+                    code: "BadArgument",
+                    message: queryErrorMessages.invalidPageNumberMessage,
+                    target: "q",
+                    innererror: {
+                        code: "InvalidPageNumberMessage"
+                        //minLength": "2",
+                        //"maxLength": "20",
+                        //"characterTypes": ["lowerCase","upperCase","number","symbol"]
+                    }
+                }};
+                return { validated: false, message: errorResponse };
+                //return { validated: false, message: queryErrorMessages.invalidPageNumberMessage };
             }
         }
 
         if ("pageSize" in query) {
             const pageSize = parseInt(query.pageSize, 10)
             if (isNaN(pageSize) || pageSize != query.pageSize || pageSize < 1 || pageSize > 1000) {
-                return { validated: false, message: queryErrorMessages.invalidPageSizeMessage };
+                let errorResponse = { error: {
+                    code: "BadArgument",
+                    message: queryErrorMessages.invalidPageSizeMessage,
+                    target: "q",
+                    innererror: {
+                        code: "InvalidPageSizeMessage"
+                        //minLength": "2",
+                        //"maxLength": "20",
+                        //"characterTypes": ["lowerCase","upperCase","number","symbol"]
+                    }
+                }};
+                return { validated: false, message: errorResponse };
+                //return { validated: false, message: queryErrorMessages.invalidPageSizeMessage };
             }
         }
 
