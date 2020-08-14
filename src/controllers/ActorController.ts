@@ -20,11 +20,11 @@ export class ActorController implements interfaces.Controller {
     @Get("/")
     public async getAllActors(req: Request, res) {
         // validate query parameters
-        const { validated: validated, message: message } = ValidationUtilities.validateCommon(req.query);
+        const { validated: validated, message: errorResponse } = ValidationUtilities.validateCommon(req.query);
         
         if (!validated) {
-            this.logger.warn(`InvalidParameter|getAllActors|${message}`);
-            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message});
+            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.error.message}`);            
+            return res.send(HttpStatus.BAD_REQUEST, errorResponse);
         }
 
         let resCode: number = HttpStatus.OK;
@@ -46,11 +46,11 @@ export class ActorController implements interfaces.Controller {
     public async getActorById(req, res) {
         // validate Actor Id parameter
         const actorId: string = req.params.id;
-        const { validated: validated, message: message } = ValidationUtilities.validateActorId(actorId);
+        const { validated: validated, message: errorResponse } = ValidationUtilities.validateActorId(actorId);
         
         if (!validated) {
-            this.logger.warn(`getActorById|${actorId}|${message}`);
-            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message});
+            this.logger.warn(`getActorById|${actorId}|${errorResponse.error.message}`);
+            return res.send(HttpStatus.BAD_REQUEST, errorResponse);
         }
 
         let resCode: number = HttpStatus.OK;

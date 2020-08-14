@@ -21,8 +21,8 @@ export class MovieController implements interfaces.Controller {
         const { validated: validated, message: message } = ValidationUtilities.validateMovies(req.query);
         
         if (!validated) {
-            this.logger.warn(`InvalidParameter|getAllMovies|${message}`);
-            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message });
+            this.logger.warn(`InvalidParameter|getAllMovies|${message.error.message}`);
+            return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
         let resCode: number = HttpStatus.OK;
@@ -47,8 +47,8 @@ export class MovieController implements interfaces.Controller {
         const { validated: validated, message: message } = ValidationUtilities.validateMovieId(movieId);
 
         if (!validated) {
-            this.logger.warn(`getMovieById|${movieId}|${message}`);
-            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message });
+            this.logger.warn(`getMovieById|${movieId}|${message.error.message}`);
+            return res.send(HttpStatus.BAD_REQUEST, message);
         }
 
         let resCode: number = HttpStatus.OK;
