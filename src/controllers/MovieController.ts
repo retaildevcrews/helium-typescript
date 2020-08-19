@@ -22,7 +22,7 @@ export class MovieController implements interfaces.Controller {
         
         if (!validated) {
             this.logger.warn(`InvalidParameter|getAllMovies|${message.error.message}`);
-            return res.send(HttpStatus.BAD_REQUEST, message);
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(message, null, 4));
         }
 
         let resCode: number = HttpStatus.OK;
@@ -48,7 +48,7 @@ export class MovieController implements interfaces.Controller {
 
         if (!validated) {
             this.logger.warn(`getMovieById|${movieId}|${message.error.message}`);
-            return res.send(HttpStatus.BAD_REQUEST, message);
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(message, null, 4));
         }
 
         let resCode: number = HttpStatus.OK;

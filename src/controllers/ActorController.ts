@@ -23,8 +23,8 @@ export class ActorController implements interfaces.Controller {
         const { validated: validated, message: errorResponse } = ValidationUtilities.validateCommon(req.query);
         
         if (!validated) {
-            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.error.message}`);            
-            return res.send(HttpStatus.BAD_REQUEST, errorResponse);
+            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.error.message}`); 
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));  
         }
 
         let resCode: number = HttpStatus.OK;
@@ -49,8 +49,8 @@ export class ActorController implements interfaces.Controller {
         const { validated: validated, message: errorResponse } = ValidationUtilities.validateActorId(actorId);
         
         if (!validated) {
-            this.logger.warn(`getActorById|${actorId}|${errorResponse.error.message}`);
-            return res.send(HttpStatus.BAD_REQUEST, errorResponse);
+            this.logger.warn(`getActorById|${actorId}|${errorResponse.error.message}`); 
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4)); 
         }
 
         let resCode: number = HttpStatus.OK;
