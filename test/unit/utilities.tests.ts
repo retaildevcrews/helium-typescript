@@ -104,9 +104,8 @@ describe("Utilities tests", () => {
       });
 
       it("should validate movie ID tt333344", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId("tt333344");
+        const { validated } = ValidationUtilities.validateMovieId("tt333344");
         assert.isTrue(validated);
-        //assert.isEmpty(message);
       });
 
       it("should invalidate TT333344 (uppercase prefix)", () => {
@@ -187,9 +186,8 @@ describe("Utilities tests", () => {
 
     describe("validateActorId", () => {
       it("should validate nm333344", () => {
-        const { validated, message } = ValidationUtilities.validateActorId("nm333344");
+        const { validated } = ValidationUtilities.validateActorId("nm333344");
         assert.isTrue(validated);
-        //assert.isEmpty(message);
       });
 
       it("should invalidate NM333344 (upper case)", () => {
