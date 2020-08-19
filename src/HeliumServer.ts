@@ -71,7 +71,21 @@ export class HeliumServer {
         });
     }
 
-    public stop() {
-        if (this.server) this.server.close();
+    public shutdown() {
+        if (!this.server) {
+            console.info("Server not defined. Exiting.");
+            process.exit(0);
+        }
+
+        this.server.close(() => {
+            console.info("Graceful Shutdown complete.");
+            process.exit(0);
+        });
+
+        // allow existing requests to be processed for 10s, then force shutdown
+        setTimeout(() => {
+            console.info("Graceful shutdown aborted with one or more requests still active.");
+            process.exit(0);
+        }, 10000);
     }
 }
