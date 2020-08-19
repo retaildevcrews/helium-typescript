@@ -75,50 +75,113 @@ describe("Utilities tests", () => {
     describe("validateMovieId", () => {
       it("should invalidate ( null )", () => {
         const { validated, message } = ValidationUtilities.validateMovieId( null );
+        const response = { error: {
+          code: "BadArgument",
+          message: queryErrorMessages.invalidMovieIDMessage,
+          statusCode: HttpStatus.BAD_REQUEST,
+          target: "movieId",
+          innererror: {
+              code: "InvalidMovieIDParameter"
+          }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate ( undefined )", () => {
         const { validated, message } = ValidationUtilities.validateMovieId( undefined );
+        const response = { error: {
+          code: "BadArgument",
+          message: queryErrorMessages.invalidMovieIDMessage,
+          statusCode: HttpStatus.BAD_REQUEST,
+          target: "movieId",
+          innererror: {
+              code: "InvalidMovieIDParameter"
+          }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(message, response);
       });
 
       it("should validate movie ID tt333344", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("tt333344");
         assert.isTrue(validated);
-        assert.isEmpty(message);
+        //assert.isEmpty(message);
       });
 
       it("should invalidate TT333344 (uppercase prefix)", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("TT333344");
+        const response = { error: {
+          code: "BadArgument",
+          message: queryErrorMessages.invalidMovieIDMessage,
+          statusCode: HttpStatus.BAD_REQUEST,
+          target: "movieId",
+          innererror: {
+              code: "InvalidMovieIDParameter"
+          }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate nm333344 (incorrect prefix)", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("nm333344");
+        const response = { error: {
+          code: "BadArgument",
+          message: queryErrorMessages.invalidMovieIDMessage,
+          statusCode: HttpStatus.BAD_REQUEST,
+          target: "movieId",
+          innererror: {
+              code: "InvalidMovieIDParameter"
+          }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate tt (too short)", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("tt");
+        const response = { error: {
+          code: "BadArgument",
+          message: queryErrorMessages.invalidMovieIDMessage,
+          statusCode: HttpStatus.BAD_REQUEST,
+          target: "movieId",
+          innererror: {
+              code: "InvalidMovieIDParameter"
+          }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate tttttttttttt (too long)", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("tttttttttttt");
+        const response = { error: {
+          code: "BadArgument",
+          message: queryErrorMessages.invalidMovieIDMessage,
+          statusCode: HttpStatus.BAD_REQUEST,
+          target: "movieId",
+          innererror: {
+              code: "InvalidMovieIDParameter"
+          }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate ttabcdef (non-numeric after first 2 characters)", () => {
         const { validated, message } = ValidationUtilities.validateMovieId("ttabcdef");
+        const response = { error: {
+          code: "BadArgument",
+          message: queryErrorMessages.invalidMovieIDMessage,
+          statusCode: HttpStatus.BAD_REQUEST,
+          target: "movieId",
+          innererror: {
+              code: "InvalidMovieIDParameter"
+          }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(message, response);
       });
     });
 
@@ -126,39 +189,82 @@ describe("Utilities tests", () => {
       it("should validate nm333344", () => {
         const { validated, message } = ValidationUtilities.validateActorId("nm333344");
         assert.isTrue(validated);
-        assert.isEmpty(message);
+        //assert.isEmpty(message);
       });
 
       it("should invalidate NM333344 (upper case)", () => {
         const { validated, message } = ValidationUtilities.validateActorId("NM333344");
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidActorIDMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "actorId",
+            innererror: {
+                code: "InvalidActorIDParameter"
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate tt333344 (incorrect prefix)", () => {
         const { validated, message } = ValidationUtilities.validateActorId("tt333344");
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidActorIDMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "actorId",
+            innererror: {
+                code: "InvalidActorIDParameter"
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate nm (too short)", () => {
         const { validated, message } = ValidationUtilities.validateActorId("nm");
-        // expect(result.validated).toEqual(false);
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidActorIDMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "actorId",
+            innererror: {
+                code: "InvalidActorIDParameter"
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate tttttttttttt (too long)", () => {
         const { validated, message } = ValidationUtilities.validateActorId("tttttttttttt");
-        // expect(result.validated).toEqual(false);
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidActorIDMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "actorId",
+            innererror: {
+                code: "InvalidActorIDParameter"
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate nmabcdef (non-numeric after first 2 characters)", () => {
         const { validated, message } = ValidationUtilities.validateActorId("nmabcdef");
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidActorIDMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "actorId",
+            innererror: {
+                code: "InvalidActorIDParameter"
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(message, response);
       });
     });
 
@@ -201,50 +307,146 @@ describe("Utilities tests", () => {
 
       it("should invalidate when q parameter is too long", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ q: "this query is too long" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidQSearchMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "q",
+            innererror: {
+                code: "InvalidSearchParameter",
+                minLength: "2",
+                maxLength: "20",
+                characterTypes: ["lowerCase","upperCase","number","symbol"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidQSearchMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate when q parameter is too short", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ q: "a" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidQSearchMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "q",
+            innererror: {
+                code: "InvalidSearchParameter",
+                minLength: "2",
+                maxLength: "20",
+                characterTypes: ["lowerCase","upperCase","number","symbol"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidQSearchMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate when pageNumber parameter cannot parse to an integer", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ pageNumber: "number" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageNumberMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageNumber",
+            innererror: {
+                code: "InvalidPageNumberParameter",
+                minValue: "1",
+                maxValue: "10000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate when pageNumber parameter is too large", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ pageNumber: "20000" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageNumberMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageNumber",
+            innererror: {
+                code: "InvalidPageNumberParameter",
+                minValue: "1",
+                maxValue: "10000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate when pageNumber parameter is too small", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ pageNumber: "0" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageNumberMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageNumber",
+            innererror: {
+                code: "InvalidPageNumberParameter",
+                minValue: "1",
+                maxValue: "10000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate when pageSize parameter cannot parse to an integer", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ pageSize: "size" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageSizeMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageSize",
+            innererror: {
+                code: "InvalidPageSizeParameter",
+                minValue: "1",
+                maxValue: "1000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate when pageSize parameter is too large", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ pageSize: "2000" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageSizeMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageSize",
+            innererror: {
+                code: "InvalidPageSizeParameter",
+                minValue: "1",
+                maxValue: "1000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate when pageSize parameter is too small", () => {
         const { validated, message } = ValidationUtilities.validateCommon({ pageSize: "0" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageSizeMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageSize",
+            innererror: {
+                code: "InvalidPageSizeParameter",
+                minValue: "1",
+                maxValue: "1000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(message, response);
       });
     });
 
@@ -293,86 +495,251 @@ describe("Utilities tests", () => {
 
       it("should invalidate with invalid q parameter", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ q: "a" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidQSearchMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "q",
+            innererror: {
+                code: "InvalidSearchParameter",
+                minLength: "2",
+                maxLength: "20",
+                characterTypes: ["lowerCase","upperCase","number","symbol"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidQSearchMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid pageNumber parameter", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ pageNumber: "0" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageNumberMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageNumber",
+            innererror: {
+                code: "InvalidPageNumberParameter",
+                minValue: "1",
+                maxValue: "10000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid pageSize parameter", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ pageSize: "size" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidPageSizeMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "pageSize",
+            innererror: {
+                code: "InvalidPageSizeParameter",
+                minValue: "1",
+                maxValue: "1000",
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid genre parameter (null)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ genre: null });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidGenreMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "genre",
+            innererror: {
+                code: "InvalidGenreParameter",
+                minLength: "3",
+                maxLength: "20",
+                valueTypes: ["string"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid genre parameter (undefined)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ genre: undefined });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidGenreMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "genre",
+            innererror: {
+                code: "InvalidGenreParameter",
+                minLength: "3",
+                maxLength: "20",
+                valueTypes: ["string"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid genre parameter (too long)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ genre: "this is too long for a genre" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidGenreMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "genre",
+            innererror: {
+                code: "InvalidGenreParameter",
+                minLength: "3",
+                maxLength: "20",
+                valueTypes: ["string"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid genre parameter (too short)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ genre: "ge" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidGenreMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "genre",
+            innererror: {
+                code: "InvalidGenreParameter",
+                minLength: "3",
+                maxLength: "20",
+                valueTypes: ["string"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid year parameter (won't parse to an integer)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ year: "year" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidYearMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "year",
+            innererror: {
+                code: "InvalidYearParameter",
+                minValue: 1874,
+                maxValue: (new Date(Date.now()).getFullYear() + 5),
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidYearMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid year parameter (too large)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ year: "3060" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidYearMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "year",
+            innererror: {
+                code: "InvalidYearParameter",
+                minValue: 1874,
+                maxValue: (new Date(Date.now()).getFullYear() + 5),
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidYearMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid year parameter (too small)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ year: "1870" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidYearMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "year",
+            innererror: {
+                code: "InvalidYearParameter",
+                minValue: 1874,
+                maxValue: (new Date(Date.now()).getFullYear() + 5),
+                valueTypes: ["integer"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidYearMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid rating parameter (won't parse to an integer)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ rating: "rating" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidRatingMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "rating",
+            innererror: {
+                code: "InvalidRatingParameter",
+                minValue: "0",
+                maxValue: "10",
+                valueTypes: ["double"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidRatingMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid rating parameter (too large)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ rating: "12.34" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidRatingMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "rating",
+            innererror: {
+                code: "InvalidRatingParameter",
+                minValue: "0",
+                maxValue: "10",
+                valueTypes: ["double"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidRatingMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid rating parameter (too small)", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ rating: "-1" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidRatingMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "rating",
+            innererror: {
+                code: "InvalidRatingParameter",
+                minValue: "0",
+                maxValue: "10",
+                valueTypes: ["double"]
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidRatingMessage);
+        assert.equal(message, response);
       });
 
       it("should invalidate with invalid actorId parameter", () => {
         const { validated, message } = ValidationUtilities.validateMovies({ actorId: "actor" });
+        const response = { error: {
+            code: "BadArgument",
+            message: queryErrorMessages.invalidActorIDMessage,
+            statusCode: HttpStatus.BAD_REQUEST,
+            target: "actorId",
+            innererror: {
+                code: "InvalidActorIDParameter"
+            }
+        }};
         assert.isFalse(validated);
-        assert.equal(message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(message, response);
       });
     });
   });
