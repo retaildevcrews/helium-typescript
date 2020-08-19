@@ -185,7 +185,7 @@ export class ValidationUtilities {
             }
         }
 
-        return { validated: validated};
+        return { validated: validated };
     }
 
     public static validateActorId(actorId: string) {
