@@ -83,7 +83,7 @@ export class HeliumServer {
         });
 
         // allow existing requests to be processed for 10s, then force shutdown
-        setTimeout(function() {
+        setTimeout(() => {
             console.info("Graceful shutdown aborted with one or more requests still active.");
             process.exit(0);
         }, 10000);

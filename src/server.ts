@@ -58,8 +58,8 @@ import NodeCache = require("node-cache");
     heliumServer.start();
 
     // graceful shutdown
-    ['SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGKILL'].forEach(signal => process.on(signal, () => {
-        console.info("Commencing graceful shutdown. Waiting for active requests to complete.");
+    ["SIGINT", "SIGTERM", "SIGQUIT", "SIGKILL"].forEach(signal => process.on(signal, () => {
+        console.info(`Received '${signal}', commencing graceful shutdown. Waiting for active requests to complete.`);
         heliumServer.shutdown();
     }));
 
