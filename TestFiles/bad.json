@@ -8,8 +8,8 @@
             {"field":"target","value":"q"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidSearchParameter"},
-                {"field":"maxLength","value":"20"},
-                {"field":"minLength","value":"2"},
+                {"field":"maxLength","value":20},
+                {"field":"minLength","value":2},
                 {"field":"characterTypes","Validation":{"jsonArray":{"count":4,"byIndex":[
                                                     {"index":0,"value":"lowerCase"}, 
                                                     {"index":1,"value":"upperCase"}, 
@@ -28,8 +28,8 @@
             {"field":"target","value":"q"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidSearchParameter"},
-                {"field":"maxLength","value":"20"},
-                {"field":"minLength","value":"2"},
+                {"field":"maxLength","value":20},
+                {"field":"minLength","value":2},
                 {"field":"characterTypes","Validation":{"jsonArray":{"count":4,"byIndex":[
                                                     {"index":0,"value":"lowerCase"}, 
                                                     {"index":1,"value":"upperCase"}, 
@@ -49,8 +49,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -66,8 +66,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -83,8 +83,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -100,8 +100,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -117,8 +117,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -135,8 +135,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -152,8 +152,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -169,8 +169,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -186,8 +186,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -203,8 +203,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -221,8 +221,8 @@
             {"field":"target","value":"q"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidSearchParameter"},
-                {"field":"maxLength","value":"20"},
-                {"field":"minLength","value":"2"},
+                {"field":"maxLength","value":20},
+                {"field":"minLength","value":2},
                 {"field":"characterTypes","Validation":{"jsonArray":{"count":4,"byIndex":[
                                                     {"index":0,"value":"lowerCase"}, 
                                                     {"index":1,"value":"upperCase"}, 
@@ -241,8 +241,8 @@
             {"field":"target","value":"q"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidSearchParameter"},
-                {"field":"maxLength","value":"20"},
-                {"field":"minLength","value":"2"},
+                {"field":"maxLength","value":20},
+                {"field":"minLength","value":2},
                 {"field":"characterTypes","Validation":{"jsonArray":{"count":4,"byIndex":[
                                                     {"index":0,"value":"lowerCase"}, 
                                                     {"index":1,"value":"upperCase"}, 
@@ -262,8 +262,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -279,8 +279,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -296,8 +296,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -313,8 +313,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -330,8 +330,8 @@
             {"field":"target","value":"pageSize"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageSizeParameter"},
-                {"field":"maxValue","value":"1000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":1000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -348,8 +348,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -365,8 +365,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -382,8 +382,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -399,8 +399,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -416,8 +416,8 @@
             {"field":"target","value":"pageNumber"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidPageNumberParameter"},
-                {"field":"maxValue","value":"10000"},
-                {"field":"minValue","value":"1"},
+                {"field":"maxValue","value":10000},
+                {"field":"minValue","value":1},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"integer"}
                                                 ]}}}
@@ -557,8 +557,8 @@
             {"field":"target","value":"rating"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidRatingParameter"},
-                {"field":"maxValue","value": "10"},
-                {"field":"minValue","value": "0"},
+                {"field":"maxValue","value": 10},
+                {"field":"minValue","value": 0},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"double"}
                                                 ]}}}
@@ -574,8 +574,8 @@
             {"field":"target","value":"rating"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidRatingParameter"},
-                {"field":"maxValue","value": "10"},
-                {"field":"minValue","value": "0"},
+                {"field":"maxValue","value": 10},
+                {"field":"minValue","value": 0},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"double"}
                                                 ]}}}
@@ -591,8 +591,8 @@
             {"field":"target","value":"rating"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidRatingParameter"},
-                {"field":"maxValue","value": "10"},
-                {"field":"minValue","value": "0"},
+                {"field":"maxValue","value": 10},
+                {"field":"minValue","value": 0},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"double"}
                                                 ]}}}
@@ -609,8 +609,8 @@
             {"field":"target","value":"genre"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidGenreParameter"},
-                {"field":"maxLength","value": "20"},
-                {"field":"minLength","value": "3"},
+                {"field":"maxLength","value": 20},
+                {"field":"minLength","value": 3},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"string"}
                                                 ]}}}
@@ -626,8 +626,8 @@
             {"field":"target","value":"genre"},
             {"field":"innererror","Validation":{"jsonObject":[
                 {"field":"code","value":"InvalidGenreParameter"},
-                {"field":"maxLength","value": "20"},
-                {"field":"minLength","value": "3"},
+                {"field":"maxLength","value": 20},
+                {"field":"minLength","value": 3},
                 {"field":"valueTypes","Validation":{"jsonArray":{"count":1,"byIndex":[
                                                 {"index":0,"value":"string"}
                                                 ]}}}

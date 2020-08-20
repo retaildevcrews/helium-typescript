@@ -20,8 +20,8 @@ export class ValidationUtilities {
                     target: "q",
                     innererror: {
                         code: "InvalidSearchParameter",
-                        minLength: "2",
-                        maxLength: "20",
+                        minLength: 2,
+                        maxLength: 20,
                         characterTypes: ["lowerCase","upperCase","number","symbol"]
                     }
                 }};
@@ -39,8 +39,8 @@ export class ValidationUtilities {
                     target: "pageNumber",
                     innererror: {
                         code: "InvalidPageNumberParameter",
-                        minValue: "1",
-                        maxValue: "10000",
+                        minValue: 1,
+                        maxValue: 10000,
                         valueTypes: ["integer"]
                     }
                 }};
@@ -58,8 +58,8 @@ export class ValidationUtilities {
                     target: "pageSize",
                     innererror: {
                         code: "InvalidPageSizeParameter",
-                        minValue: "1",
-                        maxValue: "1000",
+                        minValue: 1,
+                        maxValue: 1000,
                         valueTypes: ["integer"]
                     }
                 }};
@@ -91,8 +91,8 @@ export class ValidationUtilities {
                     target: "genre",
                     innererror: {
                         code: "InvalidGenreParameter",
-                        minLength: "3",
-                        maxLength: "20",
+                        minLength: 3,
+                        maxLength: 20,
                         valueTypes: ["string"]
                     }
                 }};
@@ -129,8 +129,8 @@ export class ValidationUtilities {
                     target: "rating",
                     innererror: {
                         code: "InvalidRatingParameter",
-                        minValue: "0",
-                        maxValue: "10",
+                        minValue: 0,
+                        maxValue: 10,
                         valueTypes: ["double"]
                     }
                 }};
