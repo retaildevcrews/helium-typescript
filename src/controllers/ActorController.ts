@@ -4,7 +4,7 @@ import { Request } from "restify";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Actor } from "../models/Actor";
-import { actorsControllerException } from "../config/constants";
+import { controllerExceptions } from "../config/constants";
 import { getHttpStatusCode, ValidationUtilities } from "../utilities";
 
 // controller implementation for our actors endpoint
@@ -20,11 +20,11 @@ export class ActorController implements interfaces.Controller {
     @Get("/")
     public async getAllActors(req: Request, res) {
         // validate query parameters
-        const { validated: validated, message: message } = ValidationUtilities.validateCommon(req.query);
+        const { validated: validated, message: errorResponse } = ValidationUtilities.validateCommon(req.query);
         
         if (!validated) {
-            this.logger.warn(`InvalidParameter|getAllActors|${message}`);
-            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message});
+            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.error.message}`); 
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));  
         }
 
         let resCode: number = HttpStatus.OK;
@@ -35,8 +35,8 @@ export class ActorController implements interfaces.Controller {
             results = await this.dataService.queryActors(req.query);
         } catch (err) {
             resCode = getHttpStatusCode(err);
-            this.logger.error(Error(err), `${actorsControllerException}: ${err.toString()}`);
-            return res.send(resCode, { status: resCode, message: actorsControllerException });
+            this.logger.error(Error(err), `${controllerExceptions.actorsControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: controllerExceptions.actorsControllerException });
         }
 
         return res.send(resCode, results);
@@ -46,11 +46,11 @@ export class ActorController implements interfaces.Controller {
     public async getActorById(req, res) {
         // validate Actor Id parameter
         const actorId: string = req.params.id;
-        const { validated: validated, message: message } = ValidationUtilities.validateActorId(actorId);
+        const { validated: validated, message: errorResponse } = ValidationUtilities.validateActorId(actorId);
         
         if (!validated) {
-            this.logger.warn(`getActorById|${actorId}|${message}`);
-            return res.send(HttpStatus.BAD_REQUEST, { status: HttpStatus.BAD_REQUEST, message: message});
+            this.logger.warn(`getActorById|${actorId}|${errorResponse.error.message}`); 
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4)); 
         }
 
         let resCode: number = HttpStatus.OK;
@@ -65,8 +65,8 @@ export class ActorController implements interfaces.Controller {
                 return res.send(resCode, {status: resCode, message: "Actor Not Found"});
             }
 
-            this.logger.error(Error(err), `${actorsControllerException}: ${err.toString()}`);
-            return res.send(resCode, {status: resCode, message: actorsControllerException});
+            this.logger.error(Error(err), `${controllerExceptions.actorsControllerException}: ${err.toString()}`);
+            return res.send(resCode, {status: resCode, message: controllerExceptions.actorsControllerException});
         }
 
         return res.send(resCode, result);

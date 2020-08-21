@@ -3,7 +3,7 @@ import { Controller, Get, interfaces } from "inversify-restify-utils";
 import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Movie } from "../models/Movie";
-import { featuredControllerException } from "../config/constants";
+import { controllerExceptions } from "../config/constants";
 import { getHttpStatusCode } from "../utilities/httpStatusUtilities";
 
 // controller implementation for our featured movie endpoint
@@ -35,8 +35,8 @@ export class FeaturedController implements interfaces.Controller {
             }
         } catch (err) {
             resCode = getHttpStatusCode(err);
-            this.logger.error(Error(err), `${featuredControllerException}: ${err.toString()}`);
-            return res.send(resCode, { status: resCode, message: featuredControllerException });
+            this.logger.error(Error(err), `${controllerExceptions.featuredControllerException}: ${err.toString()}`);
+            return res.send(resCode, { status: resCode, message: controllerExceptions.featuredControllerException });
         }
 
         return res.send(resCode, result);
