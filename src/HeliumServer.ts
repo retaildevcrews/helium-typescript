@@ -6,7 +6,7 @@ import { InversifyRestifyServer } from "inversify-restify-utils";
 import { ConfigValues } from "./config/ConfigValues";
 import { html } from "./swagger-html";
 import { robotsHandler } from "./middleware/robotsText";
-import { buildVersion, swaggerVersion } from "./config/constants";
+import { buildVersion, swaggerVersion, gracefulShutdownTimeout } from "./config/constants";
 import bodyParser = require("body-parser");
 import restify = require("restify");
 
@@ -82,10 +82,10 @@ export class HeliumServer {
             process.exit(0);
         });
 
-        // allow existing requests to be processed for 10s, then force shutdown
+        // allow existing requests to be processed until timeout, then force shutdown
         setTimeout(() => {
             console.info("Graceful shutdown aborted with one or more requests still active.");
             process.exit(0);
-        }, 10000);
+        }, gracefulShutdownTimeout);
     }
 }
