@@ -2,20 +2,21 @@
 name: CP Review
 about: Checkpoint Review checklist
 title: ''
-labels: CP Review, Sharing
+labels: CP Review, Pri1, Sharing
 assignees: ''
 
 ---
 
-This checklist is for verifying the necessary details for a checkpoint review. 
+This checklist is for verifying the necessary details for a checkpoint review.
 
 ## Checkpoint Review
 
 - [ Milestone, Period]
-- Review Date: 
+- Review Date:
 
 ### Demo
-_Encouraged to just replay "best of" Sprint Demo_
+
+Encouraged to just replay "best of" Sprint Demo
 
 - [ ] Demo completed
 

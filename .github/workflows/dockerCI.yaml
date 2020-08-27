@@ -3,7 +3,7 @@ name: Docker Image Build
 on:
   pull_request:
     branches:
-      - master
+      - main
 
     paths-ignore:
     - 'docs/**'
@@ -14,7 +14,7 @@ on:
 
   push:
     branches:
-      - master
+      - main
 
     paths-ignore:
     - 'docs/**'
@@ -69,6 +69,29 @@ jobs:
           echo "::set-env name=ACR_SET::true"
         fi
 
+    - name: PR Closed
+      if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && ! github.event.pull_request.merged }}
+
+      run: |
+        # handle PR Closed event by building / pushing main branch
+        
+        # checkout parent branch (usually "main")
+        git config pull.ff only
+        git fetch --all
+        git checkout ${{ github.base_ref }}
+        git pull
+
+    - name: PR Merged
+      if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged }}
+
+      run: |
+        # Do not build on PR Merged
+        
+        # Skip remaining steps
+        echo "::set-env name=AZURE_SET::false"
+        echo "::set-env name=DOCKER_SET::false"
+        echo "::set-env name=ACR_SET::false"
+
     - name: Validate Azure Access
       if: ${{ env.AZURE_SET == 'true' }}
       run: |
@@ -81,7 +104,7 @@ jobs:
         # login to dockerhub
         echo "${{ secrets.DOCKER_PAT }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
 
-    - name: Docker Pull
+    - name: Docker Pull Release
       if: ${{ env.AZURE_SET == 'true' || env.DOCKER_SET == 'true' || env.ACR_SET == 'true' }}
       run: |
         # Pull the latest image if needed
@@ -89,7 +112,7 @@ jobs:
         docker pull node
         docker pull node:lts-alpine
 
-    - name: Docker Build
+    - name: Docker Build Release
       if: ${{ env.DOCKER_SET == 'true' || env.ACR_SET == 'true' }}
       run: |
         # build release image
