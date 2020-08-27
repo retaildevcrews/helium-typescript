@@ -2,6 +2,7 @@ name: Docker Image Build
 
 on:
   pull_request:
+    types: [opened, reopened, synchronize, closed]
     branches:
       - main
 
