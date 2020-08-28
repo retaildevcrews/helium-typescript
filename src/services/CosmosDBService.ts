@@ -1,7 +1,6 @@
 import { CosmosClient, Container, FeedOptions } from "@azure/cosmos";
 import { inject, injectable } from "inversify";
 import { LogService } from "./LogService";
-import { QueryUtilities } from "../utilities/queryUtilities";
 import { Actor, Movie } from "../models";
 import { defaultPageSize } from "../config/constants";
 import { DataService } from "./DataService";
@@ -33,15 +32,25 @@ export class CosmosDBService implements DataService {
     }
 
     // retrieves a specific document by id
-    public async getDocument(documentId: string): Promise<any> {
+    public async getDocument(documentId: string, partitionKey: string): Promise<any> {
         const { resource: result, statusCode: status }
-            = await this.cosmosContainer.item(documentId, QueryUtilities.getPartitionKey(documentId)).read();
+            = await this.cosmosContainer.item(documentId, partitionKey).read();
         if (status === 200) {
             return result;
         }
 
         // 404 not found does not throw an error
         throw Error("Cosmos Error: " + status);
+    }
+
+    // retrieves an actor by actor id
+    public async getActorById(actorId: string): Promise<Actor> {
+        return await this.getDocument(actorId, Actor.computePartitionKey(actorId))
+    }
+    
+    // retrieves a movie by movie id
+    public async getMovieById(movieId: string): Promise<Movie> {
+        return await this.getDocument(movieId, Movie.computePartitionKey(movieId))
     }
 
     // runs the given query for actors against the database.

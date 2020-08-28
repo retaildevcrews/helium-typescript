@@ -31,7 +31,7 @@ export class FeaturedController implements interfaces.Controller {
             // return a random featured movie from the list
             if (this.featuredMovies != null && this.featuredMovies.length > 0 ) {
                 const movieId = this.featuredMovies[ Math.floor(Math.random() * ( this.featuredMovies.length - 1 )) ];
-                result = new Movie(await this.cosmosDb.getDocument(movieId));
+                result = new Movie(await this.cosmosDb.getMovieById(movieId));
             }
         } catch (err) {
             resCode = getHttpStatusCode(err);
