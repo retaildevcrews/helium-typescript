@@ -96,7 +96,7 @@ it("Run webv against the running server", async function () {
 after(() => {
     if (heliumServer) {
         console.log("Stopping Helium server...");
-        heliumServer.stop();
+        heliumServer.shutdown();
     }
     else console.log("No Helium server to stop.");
 })

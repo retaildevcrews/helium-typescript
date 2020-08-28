@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import * as HttpStatus from "http-status-codes";
-import { QueryUtilities, DateUtilities, VersionUtilities, ValidationUtilities, getHttpStatusCode } from "../../src/utilities";
+import { DateUtilities, VersionUtilities, ValidationUtilities, getHttpStatusCode } from "../../src/utilities";
 import { ConsoleController } from "../../src/config/ConsoleController";
 import { queryErrorMessages } from "../../src/config/constants"
 import { Container } from "inversify";
@@ -13,22 +13,6 @@ describe("Utilities tests", () => {
     const container: Container = new Container();
     container.bind<LogService>("LogService").to(ConsoleLogService);
     logService = container.get<LogService>("LogService");
-  });
-
-  describe("QueryUtilities", () => {
-    describe("getPartitionKey", () => {
-      it("should return the right type", () => {
-        assert.typeOf(QueryUtilities.getPartitionKey("nm1234"), "string");
-      });
-
-      it("should return the right partition key", () => {
-        assert.equal(QueryUtilities.getPartitionKey("nm1234"), "4");
-        assert.equal(QueryUtilities.getPartitionKey("tt1234"), "4");
-        assert.equal(QueryUtilities.getPartitionKey("tttttt"), "0");
-        assert.equal(QueryUtilities.getPartitionKey("Action"), "0");
-        assert.equal(QueryUtilities.getPartitionKey("tt1"), "0");
-      });
-    })
   });
 
   describe("DateUtilities", () => {

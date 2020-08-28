@@ -148,9 +148,9 @@ export class HealthzController implements interfaces.Controller {
             if (endpoint === "/api/genres") {
                 await this.cosmosDb.queryDocuments(sqlGenres);
             } else if (endpoint === "/api/actors/nm0000173") {
-                await this.cosmosDb.getDocument("nm0000173");
+                await this.cosmosDb.getActorById("nm0000173");
             } else if (endpoint === "/api/movies/tt0133093") {
-                await this.cosmosDb.getDocument("tt0133093");
+                await this.cosmosDb.getMovieById("tt0133093");
             } else if (endpoint === "/api/movies?q=ring") {
                 await this.cosmosDb.queryMovies({q: "ring"});
             } else {

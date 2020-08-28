@@ -27,4 +27,16 @@ export class Actor {
             this.movies = data.movies;
         }
     }
+
+    // compute the partition key based on the actorId
+    public static computePartitionKey(id: string): string {
+        let idInt = 0;
+
+        if ( id.length > 5 && id.startsWith("nm")) {
+            idInt = parseInt(id.substring(2), 10);
+            return isNaN(idInt) ? "0" : (idInt % 10).toString();
+        }
+
+        return idInt.toString();
+    }
 }

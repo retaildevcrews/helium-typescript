@@ -54,7 +54,7 @@ export class MovieController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let result: Movie;
         try {
-            result = new Movie(await this.cosmosDb.getDocument(movieId));
+            result = new Movie(await this.cosmosDb.getMovieById(movieId));
         } catch (err) {
             resCode = getHttpStatusCode(err);
 

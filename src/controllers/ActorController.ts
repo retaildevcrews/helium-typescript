@@ -56,7 +56,7 @@ export class ActorController implements interfaces.Controller {
         let resCode: number = HttpStatus.OK;
         let result: Actor;
         try {
-            result = new Actor(await this.dataService.getDocument(actorId));
+            result = new Actor(await this.dataService.getActorById(actorId));
         } catch (err) {
             resCode = getHttpStatusCode(err);
 
