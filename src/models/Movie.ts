@@ -7,7 +7,7 @@ export class Movie {
     public title: string;
     public textSearch: string;
     public type: string;
-    public partitionKey: string;
+    public readonly partitionKey: string;
     public year?: number;
     public runtime?: number;
     public rating?: number;

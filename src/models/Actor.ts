@@ -7,7 +7,7 @@ export class Actor {
     public name: string;
     public textSearch: string;
     public type: string;
-    public partitionKey: string;
+    public readonly partitionKey: string;
     public birthYear?: number;
     public deathYear?: number;
     public profession?: string[];
