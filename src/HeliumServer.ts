@@ -59,7 +59,8 @@ export class HeliumServer {
                 res.setHeader("Content-Type", "application/json");
                 res.send({
                     apiVersion: swaggerVersion,
-                    appVersion: buildVersion
+                    appVersion: buildVersion,
+                    language: "typescript"
                 });
             });
         }).build();
