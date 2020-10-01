@@ -1,4 +1,4 @@
-import { queryErrorMessages } from "../config/constants";
+import { queryErrorTypes } from "../config/constants";
 import * as HttpStatus from "http-status-codes";
 import { ParameterValidationUtilities } from "./parameterValidationUtilities";
 
