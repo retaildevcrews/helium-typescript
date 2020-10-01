@@ -31,7 +31,7 @@ export class APIValidationUtilities {
         var errorResponse = {
             "type": queryErrorTypes.actorQuery,
             "title": "Parameter validation error",
-            "status": 400,
+            "status": HttpStatus.BAD_REQUEST,
             "detail": "One or more invalid parameters were specified.",
             "instance": queryString, //"/api/actors?q=a&pageSize=99999",
             "validationErrors": []
@@ -76,7 +76,7 @@ export class APIValidationUtilities {
         var errorResponse = {
             "type": queryErrorTypes.movieQuery,
             "title": "Parameter validation error",
-            "status": 400,
+            "status": HttpStatus.BAD_REQUEST,
             "detail": "One or more invalid parameters were specified.",
             "instance": queryString, 
             "validationErrors": []
@@ -138,7 +138,7 @@ export class APIValidationUtilities {
         var errorResponse = {
             "type": queryErrorTypes.movieDirectRead,
             "title": "Parameter validation error",
-            "status": 400,
+            "status": HttpStatus.BAD_REQUEST,
             "detail": "One or more invalid parameters were specified.",
             "instance": movieId, 
             "validationErrors": []
@@ -166,7 +166,7 @@ export class APIValidationUtilities {
         var errorResponse = {
             "type": queryErrorTypes.actorDirectRead,
             "title": "Parameter validation error",
-            "status": 400,
+            "status": HttpStatus.BAD_REQUEST,
             "detail": "One or more invalid parameters were specified.",
             "instance": actorId, 
             "validationErrors": []
