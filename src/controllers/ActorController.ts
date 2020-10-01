@@ -5,8 +5,8 @@ import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Actor } from "../models/Actor";
 import { controllerExceptions } from "../config/constants";
-import { getHttpStatusCode, ValidationUtilities } from "../utilities";
-import { APIValidationUtilities } from "../utilities/apiValidationUtilities";
+import { getHttpStatusCode, APIValidationUtilities } from "../utilities";
+//import { APIValidationUtilities } from "../utilities/apiValidationUtilities";
 
 // controller implementation for our actors endpoint
 @Controller("/api/actors")
@@ -21,7 +21,7 @@ export class ActorController implements interfaces.Controller {
     @Get("/")
     public async getAllActors(req: Request, res) {
         // validate query parameters
-        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActors(req.query);
+        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActors(req.query, req.path(), req.getQuery());
         
         if (!validated) {
             this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.detail}`); 
@@ -47,7 +47,7 @@ export class ActorController implements interfaces.Controller {
     public async getActorById(req, res) {
         // validate Actor Id parameter
         const actorId: string = req.params.id;
-        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActorId(actorId);
+        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActorId(actorId, req.path(), req.getQuery());
         
         if (!validated) {
             this.logger.warn(`getActorById|${actorId}|${errorResponse.detail}`); 

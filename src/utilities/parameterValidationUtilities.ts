@@ -1,5 +1,4 @@
 import { queryErrorMessages } from "../config/constants";
-import * as HttpStatus from "http-status-codes";
 
 // utilities for validating API parameters.
 export class ParameterValidationUtilities {

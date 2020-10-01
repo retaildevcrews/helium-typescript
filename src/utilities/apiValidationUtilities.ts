@@ -5,20 +5,8 @@ import { ParameterValidationUtilities } from "./parameterValidationUtilities";
 // utilities for validating API call responses.
 export class APIValidationUtilities {
 
-    public static buildQueryString(prefix: string, query: any) {
-
-        let output = prefix;
-        for (var key in query) {
-            if (query.hasOwnProperty(key)) {
-              output = output + key + "=" + query[key] + "&";
-            }
-        }
-        //console.log(query);
-        return output.substring(0, output.length-1);
-    }
-
     // validate common parameters
-    public static validateActors(query: any) {
+    public static validateActors(query: any, path: string, querySuffix: string) {
 
         if ( query === null || query === undefined ) {
             return { validated: true };
@@ -26,14 +14,14 @@ export class APIValidationUtilities {
 
         let foundActorQueryError = false;
 
-        const queryString = APIValidationUtilities.buildQueryString("/api/actors?", query);
+        const queryString = path+"?"+querySuffix;
 
-        var errorResponse = {
+        const errorResponse = {
             "type": queryErrorTypes.actorQuery,
             "title": "Parameter validation error",
             "status": HttpStatus.BAD_REQUEST,
             "detail": "One or more invalid parameters were specified.",
-            "instance": queryString, //"/api/actors?q=a&pageSize=99999",
+            "instance": queryString,
             "validationErrors": []
         };
 
@@ -63,7 +51,7 @@ export class APIValidationUtilities {
     }
 
     // validate movie-specific parameters
-    public static validateMovies(query: any) {
+    public static validateMovies(query: any, path: string, querySuffix: string) {
 
         if ( query === null || query === undefined ) {
             return { validated: true };
@@ -71,9 +59,9 @@ export class APIValidationUtilities {
 
         let foundMovieQueryError = false;
 
-        const queryString = APIValidationUtilities.buildQueryString("/api/movies?", query);
+        const queryString = path+"?"+querySuffix;
 
-        var errorResponse = {
+        const errorResponse = {
             "type": queryErrorTypes.movieQuery,
             "title": "Parameter validation error",
             "status": HttpStatus.BAD_REQUEST,
@@ -130,16 +118,18 @@ export class APIValidationUtilities {
         return { validated: true};
     }
 
-    public static validateMovieId(movieId: string) {
+    public static validateMovieId(movieId: string, path: string, querySuffix: string) {
         
         let foundMovieQueryError = false;
 
-        var errorResponse = {
+        const queryString = path+"/"+querySuffix;
+
+        const errorResponse = {
             "type": queryErrorTypes.movieDirectRead,
             "title": "Parameter validation error",
             "status": HttpStatus.BAD_REQUEST,
             "detail": "One or more invalid parameters were specified.",
-            "instance": movieId, 
+            "instance": queryString.substring(0, queryString.length-1), 
             "validationErrors": []
         };
 
@@ -157,16 +147,18 @@ export class APIValidationUtilities {
         return { validated: true };
     }
 
-    public static validateActorId(actorId: string) {
+    public static validateActorId(actorId: string, path: string, querySuffix: string) {
         
         let foundActorQueryError = false;
 
-        var errorResponse = {
+        const queryString = path+"/"+querySuffix;
+
+        const errorResponse = {
             "type": queryErrorTypes.actorDirectRead,
             "title": "Parameter validation error",
             "status": HttpStatus.BAD_REQUEST,
             "detail": "One or more invalid parameters were specified.",
-            "instance": actorId, 
+            "instance": queryString.substring(0, queryString.length-1), 
             "validationErrors": []
         };
 
