@@ -6,7 +6,6 @@ import { DataService, LogService } from "../services";
 import { Actor } from "../models/Actor";
 import { controllerExceptions } from "../config/constants";
 import { getHttpStatusCode, APIValidationUtilities } from "../utilities";
-//import { APIValidationUtilities } from "../utilities/apiValidationUtilities";
 
 // controller implementation for our actors endpoint
 @Controller("/api/actors")
