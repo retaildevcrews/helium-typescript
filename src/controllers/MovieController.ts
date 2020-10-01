@@ -5,6 +5,7 @@ import { DataService, LogService } from "../services";
 import { Movie } from "../models/Movie";
 import { controllerExceptions } from "../config/constants";
 import { getHttpStatusCode, ValidationUtilities } from "../utilities";
+import { APIValidationUtilities } from "../utilities/apiValidationUtilities";
 
 // controller implementation for our movies endpoint
 @Controller("/api/movies")
@@ -18,11 +19,11 @@ export class MovieController implements interfaces.Controller {
     @Get("/")
     public async getAllMovies(req, res) {
         // validate query parameters
-        const { validated: validated, message: message } = ValidationUtilities.validateMovies(req.query);
+        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateMovies(req.query);
         
         if (!validated) {
-            this.logger.warn(`InvalidParameter|getAllMovies|${message.error.message}`);
-            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(message, null, 4));
+            this.logger.warn(`InvalidParameter|getAllMovies|${errorResponse.detail}`);
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));
         }
 
         let resCode: number = HttpStatus.OK;
@@ -44,11 +45,11 @@ export class MovieController implements interfaces.Controller {
     public async getMovieById(req, res) {
         // validate Movie Id parameter
         const movieId: string = req.params.id;
-        const { validated: validated, message: message } = ValidationUtilities.validateMovieId(movieId);
+        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateMovieId(movieId);
 
         if (!validated) {
-            this.logger.warn(`getMovieById|${movieId}|${message.error.message}`);
-            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(message, null, 4));
+            this.logger.warn(`getMovieById|${movieId}|${errorResponse.detail}`);
+            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));
         }
 
         let resCode: number = HttpStatus.OK;
