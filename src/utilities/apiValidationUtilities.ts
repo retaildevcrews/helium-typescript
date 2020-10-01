@@ -1,4 +1,3 @@
-import { queryErrorMessages, queryErrorTypes } from "../config/constants";
 import * as HttpStatus from "http-status-codes";
 import { ParameterValidationUtilities } from "./parameterValidationUtilities";
 
@@ -43,15 +42,15 @@ export class APIValidationUtilities {
         const { validated: validatedPS, message: messagePS } = ParameterValidationUtilities.validatePageSize(query);
 
         if (!validatedQ) {
-            errorResponse['validationErrors'].push(messageQ);
+            errorResponse["validationErrors"].push(messageQ);
             foundActorQueryError = true;
         }
         if (!validatedPN) {
-            errorResponse['validationErrors'].push(messagePN);
+            errorResponse["validationErrors"].push(messagePN);
             foundActorQueryError = true;
         }
         if (!validatedPS) {
-            errorResponse['validationErrors'].push(messagePS);
+            errorResponse["validationErrors"].push(messagePS);
             foundActorQueryError = true;
         }
 
@@ -91,34 +90,34 @@ export class APIValidationUtilities {
         const { validated: validatedR, message: messageR } = ParameterValidationUtilities.validateRating(query);
 
         if (!validatedQ) {
-            errorResponse['validationErrors'].push(messageQ);
+            errorResponse["validationErrors"].push(messageQ);
             foundMovieQueryError = true;
         }
         if (!validatedPN) {
-            errorResponse['validationErrors'].push(messagePN);
+            errorResponse["validationErrors"].push(messagePN);
             foundMovieQueryError = true;
         }
         if (!validatedPS) {
-            errorResponse['validationErrors'].push(messagePS);
+            errorResponse["validationErrors"].push(messagePS);
             foundMovieQueryError = true;
         }
         if (!validatedG) {
-            errorResponse['validationErrors'].push(messageG);
+            errorResponse["validationErrors"].push(messageG);
             foundMovieQueryError = true;
         }
         if (!validatedY) {
-            errorResponse['validationErrors'].push(messageY);
+            errorResponse["validationErrors"].push(messageY);
             foundMovieQueryError = true;
         }
         if (!validatedR) {
-            errorResponse['validationErrors'].push(messageR);
+            errorResponse["validationErrors"].push(messageR);
             foundMovieQueryError = true;
         }
 
         if ("actorId" in query) {
             const { validated: validatedActorId, message: messageActorId } = ParameterValidationUtilities.validateActorId(query.actorId);
             if (!validatedActorId) {
-                errorResponse['validationErrors'].push(messageActorId);
+                errorResponse["validationErrors"].push(messageActorId);
                 foundMovieQueryError = true;
             }
         }
@@ -132,7 +131,6 @@ export class APIValidationUtilities {
 
     public static validateMovieId(movieId: string) {
         
-        let validated = true;
         let foundMovieQueryError = false;
 
         var errorResponse = {
@@ -147,7 +145,7 @@ export class APIValidationUtilities {
         const { validated: validatedMovieId, message: messageMovieId } = ParameterValidationUtilities.validateMovieId(movieId);
 
         if (!validatedMovieId) {
-            errorResponse['validationErrors'].push(messageMovieId);
+            errorResponse["validationErrors"].push(messageMovieId);
             foundMovieQueryError = true;
         }
 
@@ -155,12 +153,11 @@ export class APIValidationUtilities {
             return { validated: false, errorResponse: errorResponse};
         }
         
-        return { validated: validated };
+        return { validated: true };
     }
 
     public static validateActorId(actorId: string) {
         
-        let validated = true;
         let foundActorQueryError = false;
 
         var errorResponse = {
@@ -175,7 +172,7 @@ export class APIValidationUtilities {
         const { validated: validatedActorId, message: messageActorId } = ParameterValidationUtilities.validateActorId(actorId);
 
         if (!validatedActorId) {
-            errorResponse['validationErrors'].push(messageActorId);
+            errorResponse["validationErrors"].push(messageActorId);
             foundActorQueryError = true;
         }
 
@@ -183,6 +180,6 @@ export class APIValidationUtilities {
             return { validated: false, errorResponse: errorResponse};
         }
         
-        return { validated: validated };
+        return { validated: true };
     }
 }
