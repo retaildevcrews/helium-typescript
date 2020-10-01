@@ -1,4 +1,13 @@
-import { queryErrorMessages } from "../config/constants";
+export const queryErrorMessages = {
+    invalidMovieIDMessage: "The parameter 'movieId' should start with 'tt' and be between 7 and 11 characters in total.",
+    invalidActorIDMessage: "The parameter 'actorId' should start with 'nm' and be between 7 and 11 characters in total.",
+    invalidQSearchMessage: "The parameter 'q' should be between 2 and 20 characters.",
+    invalidPageNumberMessage: "The parameter 'pageNumber' should be between 1 and 10000.",
+    invalidPageSizeMessage: "The parameter 'pageSize' should be between 1 and 1000.",
+    invalidGenreMessage: "The parameter 'genre' should be between 3 and 20 characters.",
+    invalidYearMessage: "The parameter 'year' should be between 1874 and {Current Year + 5}.",
+    invalidRatingMessage: "The parameter 'rating' should be between 0.0 and 10.0."
+};
 
 // utilities for validating API parameters.
 export class ParameterValidationUtilities {

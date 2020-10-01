@@ -1,13 +1,14 @@
 import { assert } from "chai";
 import * as HttpStatus from "http-status-codes";
-import { DateUtilities, VersionUtilities, ValidationUtilities, getHttpStatusCode } from "../../src/utilities";
+import { DateUtilities, VersionUtilities, APIValidationUtilities, queryErrorMessages, getHttpStatusCode } from "../../src/utilities";
 import { ConsoleController } from "../../src/config/ConsoleController";
-import { queryErrorMessages } from "../../src/config/constants"
 import { Container } from "inversify";
 import { LogService, ConsoleLogService } from "../../src/services";
 
 let logService;
 
+const querySuffix = "test";
+const queryPrefix = "/api/test";
 describe("Utilities tests", () => {
   before(() => {
     const container: Container = new Container();
@@ -55,304 +56,304 @@ describe("Utilities tests", () => {
     });
   });
 
-  describe("ValidationUtilities", () => {
+  describe("APIValidationUtilities", () => {
     describe("validateMovieId", () => {
       it("should invalidate ( null )", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId( null );
+        const { validated, errorResponse } = APIValidationUtilities.validateMovieId( null, queryPrefix, querySuffix );
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidMovieIDMessage);
       });
 
       it("should invalidate ( undefined )", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId( undefined );
+        const { validated, errorResponse } = APIValidationUtilities.validateMovieId( undefined, queryPrefix, querySuffix );
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidMovieIDMessage);
       });
 
       it("should validate movie ID tt333344", () => {
-        const { validated } = ValidationUtilities.validateMovieId("tt333344");
+        const { validated } = APIValidationUtilities.validateMovieId("tt333344", queryPrefix, querySuffix);
         assert.isTrue(validated);
       });
 
       it("should invalidate TT333344 (uppercase prefix)", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId("TT333344");
+        const { validated, errorResponse } = APIValidationUtilities.validateMovieId("TT333344", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidMovieIDMessage);
       });
 
       it("should invalidate nm333344 (incorrect prefix)", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId("nm333344");
+        const { validated, errorResponse } = APIValidationUtilities.validateMovieId("nm333344", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidMovieIDMessage);
       });
 
       it("should invalidate tt (too short)", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId("tt");
+        const { validated, errorResponse } = APIValidationUtilities.validateMovieId("tt", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidMovieIDMessage);
       });
 
       it("should invalidate tttttttttttt (too long)", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId("tttttttttttt");
+        const { validated, errorResponse } = APIValidationUtilities.validateMovieId("tttttttttttt", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidMovieIDMessage);
       });
 
       it("should invalidate ttabcdef (non-numeric after first 2 characters)", () => {
-        const { validated, message } = ValidationUtilities.validateMovieId("ttabcdef");
+        const { validated, errorResponse } = APIValidationUtilities.validateMovieId("ttabcdef", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidMovieIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidMovieIDMessage);
       });
     });
 
     describe("validateActorId", () => {
       it("should validate nm333344", () => {
-        const { validated } = ValidationUtilities.validateActorId("nm333344");
+        const { validated } = APIValidationUtilities.validateActorId("nm333344", queryPrefix, querySuffix);
         assert.isTrue(validated);
       });
 
       it("should invalidate NM333344 (upper case)", () => {
-        const { validated, message } = ValidationUtilities.validateActorId("NM333344");
+        const { validated, errorResponse } = APIValidationUtilities.validateActorId("NM333344", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidActorIDMessage);
       });
 
       it("should invalidate tt333344 (incorrect prefix)", () => {
-        const { validated, message } = ValidationUtilities.validateActorId("tt333344");
+        const { validated, errorResponse } = APIValidationUtilities.validateActorId("tt333344", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidActorIDMessage);
       });
 
       it("should invalidate nm (too short)", () => {
-        const { validated, message } = ValidationUtilities.validateActorId("nm");
+        const { validated, errorResponse } = APIValidationUtilities.validateActorId("nm", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidActorIDMessage);
       });
 
       it("should invalidate tttttttttttt (too long)", () => {
-        const { validated, message } = ValidationUtilities.validateActorId("tttttttttttt");
+        const { validated, errorResponse } = APIValidationUtilities.validateActorId("tttttttttttt", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidActorIDMessage);
       });
 
       it("should invalidate nmabcdef (non-numeric after first 2 characters)", () => {
-        const { validated, message } = ValidationUtilities.validateActorId("nmabcdef");
+        const { validated, errorResponse } = APIValidationUtilities.validateActorId("nmabcdef", queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidActorIDMessage);
       });
     });
 
     describe("validateCommon", () => {
       it("should validate with no parameters", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({});
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({}, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with null", () => {
-        const { validated, message } = ValidationUtilities.validateCommon( null );
+        const { validated, errorResponse } = APIValidationUtilities.validateActors( null, queryPrefix, querySuffix );
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with undefined", () => {
-        const { validated, message } = ValidationUtilities.validateCommon( undefined );
+        const { validated, errorResponse } = APIValidationUtilities.validateActors( undefined, queryPrefix, querySuffix );
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with a valid q parameter", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ q: "valid" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ q: "valid" }, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with a valid pageNumber parameter", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageNumber: "100" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageNumber: "100" }, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with a valid pageSize parameter", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageSize: "200" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageSize: "200" }, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should invalidate when q parameter is too long", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ q: "this query is too long" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ q: "this query is too long" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidQSearchMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidQSearchMessage);
       });
 
       it("should invalidate when q parameter is too short", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ q: "a" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ q: "a" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidQSearchMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidQSearchMessage);
       });
 
       it("should invalidate when pageNumber parameter cannot parse to an integer", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageNumber: "number" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageNumber: "number" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageNumberMessage);
       });
 
       it("should invalidate when pageNumber parameter is too large", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageNumber: "20000" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageNumber: "20000" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageNumberMessage);
       });
 
       it("should invalidate when pageNumber parameter is too small", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageNumber: "0" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageNumber: "0" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageNumberMessage);
       });
 
       it("should invalidate when pageSize parameter cannot parse to an integer", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageSize: "size" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageSize: "size" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageSizeMessage);
       });
 
       it("should invalidate when pageSize parameter is too large", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageSize: "2000" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageSize: "2000" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageSizeMessage);
       });
 
       it("should invalidate when pageSize parameter is too small", () => {
-        const { validated, message } = ValidationUtilities.validateCommon({ pageSize: "0" });
+        const { validated, errorResponse } = APIValidationUtilities.validateActors({ pageSize: "0" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageSizeMessage);
       });
     });
 
     describe("validateMovies", () => {
       it("should validate with no parameters", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({});
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({}, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with null", () => {
-        const { validated, message } = ValidationUtilities.validateMovies( null );
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies( null, queryPrefix, querySuffix );
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with undefined", () => {
-        const { validated, message } = ValidationUtilities.validateMovies( undefined );
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies( undefined, queryPrefix, querySuffix );
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with a valid genre", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ genre: "action" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ genre: "action" }, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with a valid year", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ year: "1999" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ year: "1999" }, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with a valid rating", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ rating: "9.3" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ rating: "9.3" }, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should validate with a valid actorId", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ actorId: "nm123345" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ actorId: "nm123345" }, queryPrefix, querySuffix);
         assert.isTrue(validated);
-        assert.isUndefined(message);
+        assert.isUndefined(errorResponse);
       });
 
       it("should invalidate with invalid q parameter", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ q: "a" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ q: "a" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidQSearchMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidQSearchMessage);
       });
 
       it("should invalidate with invalid pageNumber parameter", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ pageNumber: "0" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ pageNumber: "0" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageNumberMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageNumberMessage);
       });
 
       it("should invalidate with invalid pageSize parameter", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ pageSize: "size" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ pageSize: "size" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidPageSizeMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidPageSizeMessage);
       });
 
       it("should invalidate with invalid genre parameter (null)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ genre: null });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ genre: null }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidGenreMessage);
       });
 
       it("should invalidate with invalid genre parameter (undefined)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ genre: undefined });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ genre: undefined }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidGenreMessage);
       });
 
       it("should invalidate with invalid genre parameter (too long)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ genre: "this is too long for a genre" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ genre: "this is too long for a genre" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidGenreMessage);
       });
 
       it("should invalidate with invalid genre parameter (too short)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ genre: "ge" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ genre: "ge" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidGenreMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidGenreMessage);
       });
 
       it("should invalidate with invalid year parameter (won't parse to an integer)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ year: "year" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ year: "year" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidYearMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidYearMessage);
       });
 
       it("should invalidate with invalid year parameter (too large)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ year: "3060" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ year: "3060" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidYearMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidYearMessage);
       });
 
       it("should invalidate with invalid year parameter (too small)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ year: "1870" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ year: "1870" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidYearMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidYearMessage);
       });
 
       it("should invalidate with invalid rating parameter (won't parse to an integer)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ rating: "rating" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ rating: "rating" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidRatingMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidRatingMessage);
       });
 
       it("should invalidate with invalid rating parameter (too large)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ rating: "12.34" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ rating: "12.34" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidRatingMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidRatingMessage);
       });
 
       it("should invalidate with invalid rating parameter (too small)", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ rating: "-1" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ rating: "-1" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidRatingMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidRatingMessage);
       });
 
       it("should invalidate with invalid actorId parameter", () => {
-        const { validated, message } = ValidationUtilities.validateMovies({ actorId: "actor" });
+        const { validated, errorResponse } = APIValidationUtilities.validateMovies({ actorId: "actor" }, queryPrefix, querySuffix);
         assert.isFalse(validated);
-        assert.equal(message.error.message, queryErrorMessages.invalidActorIDMessage);
+        assert.equal(errorResponse.validationErrors[0].message, queryErrorMessages.invalidActorIDMessage);
       });
     });
   });

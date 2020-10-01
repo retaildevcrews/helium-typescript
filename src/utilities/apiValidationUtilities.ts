@@ -1,8 +1,15 @@
-import { queryErrorTypes } from "../config/constants";
 import * as HttpStatus from "http-status-codes";
 import { ParameterValidationUtilities } from "./parameterValidationUtilities";
 
-// utilities for validating API call responses.
+export const queryErrorTypes = {
+    actorQuery: "https://github.com/retaildevcrews/helium/blob/main/docs/ParameterValidation.md#actors",
+    movieQuery: "https://github.com/retaildevcrews/helium/blob/main/docs/ParameterValidation.md#movies",
+    movieDirectRead: "https://github.com/retaildevcrews/helium/blob/main/docs/ParameterValidation.md#direct-read",
+    actorDirectRead: "https://github.com/retaildevcrews/helium/blob/main/docs/ParameterValidation.md#direct-read-1"
+};
+
+
+// utilities for building API call responses.
 export class APIValidationUtilities {
 
     // validate common parameters
