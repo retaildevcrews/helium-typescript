@@ -8,8 +8,6 @@ export class ParameterValidationUtilities {
 
     public static validateQ(query: any) {
         
-        let validated = true;
-
         if ("q" in query) {
             
             if (query.q === null || query.q === undefined || query.q.length < 2 || query.q.length > 20 ) {
@@ -25,14 +23,12 @@ export class ParameterValidationUtilities {
 
         }
 
-        return { validated: validated };
+        return { validated: true };
 
     }
 
     public static validatePageNumber(query: any) {
         
-        let validated = true;
-
         if ("pageNumber" in query) {
             
             const pageNumber = parseInt(query.pageNumber, 10)
@@ -50,14 +46,12 @@ export class ParameterValidationUtilities {
 
         }
 
-        return { validated: validated };
+        return { validated: true };
 
     }
 
     public static validatePageSize(query: any) {
         
-        let validated = true;
-
         if ("pageSize" in query) {
 
             const pageSize = parseInt(query.pageSize, 10)
@@ -75,14 +69,12 @@ export class ParameterValidationUtilities {
 
         }
 
-        return { validated: validated };
+        return { validated: true };
 
     }
 
     public static validateGenre(query: any) {
         
-        let validated = true;
-
         if ("genre" in query) {
 
             if (query.genre === null || query.genre === undefined || query.genre.length < 3 || query.genre.length > 20) {
@@ -99,14 +91,12 @@ export class ParameterValidationUtilities {
 
         }
 
-        return { validated: validated };
+        return { validated: true };
 
     }
 
     public static validateYear(query: any) {
         
-        let validated = true;
-
         if ("year" in query) {
             const year = parseInt(query.year, 10);
 
@@ -124,14 +114,12 @@ export class ParameterValidationUtilities {
 
         }
 
-        return { validated: validated };
+        return { validated: true };
 
     }
 
     public static validateRating(query: any) {
         
-        let validated = true;
-
         if ("rating" in query) {
 
             const rating = parseFloat(query.rating);
@@ -149,7 +137,7 @@ export class ParameterValidationUtilities {
 
         }
 
-        return { validated: validated };
+        return { validated: true };
 
     }
 
