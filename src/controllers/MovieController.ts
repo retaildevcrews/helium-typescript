@@ -22,6 +22,7 @@ export class MovieController implements interfaces.Controller {
         
         if (!validated) {
             this.logger.warn(`InvalidParameter|getAllMovies|${errorResponse.detail}`);
+            res.setHeader("Content-Type", "application/problem+json");
             return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));
         }
 
@@ -48,6 +49,7 @@ export class MovieController implements interfaces.Controller {
 
         if (!validated) {
             this.logger.warn(`getMovieById|${movieId}|${errorResponse.detail}`);
+            res.setHeader("Content-Type", "application/problem+json");
             return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));
         }
 

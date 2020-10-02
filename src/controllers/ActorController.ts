@@ -24,6 +24,7 @@ export class ActorController implements interfaces.Controller {
         
         if (!validated) {
             this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.detail}`); 
+            res.setHeader("Content-Type", "application/problem+json");
             return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));  
         }
 
@@ -50,6 +51,7 @@ export class ActorController implements interfaces.Controller {
         
         if (!validated) {
             this.logger.warn(`getActorById|${actorId}|${errorResponse.detail}`); 
+            res.setHeader("Content-Type", "application/problem+json");
             return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4)); 
         }
 
