@@ -12,7 +12,7 @@ export const queryErrorTypes = {
 // utilities for building API call responses.
 export class APIValidationUtilities {
 
-    // validate common parameters
+    // validate actor-specific parameters
     public static validateActors(query: any, path: string, querySuffix: string) {
 
         if ( query === null || query === undefined ) {
