@@ -21,11 +21,15 @@ export class ActorController implements interfaces.Controller {
     public async getAllActors(req: Request, res) {
         // validate query parameters
         const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActors(req.query, req.path(), req.getQuery());
-        
+
         if (!validated) {
-            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.detail}`); 
-            res.setHeader("Content-Type", "application/problem+json");
-            return res.send(HttpStatus.BAD_REQUEST, errorResponse);  
+            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.detail}`);
+            res.writeHead(HttpStatus.BAD_REQUEST, {
+                "Content-Type": "application/problem+json",
+            });
+            res.write(JSON.stringify(errorResponse,null,4));
+    
+            return res.end();
         }
 
         let resCode: number = HttpStatus.OK;
@@ -48,11 +52,15 @@ export class ActorController implements interfaces.Controller {
         // validate Actor Id parameter
         const actorId: string = req.params.id;
         const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActorId(actorId, req.path(), req.getQuery());
-        
+
         if (!validated) {
-            this.logger.warn(`getActorById|${actorId}|${errorResponse.detail}`); 
-            res.setHeader("Content-Type", "application/problem+json");
-            return res.send(HttpStatus.BAD_REQUEST, errorResponse); 
+            this.logger.warn(`getActorById|${actorId}|${errorResponse.detail}`);
+            res.writeHead(HttpStatus.BAD_REQUEST, {
+                "Content-Type": "application/problem+json",
+            });
+            res.write(JSON.stringify(errorResponse,null,4));
+    
+            return res.end();
         }
 
         let resCode: number = HttpStatus.OK;

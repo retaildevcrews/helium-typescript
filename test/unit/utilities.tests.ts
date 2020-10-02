@@ -143,7 +143,7 @@ describe("Utilities tests", () => {
       });
     });
 
-    describe("validateCommon", () => {
+    describe("validateActors", () => {
       it("should validate with no parameters", () => {
         const { validated, errorResponse } = APIValidationUtilities.validateActors({}, queryPrefix, querySuffix);
         assert.isTrue(validated);

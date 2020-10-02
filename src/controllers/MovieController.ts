@@ -19,11 +19,15 @@ export class MovieController implements interfaces.Controller {
     public async getAllMovies(req, res) {
         // validate query parameters
         const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateMovies(req.query, req.path(), req.getQuery());
-        
+
         if (!validated) {
             this.logger.warn(`InvalidParameter|getAllMovies|${errorResponse.detail}`);
-            res.setHeader("Content-Type", "application/problem+json");
-            return res.send(HttpStatus.BAD_REQUEST, errorResponse);
+            res.writeHead(HttpStatus.BAD_REQUEST, {
+                "Content-Type": "application/problem+json",
+            });
+            res.write(JSON.stringify(errorResponse,null,4));
+    
+            return res.end();
         }
 
         let resCode: number = HttpStatus.OK;
@@ -49,8 +53,12 @@ export class MovieController implements interfaces.Controller {
 
         if (!validated) {
             this.logger.warn(`getMovieById|${movieId}|${errorResponse.detail}`);
-            res.setHeader("Content-Type", "application/problem+json");
-            return res.send(HttpStatus.BAD_REQUEST, errorResponse);
+            res.writeHead(HttpStatus.BAD_REQUEST, {
+                "Content-Type": "application/problem+json",
+            });
+            res.write(JSON.stringify(errorResponse,null,4));
+    
+            return res.end();
         }
 
         let resCode: number = HttpStatus.OK;
