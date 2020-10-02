@@ -36,6 +36,8 @@ export class HeliumServer {
                 .use(restify.plugins.requestLogger())
                 .use(EndpointLogger(this.container));
 
+            app.formatters = {"application/problem+json": (req, res, body) => {return JSON.stringify(body, null, 4);}}
+
             // routes
             app.get("/swagger/*", restify.plugins.serveStatic({
                 directory: __dirname + "/..",
