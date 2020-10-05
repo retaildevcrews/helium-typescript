@@ -5,7 +5,7 @@ import * as HttpStatus from "http-status-codes";
 import { DataService, LogService } from "../services";
 import { Actor } from "../models/Actor";
 import { controllerExceptions } from "../config/constants";
-import { getHttpStatusCode, ValidationUtilities } from "../utilities";
+import { getHttpStatusCode, APIValidationUtilities } from "../utilities";
 
 // controller implementation for our actors endpoint
 @Controller("/api/actors")
@@ -20,11 +20,16 @@ export class ActorController implements interfaces.Controller {
     @Get("/")
     public async getAllActors(req: Request, res) {
         // validate query parameters
-        const { validated: validated, message: errorResponse } = ValidationUtilities.validateCommon(req.query);
-        
+        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActors(req.query, req.path(), req.getQuery());
+
         if (!validated) {
-            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.error.message}`); 
-            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4));  
+            this.logger.warn(`InvalidParameter|getAllActors|${errorResponse.detail}`);
+            res.writeHead(HttpStatus.BAD_REQUEST, {
+                "Content-Type": "application/problem+json",
+            });
+            res.write(JSON.stringify(errorResponse,null,4));
+    
+            return res.end();
         }
 
         let resCode: number = HttpStatus.OK;
@@ -46,11 +51,16 @@ export class ActorController implements interfaces.Controller {
     public async getActorById(req, res) {
         // validate Actor Id parameter
         const actorId: string = req.params.id;
-        const { validated: validated, message: errorResponse } = ValidationUtilities.validateActorId(actorId);
-        
+        const { validated: validated, errorResponse: errorResponse } = APIValidationUtilities.validateActorId(actorId, req.path(), req.getQuery());
+
         if (!validated) {
-            this.logger.warn(`getActorById|${actorId}|${errorResponse.error.message}`); 
-            return res.sendRaw(HttpStatus.BAD_REQUEST, JSON.stringify(errorResponse, null, 4)); 
+            this.logger.warn(`getActorById|${actorId}|${errorResponse.detail}`);
+            res.writeHead(HttpStatus.BAD_REQUEST, {
+                "Content-Type": "application/problem+json",
+            });
+            res.write(JSON.stringify(errorResponse,null,4));
+    
+            return res.end();
         }
 
         let resCode: number = HttpStatus.OK;

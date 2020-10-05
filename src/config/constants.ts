@@ -12,20 +12,11 @@ export const gracefulShutdownTimeout = 10000;
 export const webInstanceRole = "WEBSITE_ROLE_INSTANCE_ID";
 export const defaultPageSize = 100;
 export const sqlGenres = "SELECT VALUE m.genre FROM m where m.type = 'Genre'";
-export const queryErrorMessages = {
-    invalidMovieIDMessage: "Invalid Movie ID parameter",
-    invalidActorIDMessage: "Invalid Actor ID parameter",
-    invalidQSearchMessage: "Invalid q (search) parameter",
-    invalidPageNumberMessage: "Invalid PageNumber parameter",
-    invalidPageSizeMessage: "Invalid PageSize parameter",
-    invalidGenreMessage: "Invalid Genre parameter",
-    invalidYearMessage: "Invalid Year parameter",
-    invalidRatingMessage: "Invalid Rating parameter"
-};
+
 export const controllerExceptions = {
     actorsControllerException: "ActorsControllerException",
     featuredControllerException: "FeaturedControllerException",
     genresControllerException: "GenresControllerException",
     healthzControllerException: "HealthzControllerException",
     moviesControllerException: "MoviesControllerException"
-}
+};
