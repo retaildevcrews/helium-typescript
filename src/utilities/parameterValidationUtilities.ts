@@ -5,7 +5,7 @@ export const queryErrorMessages = {
     invalidPageNumberMessage: "The parameter 'pageNumber' should be between 1 and 10000.",
     invalidPageSizeMessage: "The parameter 'pageSize' should be between 1 and 1000.",
     invalidGenreMessage: "The parameter 'genre' should be between 3 and 20 characters.",
-    invalidYearMessage: "The parameter 'year' should be between 1874 and {Current Year + 5}.",
+    invalidYearMessage: "The parameter 'year' should be between 1874 and 2025.",
     invalidRatingMessage: "The parameter 'rating' should be between 0.0 and 10.0."
 };
 
