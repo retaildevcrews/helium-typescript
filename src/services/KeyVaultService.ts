@@ -1,7 +1,6 @@
 import { SecretClient } from "@azure/keyvault-secrets";
 import { inject, injectable } from "inversify";
 import { LogService } from "./LogService";
-import * as msRestNodeAuth from "@azure/ms-rest-nodeauth";
 import azureIdentity = require("@azure/identity");
 import { cosmosUrl } from "../config/constants";
 
@@ -37,7 +36,7 @@ export class KeyVaultService {
                 // use specified authentication type (either MI or CLI)
                 const creds: any = this.authType === "MI" ?
                     new azureIdentity.ManagedIdentityCredential() :
-                    await msRestNodeAuth.AzureCliCredentials.create({ resource: "https://vault.azure.net" });
+                    new azureIdentity.AzureCliCredential();
 
                 this.client = new SecretClient(this.url, creds);
 

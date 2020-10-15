@@ -89,19 +89,19 @@ export class HealthzController implements interfaces.Controller {
 
         try {
             healthChecks["getGenres:responseTime"] = getGenres;
-            await this.runHealthCheck("getGenres", "/api/genres", 400, healthChecks["getGenres:responseTime"]);
+            await this.runHealthCheck("getGenres", "/api/genres", 200, healthChecks["getGenres:responseTime"]);
 
             healthChecks["getActorById:responseTime"] = getActorById;
-            await this.runHealthCheck("getActorById", "/api/actors/nm0000173", 250, healthChecks["getActorById:responseTime"]);
+            await this.runHealthCheck("getActorById", "/api/actors/nm0000173", 100, healthChecks["getActorById:responseTime"]);
 
             healthChecks["getMovieById:responseTime"] = getMovieById;
-            await this.runHealthCheck("getMovieById", "/api/movies/tt0133093", 250, healthChecks["getMovieById:responseTime"]);
+            await this.runHealthCheck("getMovieById", "/api/movies/tt0133093", 100, healthChecks["getMovieById:responseTime"]);
 
             healthChecks["searchMovies:responseTime"] = searchMovies;
-            await this.runHealthCheck("searchMovies", "/api/movies?q=ring", 400, healthChecks["searchMovies:responseTime"]);
+            await this.runHealthCheck("searchMovies", "/api/movies?q=ring", 200, healthChecks["searchMovies:responseTime"]);
 
             healthChecks["searchActors:responseTime"] = searchActors;
-            await this.runHealthCheck("searchActors", "/api/actors?q=nicole", 400, healthChecks["searchActors:responseTime"]);
+            await this.runHealthCheck("searchActors", "/api/actors?q=nicole", 200, healthChecks["searchActors:responseTime"]);
 
             // if any health check has a warn or down status
             // set overall status to the worst status
