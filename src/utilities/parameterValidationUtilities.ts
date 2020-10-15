@@ -108,7 +108,7 @@ export class ParameterValidationUtilities {
         if ("year" in query) {
             const year = parseInt(query.year, 10);
 
-            if (isNaN(year) || year != query.year || year < 1874 || year > (new Date(Date.now()).getFullYear() + 5)) {
+            if (isNaN(year) || year != query.year || year < 1874 || year > 2025) {
                 
                 const message = { 
                     message: queryErrorMessages.invalidYearMessage,
